@@ -203,7 +203,7 @@ export default function HomePage() {
             <img
               src={slide.image}
               alt={slide.title}
-              loading="lazy"
+              fetchPriority="high"
               className="absolute inset-0 w-full h-full object-cover"
               decoding="async"
             />
@@ -481,7 +481,7 @@ function CategoryCard({
         src={image}
         alt={title}
         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
-        loading="lazy"
+        fetchPriority="high"
       />
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white space-y-1 sm:space-y-2 p-3 sm:p-4 bg-black/10 group-hover:bg-black/40 transition-colors">
         <span className="text-[7px] sm:text-[8px] md:text-[9px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] transform translate-y-3 sm:translate-y-4 group-hover:translate-y-0 transition-all duration-500">

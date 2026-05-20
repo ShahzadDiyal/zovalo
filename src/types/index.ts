@@ -13,6 +13,7 @@ export interface User {
   createdAt?: Date | any;
 }
 
+// In src/types/index.ts
 export interface Product {
   id: string;
   title: string;
@@ -21,25 +22,28 @@ export interface Product {
   price: number;
   compareAtPrice?: number;
   category: string;
+  reviews: string;
   images: string[];
   stock: number;
-
   seaterCount?: string[];
+  seaterPrices?: { seater: string; price: number; compareAtPrice?: number }[];
   colors?: string[];
   material?: string;
   dimensions?: string;
   weight?: number;
-  assemblyRequired?: boolean;
   warrantyYears?: number;
   deliveryCountries?: string[];
   estimatedDelivery?: string;
   tags?: string[];
-
-  specifications?: Record<string, string>;
-  featured: boolean;
+  specifications?: {
+    Material?: string;
+    Dimensions?: string;
+    Weight?: string;
+    Warranty?: string;
+    CareInstructions?: string;
+  };
+  featured?: boolean;
   createdAt?: any;
-  updatedAt?: any;
-  reviews?: Review[];
 }
 
 export interface Review {

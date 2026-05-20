@@ -51,6 +51,10 @@ export default function ProductPage() {
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedSeater, setSelectedSeater] = useState<string>("");
 
+  // Current price based on selected seater
+  const [currentPrice, setCurrentPrice] = useState<number>(0);
+  const [currentCompareAtPrice, setCurrentCompareAtPrice] = useState<number>(0);
+
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -75,12 +79,43 @@ export default function ProductPage() {
         }
         if (productData.seaterCount && productData.seaterCount.length > 0) {
           setSelectedSeater(productData.seaterCount[0]);
+          // Set price based on first seater
+          updatePriceForSeater(productData.seaterCount[0], productData);
+        } else {
+          setCurrentPrice(productData.price);
+          setCurrentCompareAtPrice(productData.compareAtPrice || 0);
         }
       }
     } catch (error) {
       console.error("Error fetching product:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Update price when seater changes
+  const updatePriceForSeater = (seater: string, productData: Product) => {
+    if (productData.seaterPrices && productData.seaterPrices.length > 0) {
+      const seaterPrice = productData.seaterPrices.find(
+        (sp) => sp.seater === seater
+      );
+      if (seaterPrice) {
+        setCurrentPrice(seaterPrice.price);
+        setCurrentCompareAtPrice(seaterPrice.compareAtPrice || 0);
+      } else {
+        setCurrentPrice(productData.price);
+        setCurrentCompareAtPrice(productData.compareAtPrice || 0);
+      }
+    } else {
+      setCurrentPrice(productData.price);
+      setCurrentCompareAtPrice(productData.compareAtPrice || 0);
+    }
+  };
+
+  const handleSeaterChange = (seater: string) => {
+    setSelectedSeater(seater);
+    if (product) {
+      updatePriceForSeater(seater, product);
     }
   };
 
@@ -113,11 +148,19 @@ export default function ProductPage() {
 
     setAddingToCart(true);
 
-    // Add to cart with selected options
-    addToCart(product, quantity, {
-      color: selectedColor,
-      seater: selectedSeater,
-    });
+    // Add to cart with selected options and current price
+    addToCart(
+      {
+        ...product,
+        price: currentPrice,
+        compareAtPrice: currentCompareAtPrice,
+      },
+      quantity,
+      {
+        color: selectedColor,
+        seater: selectedSeater,
+      }
+    );
 
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 2000);
@@ -153,11 +196,19 @@ export default function ProductPage() {
 
     setOrderingNow(true);
 
-    // Add to cart with selected options
-    addToCart(product, quantity, {
-      color: selectedColor,
-      seater: selectedSeater,
-    });
+    // Add to cart with selected options and current price
+    addToCart(
+      {
+        ...product,
+        price: currentPrice,
+        compareAtPrice: currentCompareAtPrice,
+      },
+      quantity,
+      {
+        color: selectedColor,
+        seater: selectedSeater,
+      }
+    );
 
     setTimeout(() => {
       router.push("/cart");
@@ -241,12 +292,9 @@ export default function ProductPage() {
   };
 
   const discountPercent =
-    product?.compareAtPrice &&
-    product?.price &&
-    product.compareAtPrice > product.price
+    currentCompareAtPrice && currentPrice && currentCompareAtPrice > currentPrice
       ? Math.round(
-          ((product.compareAtPrice - product.price) / product.compareAtPrice) *
-            100,
+          ((currentCompareAtPrice - currentPrice) / currentCompareAtPrice) * 100
         )
       : 0;
 
@@ -418,22 +466,21 @@ export default function ProductPage() {
               {product.title}
             </h1>
 
-            {/* Price with Discount */}
+            {/* Price with Discount - Dynamically updates based on seater */}
             <div className="flex items-center gap-3 flex-wrap">
               <p className="text-2xl sm:text-3xl font-light text-near-black">
-                {formatCurrency(product.price)}
+                {formatCurrency(currentPrice)}
               </p>
-              {product.compareAtPrice &&
-                product.compareAtPrice > product.price && (
-                  <>
-                    <p className="text-lg sm:text-xl text-gray-400 line-through">
-                      {formatCurrency(product.compareAtPrice)}
-                    </p>
-                    <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">
-                      Save {discountPercent}%
-                    </span>
-                  </>
-                )}
+              {currentCompareAtPrice && currentCompareAtPrice > currentPrice && (
+                <>
+                  <p className="text-lg sm:text-xl text-gray-400 line-through">
+                    {formatCurrency(currentCompareAtPrice)}
+                  </p>
+                  <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">
+                    Save {discountPercent}%
+                  </span>
+                </>
+              )}
             </div>
 
             {/* Stock Status Bar */}
@@ -445,12 +492,12 @@ export default function ProductPage() {
               </div>
             )}
 
-            {/* Product Specifications Grid - Clean Layout */}
+            {/* Product Specifications Grid */}
             <div className="border border-warm-beige rounded-lg p-4 bg-cream/20">
               <h3 className="text-xs font-bold uppercase tracking-widest text-walnut mb-3">
                 Product Details
               </h3>
-              <div className="flex flex-col gap-y-3 gap-x-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4">
                 {/* Material */}
                 {product.material && (
                   <div className="flex items-center gap-2">
@@ -473,23 +520,27 @@ export default function ProductPage() {
                   </div>
                 )}
 
-                {/* Weight */}
-                {/* {product.weight && product.weight >= 0 && (
+                {/* Weight - RESTORED */}
+                {product.weight && product.weight > 0 && (
                   <div className="flex items-center gap-2">
                     <Weight className="w-3.5 h-3.5 text-gold" />
                     <span className="text-xs text-gray-600">Weight:</span>
-                    <span className="text-xs font-medium text-near-black">{product.weight} kg</span>
+                    <span className="text-xs font-medium text-near-black">
+                      {product.weight} kg
+                    </span>
                   </div>
-                )} */}
+                )}
 
-                {/* Warranty */}
-                {/* {product.warrantyYears && product.warrantyYears > 0 && (
+                {/* Warranty - RESTORED */}
+                {product.warrantyYears && product.warrantyYears > 0 && (
                   <div className="flex items-center gap-2">
                     <Shield className="w-3.5 h-3.5 text-gold" />
                     <span className="text-xs text-gray-600">Warranty:</span>
-                    <span className="text-xs font-medium text-near-black">{product.warrantyYears} years</span>
+                    <span className="text-xs font-medium text-near-black">
+                      {product.warrantyYears} years
+                    </span>
                   </div>
-                )} */}
+                )}
 
                 {/* Delivery */}
                 {product.estimatedDelivery && (
@@ -545,35 +596,54 @@ export default function ProductPage() {
               </div>
             )}
 
-            {/* Seater Selection */}
+            {/* Seater Selection - Shows price for each seater */}
             {product.seaterCount && product.seaterCount.length > 0 && (
               <div className="space-y-2">
                 <label className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-walnut block">
                   Select Seater <span className="text-red-500">*</span>
                 </label>
-                <div className="flex flex-wrap gap-2">
-                  {product.seaterCount.map((seater) => (
-                    <button
-                      key={seater}
-                      onClick={() => setSelectedSeater(seater)}
-                      className={`px-4 py-2 text-sm rounded-full transition-all flex items-center gap-2 ${
-                        selectedSeater === seater
-                          ? "bg-gold text-near-black font-bold ring-2 ring-gold/50"
-                          : "bg-cream text-gray-700 hover:bg-gold/20"
-                      }`}
-                    >
-                      <Sofa className="w-3.5 h-3.5" />
-                      {seater}
-                      {selectedSeater === seater && (
-                        <Check className="w-3 h-3" />
-                      )}
-                    </button>
-                  ))}
+                <div className="flex flex-wrap gap-3">
+                  {product.seaterCount.map((seater) => {
+                    const seaterPrice = product.seaterPrices?.find(
+                      (sp) => sp.seater === seater
+                    );
+                    return (
+                      <button
+                        key={seater}
+                        onClick={() => handleSeaterChange(seater)}
+                        className={`px-4 py-2 text-sm rounded-full transition-all flex items-center gap-2 ${
+                          selectedSeater === seater
+                            ? "bg-gold text-near-black font-bold ring-2 ring-gold/50"
+                            : "bg-cream text-gray-700 hover:bg-gold/20"
+                        }`}
+                      >
+                        <Sofa className="w-3.5 h-3.5" />
+                        <span>{seater}</span>
+                        {/* {seaterPrice && (
+                          <span className="text-xs font-bold ml-1">
+                            {formatCurrency(seaterPrice.price)}
+                          </span>
+                        )} */}
+                        {selectedSeater === seater && (
+                          <Check className="w-3 h-3" />
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
+                {selectedSeater && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Selected: <span className="font-bold">{selectedSeater}</span>{" "}
+                    - Price:{" "}
+                    <span className="font-bold text-gold">
+                      {formatCurrency(currentPrice)}
+                    </span>
+                  </p>
+                )}
               </div>
             )}
 
-            {/* Description - Clean with preserved formatting */}
+            {/* Description */}
             <div className="border-t border-warm-beige pt-4">
               <h3 className="text-xs font-bold uppercase tracking-widest text-walnut mb-2">
                 Description
@@ -714,18 +784,15 @@ export default function ProductPage() {
           </div>
         </div>
 
-        {/* Reviews Section */}
+        {/* Reviews Section - FULLY RESTORED */}
         {product.reviews && product.reviews.length > 0 && (
           <div className="mt-12 pt-8 border-t border-warm-beige">
             <h3 className="text-lg font-display text-near-black mb-6">
               Customer Reviews ({product.reviews.length})
             </h3>
             <div className="space-y-4">
-              {product.reviews.map((review) => (
-                <div
-                  key={review.id}
-                  className="border-b border-warm-beige pb-4"
-                >
+              {product.reviews?.map((review: any) => (
+                <div key={review.id} className="border-b border-warm-beige pb-4">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                     <div>
                       <p className="font-bold text-near-black text-sm">
@@ -737,7 +804,11 @@ export default function ProductPage() {
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                           key={star}
-                          className={`w-2.5 h-2.5 ${star <= review.rating ? "fill-gold text-gold" : "text-gray-300"}`}
+                          className={`w-2.5 h-2.5 ${
+                            star <= review.rating
+                              ? "fill-gold text-gold"
+                              : "text-gray-300"
+                          }`}
                         />
                       ))}
                     </div>
@@ -775,13 +846,13 @@ export default function ProductPage() {
                   onClick={() => shareToPlatform("facebook")}
                   className="flex items-center gap-2 p-2 bg-[#1877f2] text-white rounded-lg text-sm"
                 >
-                  {/* <Facebook className="w-4 h-4" /> Facebook */}
+                  <MessageCircle className="w-4 h-4" /> Facebook
                 </button>
                 <button
                   onClick={() => shareToPlatform("twitter")}
                   className="flex items-center gap-2 p-2 bg-[#1da1f2] text-white rounded-lg text-sm"
                 >
-                  {/* <Twitter className="w-4 h-4" /> Twitter */}
+                  <MessageCircle className="w-4 h-4" /> Twitter
                 </button>
                 <button
                   onClick={() => shareToPlatform("whatsapp")}

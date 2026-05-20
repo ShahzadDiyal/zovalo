@@ -27,6 +27,7 @@ import {
   Clock,
   Filter,
   PlusCircle,
+  Pencil,
 } from "lucide-react";
 import { Product, Category } from "../../../../../types";
 import { productApi } from "../../../../../services/productApi";
@@ -34,13 +35,15 @@ import { categoryApi } from "../../../../../services/categoryApi";
 import { LoadingSpinner } from "../../../../../components/ui/Loading";
 import { useRouter } from "next/navigation";
 
+interface SeaterPrice {
+  seater: string;
+  price: number;
+  compareAtPrice?: number;
+}
+
 export default function AdminProductForm() {
   const params = useParams();
-  const productId = params?.productId
-    ? Array.isArray(params.productId)
-      ? params.productId[0]
-      : params.productId
-    : null;
+  const productId = params.productId;
   const productIdStr = typeof productId === "string" ? productId : "";
 
   const router = useRouter();
@@ -51,6 +54,14 @@ export default function AdminProductForm() {
   const [uploadingImages, setUploadingImages] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [editingSeaterIndex, setEditingSeaterIndex] = useState<number | null>(
+    null,
+  );
+  const [tempSeaterPrice, setTempSeaterPrice] = useState<{
+    seater: string;
+    price: number;
+    compareAtPrice?: number;
+  } | null>(null);
 
   // Dynamic input states
   const [newSeater, setNewSeater] = useState("");
@@ -68,6 +79,7 @@ export default function AdminProductForm() {
     images: [],
     stock: 0,
     seaterCount: [] as string[],
+    seaterPrices: [] as SeaterPrice[],
     colors: [] as string[],
     material: "",
     dimensions: "",
@@ -97,6 +109,15 @@ export default function AdminProductForm() {
           : productId;
         const product = await productApi.getById(productIdValue);
         if (product) {
+          // Initialize seaterPrices from existing data
+          if (!product.seaterPrices && product.seaterCount?.length) {
+            const defaultPrices = product.seaterCount.map((seater) => ({
+              seater,
+              price: product.price || 0,
+              compareAtPrice: product.compareAtPrice || 0,
+            }));
+            product.seaterPrices = defaultPrices;
+          }
           setFormData(product);
         } else {
           alert("Product not found");
@@ -130,12 +151,21 @@ export default function AdminProductForm() {
     }));
   };
 
-  // Dynamic add for Seater Count
+  // Dynamic add for Seater Count with Price
   const handleAddSeater = () => {
     if (newSeater.trim() && !formData.seaterCount?.includes(newSeater.trim())) {
+      const newSeaterValue = newSeater.trim();
       setFormData((prev) => ({
         ...prev,
-        seaterCount: [...(prev.seaterCount || []), newSeater.trim()],
+        seaterCount: [...(prev.seaterCount || []), newSeaterValue],
+        seaterPrices: [
+          ...(prev.seaterPrices || []),
+          {
+            seater: newSeaterValue,
+            price: prev.price || 0,
+            compareAtPrice: prev.compareAtPrice || 0,
+          },
+        ],
       }));
       setNewSeater("");
     }
@@ -145,7 +175,30 @@ export default function AdminProductForm() {
     setFormData((prev) => ({
       ...prev,
       seaterCount: (prev.seaterCount || []).filter((s) => s !== seater),
+      seaterPrices: (prev.seaterPrices || []).filter(
+        (sp) => sp.seater !== seater,
+      ),
     }));
+  };
+
+  const handleSeaterPriceChange = (
+    seater: string,
+    field: "price" | "compareAtPrice",
+    value: number,
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      seaterPrices: (prev.seaterPrices || []).map((sp) =>
+        sp.seater === seater ? { ...sp, [field]: value } : sp,
+      ),
+    }));
+  };
+
+  const getPriceForSeater = (seater: string): number => {
+    const seaterPrice = formData.seaterPrices?.find(
+      (sp) => sp.seater === seater,
+    );
+    return seaterPrice?.price || formData.price || 0;
   };
 
   // Dynamic add for Colors
@@ -349,6 +402,11 @@ export default function AdminProductForm() {
       const productData = {
         ...formData,
         images: validImages,
+        // Set base price as the minimum price across seaters or first seater price
+        price:
+          formData.seaterPrices && formData.seaterPrices.length > 0
+            ? Math.min(...formData.seaterPrices.map((sp) => sp.price))
+            : formData.price,
       };
       if (isEdit && productId) {
         await productApi.update(productId as string, productData);
@@ -378,17 +436,6 @@ export default function AdminProductForm() {
   const imageCount = (formData.images || []).filter(
     (img) => img && img.trim() !== "",
   ).length;
-
-  const discountPercent =
-    formData.compareAtPrice &&
-    formData.price &&
-    formData.compareAtPrice > formData.price
-      ? Math.round(
-          ((formData.compareAtPrice - formData.price) /
-            formData.compareAtPrice) *
-            100,
-        )
-      : 0;
 
   return (
     <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-5 lg:px-0 space-y-5 sm:space-y-6 md:space-y-8 lg:space-y-12">
@@ -526,61 +573,134 @@ export default function AdminProductForm() {
             </div>
           </section>
 
-          {/* Pricing Section */}
+          {/* Seater Options with Individual Prices */}
           <section className="bg-white border border-warm-beige p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 space-y-4 sm:space-y-6 md:space-y-8 shadow-sm rounded-lg">
             <div className="flex items-center gap-2 sm:gap-3 border-l-4 border-gold pl-3 sm:pl-4">
-              <DollarSign className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
+              <Sofa className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
               <h2 className="text-sm sm:text-base md:text-lg font-display text-near-black uppercase">
-                Pricing
+                Seater Options & Pricing
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
-              <div className="space-y-1.5 sm:space-y-2">
-                <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block">
-                  Sale Price (GBP) *
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gold font-bold">
-                    £
-                  </span>
+            <div className="space-y-4">
+              {/* Add New Seater */}
+              <div className="flex flex-wrap gap-2 items-end">
+                <div className="flex-1 min-w-[150px]">
+                  <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block mb-1">
+                    Seater Option
+                  </label>
                   <input
-                    required
-                    type="number"
-                    name="price"
-                    value={formData.price}
-                    onChange={handleChange}
-                    className="w-full bg-cream border border-warm-beige py-2.5 pl-7 pr-3 text-sm focus:border-gold outline-none rounded"
-                    step="0.01"
-                    min="0"
+                    type="text"
+                    value={newSeater}
+                    onChange={(e) => setNewSeater(e.target.value)}
+                    placeholder="e.g., 2 Seater, 3 Seater"
+                    className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
                   />
                 </div>
+                <button
+                  type="button"
+                  onClick={handleAddSeater}
+                  className="bg-gold text-near-black px-4 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-near-black hover:text-white transition rounded"
+                >
+                  <Plus className="w-3.5 h-3.5 inline mr-1" /> Add Seater
+                </button>
               </div>
 
-              <div className="space-y-1.5 sm:space-y-2">
-                <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block">
-                  Compare at Price (Original Price)
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">
-                    £
-                  </span>
-                  <input
-                    type="number"
-                    name="compareAtPrice"
-                    value={formData.compareAtPrice || ""}
-                    onChange={handleChange}
-                    className="w-full bg-cream border border-warm-beige py-2.5 pl-7 pr-3 text-sm focus:border-gold outline-none rounded"
-                    step="0.01"
-                    min="0"
-                  />
+              {/* Seater List with Price Inputs */}
+              {(formData.seaterCount || []).length > 0 && (
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[400px]">
+                    <thead>
+                      <tr className="border-b border-warm-beige">
+                        <th className="text-left py-2 text-[10px] font-bold uppercase text-gray-400">
+                          Seater
+                        </th>
+                        <th className="text-left py-2 text-[10px] font-bold uppercase text-gray-400">
+                          Price (GBP)
+                        </th>
+                        <th className="text-left py-2 text-[10px] font-bold uppercase text-gray-400">
+                          Compare at Price (Optional)
+                        </th>
+                        <th className="text-center py-2 text-[10px] font-bold uppercase text-gray-400">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(formData.seaterCount || []).map((seater, idx) => {
+                        const seaterPrice = formData.seaterPrices?.find(
+                          (sp) => sp.seater === seater,
+                        );
+                        return (
+                          <tr key={idx} className="border-b border-warm-beige">
+                            <td className="py-2 text-sm font-medium">
+                              {seater}
+                            </td>
+                            <td className="py-2">
+                              <div className="relative w-32">
+                                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gold font-bold text-xs">
+                                  £
+                                </span>
+                                <input
+                                  type="number"
+                                  value={seaterPrice?.price || 0}
+                                  onChange={(e) =>
+                                    handleSeaterPriceChange(
+                                      seater,
+                                      "price",
+                                      parseFloat(e.target.value) || 0,
+                                    )
+                                  }
+                                  className="w-full bg-cream border border-warm-beige py-1.5 pl-6 pr-2 text-sm focus:border-gold outline-none rounded"
+                                  step="0.01"
+                                  min="0"
+                                />
+                              </div>
+                            </td>
+                            <td className="py-2">
+                              <div className="relative w-32">
+                                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xs">
+                                  £
+                                </span>
+                                <input
+                                  type="number"
+                                  value={seaterPrice?.compareAtPrice || 0}
+                                  onChange={(e) =>
+                                    handleSeaterPriceChange(
+                                      seater,
+                                      "compareAtPrice",
+                                      parseFloat(e.target.value) || 0,
+                                    )
+                                  }
+                                  className="w-full bg-cream border border-warm-beige py-1.5 pl-6 pr-2 text-sm focus:border-gold outline-none rounded"
+                                  step="0.01"
+                                  min="0"
+                                />
+                              </div>
+                            </td>
+                            <td className="py-2 text-center">
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveSeater(seater)}
+                                className="text-red-500 hover:text-red-700 transition"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
-                {discountPercent > 0 && (
-                  <p className="text-[10px] text-mint-700 mt-1">
-                    Save {discountPercent}%
-                  </p>
-                )}
-              </div>
+              )}
+
+              {(formData.seaterCount || []).length === 0 && (
+                <p className="text-[10px] text-gray-400 text-center py-4">
+                  No seater options added. Add seaters above with their
+                  respective prices.
+                </p>
+              )}
             </div>
           </section>
 
@@ -589,72 +709,11 @@ export default function AdminProductForm() {
             <div className="flex items-center gap-2 sm:gap-3 border-l-4 border-gold pl-3 sm:pl-4">
               <Filter className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
               <h2 className="text-sm sm:text-base md:text-lg font-display text-near-black uppercase">
-                Filterable Attributes
+                Additional Attributes
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-              {/* Seater Count - Dynamic */}
-              <div className="space-y-2">
-                <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block flex items-center gap-2">
-                  <Sofa className="w-3.5 h-3.5" /> Seater Options
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newSeater}
-                    onChange={(e) => {
-                      setNewSeater(e.target.value);
-                      if (e.target.value.includes(",")) {
-                        const seaters = e.target.value
-                          .split(",")
-                          .map((s) => s.trim())
-                          .filter((s) => s);
-                        seaters.forEach((seater) => {
-                          if (
-                            seater &&
-                            !formData.seaterCount?.includes(seater)
-                          ) {
-                            setFormData((prev) => ({
-                              ...prev,
-                              seaterCount: [
-                                ...(prev.seaterCount || []),
-                                seater,
-                              ],
-                            }));
-                          }
-                        });
-                        setNewSeater("");
-                      }
-                    }}
-                    placeholder="e.g., 2 Seater, L-Shape, Recliner (separate with commas)"
-                    className="flex-1 bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                  />
-                </div>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {(formData.seaterCount || []).map((seater) => (
-                    <span
-                      key={seater}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-cream text-gray-700 rounded-full text-xs"
-                    >
-                      {seater}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveSeater(seater)}
-                        className="hover:text-red-500 transition-colors"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </span>
-                  ))}
-                </div>
-                {(formData.seaterCount || []).length === 0 && (
-                  <p className="text-[10px] text-gray-400">
-                    No seater options added. Add above.
-                  </p>
-                )}
-              </div>
-
               {/* Colors - Dynamic */}
               <div className="space-y-2">
                 <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block flex items-center gap-2">

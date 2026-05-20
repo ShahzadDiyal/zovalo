@@ -40,10 +40,13 @@ export interface Product {
     Dimensions?: string;
     Weight?: string;
     Warranty?: string;
+  Color?: string;
+ 
     CareInstructions?: string;
   };
   featured?: boolean;
   createdAt?: any;
+  updatedAt?: any;
 }
 
 export interface Review {

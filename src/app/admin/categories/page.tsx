@@ -276,7 +276,7 @@ export default function AdminCategories() {
                     src={category.image}
                     alt={category.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    fetchpriority="high"
+                    fetchPriority="high"
                   />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">

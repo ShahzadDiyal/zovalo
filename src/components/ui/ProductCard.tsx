@@ -79,7 +79,7 @@ export function ProductCard({ product }: ProductCardProps) {
           src={product.images[0]}
           alt={product.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          fetchpriority="high"
+          fetchPriority="high"
         />
 
         {/* Stock Badge */}

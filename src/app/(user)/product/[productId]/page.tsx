@@ -789,7 +789,7 @@ export default function ProductPage() {
         </div>
 
         {/* Reviews Section - FULLY RESTORED */}
-        {product.reviews && product.reviews.length > 0 && (
+        {/* {product.reviews && product.reviews.length > 0 && (
           <div className="mt-12 pt-8 border-t border-warm-beige">
             <h3 className="text-lg font-display text-near-black mb-6">
               Customer Reviews ({product.reviews.length})
@@ -825,7 +825,7 @@ export default function ProductPage() {
               ))}
             </div>
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Share Options Modal */}

@@ -97,7 +97,7 @@ export default function ProductPage() {
   const updatePriceForSeater = (seater: string, productData: Product) => {
     if (productData.seaterPrices && productData.seaterPrices.length > 0) {
       const seaterPrice = productData.seaterPrices.find(
-        (sp) => sp.seater === seater
+        (sp) => sp.seater === seater,
       );
       if (seaterPrice) {
         setCurrentPrice(seaterPrice.price);
@@ -159,7 +159,7 @@ export default function ProductPage() {
       {
         color: selectedColor,
         seater: selectedSeater,
-      }
+      },
     );
 
     setShowSuccess(true);
@@ -207,7 +207,7 @@ export default function ProductPage() {
       {
         color: selectedColor,
         seater: selectedSeater,
-      }
+      },
     );
 
     setTimeout(() => {
@@ -292,9 +292,12 @@ export default function ProductPage() {
   };
 
   const discountPercent =
-    currentCompareAtPrice && currentPrice && currentCompareAtPrice > currentPrice
+    currentCompareAtPrice &&
+    currentPrice &&
+    currentCompareAtPrice > currentPrice
       ? Math.round(
-          ((currentCompareAtPrice - currentPrice) / currentCompareAtPrice) * 100
+          ((currentCompareAtPrice - currentPrice) / currentCompareAtPrice) *
+            100,
         )
       : 0;
 
@@ -471,16 +474,17 @@ export default function ProductPage() {
               <p className="text-2xl sm:text-3xl font-light text-near-black">
                 {formatCurrency(currentPrice)}
               </p>
-              {currentCompareAtPrice && currentCompareAtPrice > currentPrice && (
-                <>
-                  <p className="text-lg sm:text-xl text-gray-400 line-through">
-                    {formatCurrency(currentCompareAtPrice)}
-                  </p>
-                  <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">
-                    Save {discountPercent}%
-                  </span>
-                </>
-              )}
+              {currentCompareAtPrice &&
+                currentCompareAtPrice > currentPrice && (
+                  <>
+                    <p className="text-lg sm:text-xl text-gray-400 line-through">
+                      {formatCurrency(currentCompareAtPrice)}
+                    </p>
+                    <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">
+                      Save {discountPercent}%
+                    </span>
+                  </>
+                )}
             </div>
 
             {/* Stock Status Bar */}
@@ -605,7 +609,7 @@ export default function ProductPage() {
                 <div className="flex flex-wrap gap-3">
                   {product.seaterCount.map((seater) => {
                     const seaterPrice = product.seaterPrices?.find(
-                      (sp) => sp.seater === seater
+                      (sp) => sp.seater === seater,
                     );
                     return (
                       <button
@@ -633,8 +637,8 @@ export default function ProductPage() {
                 </div>
                 {selectedSeater && (
                   <p className="text-xs text-gray-500 mt-1">
-                    Selected: <span className="font-bold">{selectedSeater}</span>{" "}
-                    - Price:{" "}
+                    Selected:{" "}
+                    <span className="font-bold">{selectedSeater}</span> - Price:{" "}
                     <span className="font-bold text-gold">
                       {formatCurrency(currentPrice)}
                     </span>
@@ -792,7 +796,10 @@ export default function ProductPage() {
             </h3>
             <div className="space-y-4">
               {product.reviews?.map((review: any) => (
-                <div key={review.id} className="border-b border-warm-beige pb-4">
+                <div
+                  key={review.id}
+                  className="border-b border-warm-beige pb-4"
+                >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                     <div>
                       <p className="font-bold text-near-black text-sm">

@@ -688,6 +688,53 @@ export default function ProductPage() {
                     </p>
                   </div>
 
+{/* Custom Order Request Section - Static */}
+<div className="mt-6 pt-6 border-t border-warm-beige">
+  <div className="bg-cream/50 rounded-lg p-5 border border-warm-beige">
+    <div className="flex items-start gap-3">
+      <div className="w-10 h-10 bg-gold/10 rounded-full flex items-center justify-center flex-shrink-0">
+        <svg className="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+      </div>
+      <div className="flex-1">
+        <h4 className="text-sm font-bold text-near-black mb-1">Custom Order Request</h4>
+        <p className="text-xs text-gray-500 mb-3">
+          Looking for a different color, seater option, or customization? Let us know and we'll create it just for you.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <button 
+            onClick={() => {
+              const message = encodeURIComponent(`Hi! I'm interested in customizing the ${product?.title || 'product'}. Can you help with special requirements?`);
+              window.open(`https://wa.me/447123456789?text=${message}`, '_blank');
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366] text-white rounded-lg text-[11px] font-bold uppercase tracking-widest hover:bg-[#128C7E] transition-all duration-300"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12.032 2.002c-5.52 0-10 4.48-10 10 0 1.78.47 3.54 1.36 5.08l-1.37 4.22 4.37-1.33c1.48.84 3.16 1.3 4.9 1.3 5.52 0 10-4.48 10-10s-4.48-10-10-10zm0 18c-1.66 0-3.28-.46-4.68-1.32l-.34-.2-2.8.86.9-2.72-.22-.35c-.92-1.44-1.42-3.12-1.42-4.86 0-4.97 4.03-9 9-9s9 4.03 9 9-4.03 9-9 9z"/>
+              <path d="M16.74 13.96c-.22-.11-1.3-.64-1.5-.71-.2-.07-.35-.11-.5.11-.15.22-.58.71-.71.86-.13.15-.26.17-.48.06-.22-.11-.93-.34-1.77-1.09-.66-.6-1.1-1.33-1.23-1.56-.13-.23-.01-.35.1-.47.1-.1.22-.26.33-.39.11-.13.15-.22.22-.37.07-.15.04-.28-.02-.39-.06-.11-.5-1.21-.69-1.66-.18-.44-.37-.38-.5-.38-.13 0-.28-.01-.43-.01-.15 0-.39.06-.6.28-.21.22-.8.78-.8 1.91 0 1.13.82 2.22.94 2.37.12.15 1.62 2.48 3.93 3.48.55.24.98.38 1.32.48.55.17 1.05.15 1.45.09.44-.07 1.3-.53 1.48-1.04.18-.51.18-.95.13-1.04-.05-.09-.18-.15-.4-.26z"/>
+            </svg>
+            WhatsApp Now
+          </button>
+          {/* <button 
+            onClick={() => {
+              const subject = encodeURIComponent(`Custom Order Request: ${product?.title || 'Product'}`);
+              const body = encodeURIComponent(`Hi Team,\n\nI'm interested in customizing the product:\n\nProduct: ${product?.title}\n\nMy requirements:\n- Color: \n- Seater: \n- Other specifications:\n\nPlease let me know if this is possible.\n\nThank you!`);
+              window.location.href = `mailto:support@zovallo.com?subject=${subject}&body=${body}`;
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg text-[11px] font-bold uppercase tracking-widest hover:bg-gray-700 transition-all duration-300"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Email Us
+          </button> */}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
                   <div className="flex flex-col sm:flex-row gap-3">
                     <button
                       onClick={handleAddToCartOnly}

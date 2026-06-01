@@ -1,19 +1,12 @@
 // src/types/index.ts
-export interface User {
-  uid: string;
-  email: string;
-  displayName?: string;
-  phone?: string;
-  address?: string;
-  city?: string;
-  postalCode?: string;
-  country?: string;
-  avatar?: string;
-  role?: "admin" | "user";
-  createdAt?: Date | any;
+
+export interface SeaterPrice {
+  seater: string;
+  price: number;
+  compareAtPrice?: number;
+  images?: string[];  // Add this line for per-seater images
 }
 
-// In src/types/index.ts
 export interface Product {
   id: string;
   title: string;
@@ -26,7 +19,7 @@ export interface Product {
   images: string[];
   stock: number;
   seaterCount?: string[];
-  seaterPrices?: { seater: string; price: number; compareAtPrice?: number }[];
+  seaterPrices?: SeaterPrice[];  // Use the SeaterPrice interface instead of inline type
   colors?: string[];
   material?: string;
   dimensions?: string;
@@ -40,13 +33,26 @@ export interface Product {
     Dimensions?: string;
     Weight?: string;
     Warranty?: string;
-  Color?: string;
- 
+    Color?: string;
     CareInstructions?: string;
   };
   featured?: boolean;
   createdAt?: any;
   updatedAt?: any;
+}
+
+export interface User {
+  uid: string;
+  email: string;
+  displayName?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  postalCode?: string;
+  country?: string;
+  avatar?: string;
+  role?: "admin" | "user";
+  createdAt?: Date | any;
 }
 
 export interface Review {
@@ -87,7 +93,6 @@ export interface Order {
     price: number;
     quantity: number;
     image: string;
-    // Extended fields for order details
     selectedOptions?: {
       color?: string;
       seater?: string;

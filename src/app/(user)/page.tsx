@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { ProductCard } from "../../components/ui/ProductCard";
 import { Button } from "../../components/ui/Button";
+import WelcomePopup from "../../components/ui/WelcomePopup";
+
 import Link from "next/link";
 import {
   Truck,
@@ -27,6 +29,7 @@ export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [email, setEmail] = useState("");
   const [newsletterSuccess, setNewsletterSuccess] = useState(false);
+const [products, setProducts] = useState<Product[]>([]);
 
   // Hero carousel slides
   const heroSlides = [
@@ -82,6 +85,7 @@ export default function HomePage() {
         categoryApi.getAllCategories(),
       ]);
 
+      setProducts(productsData);  
       // Get featured products
       const featured = productsData.filter((p) => p.featured === true);
       setFeaturedProducts(
@@ -456,6 +460,8 @@ export default function HomePage() {
           </p>
         </div>
       </section>
+      <WelcomePopup products={products} />
+
     </div>
   );
 }

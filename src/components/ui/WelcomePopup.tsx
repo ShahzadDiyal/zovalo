@@ -55,7 +55,7 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
     <div className="fixed inset-0 z-[200] flex items-center justify-center px-4 py-6">
       {/* Backdrop */}
       <div 
-        className={`absolute inset-0 bg-black/70 backdrop-blur-md transition-opacity duration-500 ${
+        className={`absolute inset-0 transition-opacity duration-500 ${
           isClosing ? 'opacity-0' : 'opacity-100'
         }`}
         onClick={handleClose}

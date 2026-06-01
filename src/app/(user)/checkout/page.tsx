@@ -29,12 +29,42 @@ import ReCAPTCHA from "react-google-recaptcha";
 
 // Country codes with validation patterns
 const countryCodes = [
-  { code: "+44", country: "United Kingdom", pattern: "^[0-9]{10,11}$", example: "7123456789" },
-  { code: "+353", country: "Ireland", pattern: "^[0-9]{9,10}$", example: "851234567" },
-  { code: "+33", country: "France", pattern: "^[0-9]{9}$", example: "612345678" },
-  { code: "+49", country: "Germany", pattern: "^[0-9]{10,11}$", example: "15123456789" },
-  { code: "+1", country: "United States", pattern: "^[0-9]{10}$", example: "2125551234" },
-  { code: "+61", country: "Australia", pattern: "^[0-9]{9,10}$", example: "412345678" },
+  {
+    code: "+44",
+    country: "United Kingdom",
+    pattern: "^[0-9]{10,11}$",
+    example: "7123456789",
+  },
+  {
+    code: "+353",
+    country: "Ireland",
+    pattern: "^[0-9]{9,10}$",
+    example: "851234567",
+  },
+  {
+    code: "+33",
+    country: "France",
+    pattern: "^[0-9]{9}$",
+    example: "612345678",
+  },
+  {
+    code: "+49",
+    country: "Germany",
+    pattern: "^[0-9]{10,11}$",
+    example: "15123456789",
+  },
+  {
+    code: "+1",
+    country: "United States",
+    pattern: "^[0-9]{10}$",
+    example: "2125551234",
+  },
+  {
+    code: "+61",
+    country: "Australia",
+    pattern: "^[0-9]{9,10}$",
+    example: "412345678",
+  },
 ];
 
 export default function CheckoutPage() {
@@ -47,7 +77,9 @@ export default function CheckoutPage() {
   const [orderId, setOrderId] = useState<string | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [selectedCountryCode, setSelectedCountryCode] = useState(countryCodes[0]);
+  const [selectedCountryCode, setSelectedCountryCode] = useState(
+    countryCodes[0],
+  );
   const [showWarning, setShowWarning] = useState(false);
 
   // reCAPTCHA states
@@ -70,9 +102,11 @@ export default function CheckoutPage() {
 
   // Load order count from localStorage on mount
   useEffect(() => {
-    const savedOrderCount = parseInt(localStorage.getItem('userOrderCount') || '0');
+    const savedOrderCount = parseInt(
+      localStorage.getItem("userOrderCount") || "0",
+    );
     setOrderCount(savedOrderCount);
-    
+
     // Require captcha after 2 orders
     if (savedOrderCount >= 2) {
       setRequireCaptcha(true);
@@ -89,8 +123,8 @@ export default function CheckoutPage() {
   const incrementOrderCount = () => {
     const newCount = orderCount + 1;
     setOrderCount(newCount);
-    localStorage.setItem('userOrderCount', newCount.toString());
-    
+    localStorage.setItem("userOrderCount", newCount.toString());
+
     // Enable captcha for next order after 2 orders
     if (newCount >= 2) {
       setRequireCaptcha(true);
@@ -101,7 +135,11 @@ export default function CheckoutPage() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     if (validationError) setValidationError(null);
     if (showWarning) setShowWarning(false);
@@ -116,7 +154,10 @@ export default function CheckoutPage() {
     setFormData((prev) => ({ ...prev, country: countryName }));
   };
 
-  const validatePhoneNumber = (phone: string, countryData: typeof selectedCountryCode) => {
+  const validatePhoneNumber = (
+    phone: string,
+    countryData: typeof selectedCountryCode,
+  ) => {
     const phoneRegex = new RegExp(countryData.pattern);
     const phoneNumber = phone.replace(/\s/g, "");
     if (!phoneNumber) return false;
@@ -135,17 +176,24 @@ export default function CheckoutPage() {
       return false;
     }
     if (!validatePhoneNumber(formData.phone, selectedCountryCode)) {
-      setValidationError(`Please enter a valid ${selectedCountryCode.country} phone number`);
+      setValidationError(
+        `Please enter a valid ${selectedCountryCode.country} phone number`,
+      );
       setShowWarning(true);
       return false;
     }
-    if (formData.alternativePhone && !validatePhoneNumber(formData.alternativePhone, selectedCountryCode)) {
+    if (
+      formData.alternativePhone &&
+      !validatePhoneNumber(formData.alternativePhone, selectedCountryCode)
+    ) {
       setValidationError(`Please enter a valid alternative phone number`);
       setShowWarning(true);
       return false;
     }
     if (formData.address.length < 10) {
-      setValidationError("Please provide a complete street address (at least 10 characters)");
+      setValidationError(
+        "Please provide a complete street address (at least 10 characters)",
+      );
       setShowWarning(true);
       return false;
     }
@@ -164,14 +212,14 @@ export default function CheckoutPage() {
 
   const handleProceedToConfirmation = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Check if captcha is required and not verified
     if (requireCaptcha && !captchaVerified) {
       setValidationError("Please complete the verification to continue");
       setShowWarning(true);
       return;
     }
-    
+
     if (!user) {
       setValidationError("Please login to continue");
       setShowWarning(true);
@@ -193,7 +241,9 @@ export default function CheckoutPage() {
 
     try {
       const fullPhoneNumber = `${selectedCountryCode.code} ${formData.phone}`;
-      const fullAlternativePhone = formData.alternativePhone ? `${selectedCountryCode.code} ${formData.alternativePhone}` : "";
+      const fullAlternativePhone = formData.alternativePhone
+        ? `${selectedCountryCode.code} ${formData.alternativePhone}`
+        : "";
 
       const orderData = {
         userId: user!.uid,
@@ -232,7 +282,7 @@ export default function CheckoutPage() {
 
       // Increment order count after successful order
       incrementOrderCount();
-      
+
       setOrderId(docRef.id);
       setOrderComplete(true);
       clearCart();
@@ -250,12 +300,28 @@ export default function CheckoutPage() {
         <div className="inline-flex items-center justify-center w-20 h-20 bg-mint-50 rounded-full">
           <CheckCircle2 className="w-10 h-10 text-mint-700" />
         </div>
-        <h1 className="text-3xl font-display text-near-black">Thank You For Your Order!</h1>
-        <p className="text-gray-600">Order #{orderId?.slice(-8).toUpperCase()}</p>
-        <p className="text-gray-500">We'll contact you shortly for delivery confirmation.</p>
+        <h1 className="text-3xl font-display text-near-black">
+          Thank You For Your Order!
+        </h1>
+        <p className="text-gray-600">
+          Order #{orderId?.slice(-8).toUpperCase()}
+        </p>
+        <p className="text-gray-500">
+          We'll contact you shortly for delivery confirmation.
+        </p>
         <div className="flex gap-4 justify-center">
-          <Link href="/shop" className="bg-near-black text-white px-6 py-2 text-sm hover:bg-gold transition rounded">Continue Shopping</Link>
-          <Link href="/profile" className="border border-near-black px-6 py-2 text-sm hover:bg-near-black hover:text-white transition rounded">View Orders</Link>
+          <Link
+            href="/shop"
+            className="bg-near-black text-white px-6 py-2 text-sm hover:bg-gold transition rounded"
+          >
+            Continue Shopping
+          </Link>
+          <Link
+            href="/profile"
+            className="border border-near-black px-6 py-2 text-sm hover:bg-near-black hover:text-white transition rounded"
+          >
+            View Orders
+          </Link>
         </div>
       </div>
     );
@@ -265,16 +331,21 @@ export default function CheckoutPage() {
     return (
       <div className="text-center py-32">
         <h2 className="text-xl">No items to checkout</h2>
-        <Link href="/shop" className="text-gold underline">Go to Shop</Link>
+        <Link href="/shop" className="text-gold underline">
+          Go to Shop
+        </Link>
       </div>
     );
   }
 
-  const RECAPTCHA_SITE_KEY = "6Lfr4ActAAAAAMH7eumd7twNYfKopUrlfWZRzT7t"
+  const RECAPTCHA_SITE_KEY = "6Lfr4ActAAAAAMH7eumd7twNYfKopUrlfWZRzT7t";
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 pt-24 lg:pt-6">
-      <SEO title="Secure Checkout" description="Complete your order with Cash on Delivery" />
+      <SEO
+        title="Secure Checkout"
+        description="Complete your order with Cash on Delivery"
+      />
 
       {/* Warning Banner */}
       {showWarning && validationError && (
@@ -284,7 +355,9 @@ export default function CheckoutPage() {
             <p className="text-sm font-medium">Please check your details</p>
             <p className="text-xs">{validationError}</p>
           </div>
-          <button onClick={() => setShowWarning(false)} className="ml-auto"><X className="w-4 h-4" /></button>
+          <button onClick={() => setShowWarning(false)} className="ml-auto">
+            <X className="w-4 h-4" />
+          </button>
         </div>
       )}
 
@@ -294,8 +367,13 @@ export default function CheckoutPage() {
           <div className="flex items-center gap-3">
             <ShieldCheck className="w-5 h-5 text-amber-600" />
             <div>
-              <p className="text-sm font-bold text-amber-800">Security Verification Required</p>
-              <p className="text-xs text-amber-700">You've placed {orderCount} orders. Please complete the verification below to continue.</p>
+              <p className="text-sm font-bold text-amber-800">
+                Security Verification Required
+              </p>
+              <p className="text-xs text-amber-700">
+                You've placed {orderCount} orders. Please complete the
+                verification below to continue.
+              </p>
             </div>
           </div>
         </div>
@@ -306,7 +384,9 @@ export default function CheckoutPage() {
         <div className="flex-1">
           <div className="flex justify-between items-center border-b pb-4 mb-6">
             <h1 className="text-2xl font-display">Shipping Details</h1>
-            <Link href="/cart" className="text-sm text-walnut hover:text-gold">← Return to Cart</Link>
+            <Link href="/cart" className="text-sm text-walnut hover:text-gold">
+              ← Return to Cart
+            </Link>
           </div>
 
           {validationError && !showWarning && (
@@ -320,98 +400,207 @@ export default function CheckoutPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Full Name */}
               <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">Full Name <span className="text-red-500">*</span></label>
+                <label className="text-xs font-bold uppercase text-walnut block mb-1">
+                  Full Name <span className="text-red-500">*</span>
+                </label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input name="fullName" required value={formData.fullName} onChange={handleChange} className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded" placeholder="John Doe" />
+                  <input
+                    name="fullName"
+                    required
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
+                    placeholder="John Doe"
+                  />
                 </div>
               </div>
 
               {/* Email */}
               <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">Email Address <span className="text-red-500">*</span></label>
+                <label className="text-xs font-bold uppercase text-walnut block mb-1">
+                  Email Address <span className="text-red-500">*</span>
+                </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input name="email" type="email" required value={formData.email} onChange={handleChange} className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded" placeholder="john@example.com" />
+                  <input
+                    name="email"
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
+                    placeholder="john@example.com"
+                  />
                 </div>
               </div>
 
               {/* Country */}
               <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">Country <span className="text-red-500">*</span></label>
-                <select name="country" value={formData.country} onChange={handleCountryChange} className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm rounded">
-                  {countryCodes.map((c) => <option key={c.country} value={c.country}>{c.country}</option>)}
+                <label className="text-xs font-bold uppercase text-walnut block mb-1">
+                  Country <span className="text-red-500">*</span>
+                </label>
+                <select
+                  name="country"
+                  value={formData.country}
+                  onChange={handleCountryChange}
+                  className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm rounded"
+                >
+                  {countryCodes.map((c) => (
+                    <option key={c.country} value={c.country}>
+                      {c.country}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               {/* Phone Number */}
               <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">Phone Number <span className="text-red-500">*</span></label>
+                <label className="text-xs font-bold uppercase text-walnut block mb-1">
+                  Phone Number <span className="text-red-500">*</span>
+                </label>
                 <div className="flex gap-2">
                   <div className="relative w-28">
                     <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <select value={selectedCountryCode.code} onChange={(e) => {
-                      const countryData = countryCodes.find(c => c.code === e.target.value);
-                      if (countryData) {
-                        setSelectedCountryCode(countryData);
-                        setFormData(prev => ({ ...prev, country: countryData.country }));
-                      }
-                    }} className="w-full bg-cream border border-warm-beige py-2 pl-9 pr-2 text-sm rounded">
-                      {countryCodes.map(c => <option key={c.code} value={c.code}>{c.code}</option>)}
+                    <select
+                      value={selectedCountryCode.code}
+                      onChange={(e) => {
+                        const countryData = countryCodes.find(
+                          (c) => c.code === e.target.value,
+                        );
+                        if (countryData) {
+                          setSelectedCountryCode(countryData);
+                          setFormData((prev) => ({
+                            ...prev,
+                            country: countryData.country,
+                          }));
+                        }
+                      }}
+                      className="w-full bg-cream border border-warm-beige py-2 pl-9 pr-2 text-sm rounded"
+                    >
+                      {countryCodes.map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {c.code}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="relative flex-1">
                     <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input name="phone" type="tel" required value={formData.phone} onChange={handleChange} placeholder={selectedCountryCode.example} className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded" />
+                    <input
+                      name="phone"
+                      type="tel"
+                      required
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder={selectedCountryCode.example}
+                      className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
+                    />
                   </div>
                 </div>
               </div>
 
               {/* Alternative Phone Number */}
               <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">Alternative Phone Number <span className="text-gray-400 text-[8px]">(Optional)</span></label>
+                <label className="text-xs font-bold uppercase text-walnut block mb-1">
+                  Alternative Phone Number{" "}
+                  <span className="text-gray-400 text-[8px]">(Optional)</span>
+                </label>
                 <div className="flex gap-2">
                   <div className="relative w-28">
                     <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <select value={selectedCountryCode.code} className="w-full bg-cream border border-warm-beige py-2 pl-9 pr-2 text-sm rounded">
-                      {countryCodes.map(c => <option key={c.code} value={c.code}>{c.code}</option>)}
+                    <select
+                      value={selectedCountryCode.code}
+                      className="w-full bg-cream border border-warm-beige py-2 pl-9 pr-2 text-sm rounded"
+                    >
+                      {countryCodes.map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {c.code}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="relative flex-1">
                     <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input name="alternativePhone" type="tel" value={formData.alternativePhone} onChange={handleChange} placeholder={selectedCountryCode.example} className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded" />
+                    <input
+                      name="alternativePhone"
+                      type="tel"
+                      value={formData.alternativePhone}
+                      onChange={handleChange}
+                      placeholder={selectedCountryCode.example}
+                      className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
+                    />
                   </div>
                 </div>
-                <p className="text-[8px] text-gray-400 mt-1">We'll use this if we can't reach you on your primary number</p>
+                <p className="text-[8px] text-gray-400 mt-1">
+                  We'll use this if we can't reach you on your primary number
+                </p>
               </div>
 
               {/* City */}
               <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">City <span className="text-red-500">*</span></label>
-                <input name="city" required value={formData.city} onChange={handleChange} className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded" placeholder="London" />
+                <label className="text-xs font-bold uppercase text-walnut block mb-1">
+                  City <span className="text-red-500">*</span>
+                </label>
+                <input
+                  name="city"
+                  required
+                  value={formData.city}
+                  onChange={handleChange}
+                  className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
+                  placeholder="London"
+                />
               </div>
 
               {/* Postal Code */}
               <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">Postal Code <span className="text-red-500">*</span></label>
-                <input name="postalCode" required value={formData.postalCode} onChange={handleChange} className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded" placeholder="SW1A 1AA" />
+                <label className="text-xs font-bold uppercase text-walnut block mb-1">
+                  Postal Code <span className="text-red-500">*</span>
+                </label>
+                <input
+                  name="postalCode"
+                  required
+                  value={formData.postalCode}
+                  onChange={handleChange}
+                  className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
+                  placeholder="SW1A 1AA"
+                />
               </div>
 
               {/* Address */}
               <div className="md:col-span-2">
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">Street Address <span className="text-red-500">*</span></label>
+                <label className="text-xs font-bold uppercase text-walnut block mb-1">
+                  Street Address <span className="text-red-500">*</span>
+                </label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-                  <textarea name="address" required rows={2} value={formData.address} onChange={handleChange} className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded" placeholder="123 Main Street, Apartment 4B" />
+                  <textarea
+                    name="address"
+                    required
+                    rows={2}
+                    value={formData.address}
+                    onChange={handleChange}
+                    className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
+                    placeholder="123 Main Street, Apartment 4B"
+                  />
                 </div>
               </div>
 
               {/* Notes */}
               <div className="md:col-span-2">
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">Order Notes (Optional)</label>
+                <label className="text-xs font-bold uppercase text-walnut block mb-1">
+                  Order Notes (Optional)
+                </label>
                 <div className="relative">
                   <MessageSquare className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-                  <textarea name="notes" rows={3} value={formData.notes} onChange={handleChange} placeholder="E.g., Gate code, floor number, special instructions..." className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded" />
+                  <textarea
+                    name="notes"
+                    rows={3}
+                    value={formData.notes}
+                    onChange={handleChange}
+                    placeholder="E.g., Gate code, floor number, special instructions..."
+                    className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
+                  />
                 </div>
               </div>
             </div>
@@ -443,7 +632,9 @@ export default function CheckoutPage() {
               ) : orderCount === 1 ? (
                 <p>⚠️ Next order will require security verification.</p>
               ) : (
-                <p className="text-amber-600">✓ Security verification completed for this order</p>
+                <p className="text-amber-600">
+                  ✓ Security verification completed for this order
+                </p>
               )}
             </div>
 
@@ -451,13 +642,24 @@ export default function CheckoutPage() {
             <div className="bg-mint-50 border border-mint-200 p-4 rounded-lg">
               <div className="flex items-center gap-3 mb-3">
                 <CreditCard className="w-5 h-5 text-mint-700" />
-                <span className="font-bold text-near-black">Cash Upon Delivery</span>
+                <span className="font-bold text-near-black">
+                  Cash Upon Delivery
+                </span>
               </div>
-              <p className="text-sm text-gray-600 mb-3">Pay only when your furniture arrives at your doorstep. No advance payment required.</p>
+              <p className="text-sm text-gray-600 mb-3">
+                Pay only when your furniture arrives at your doorstep. No
+                advance payment required.
+              </p>
               <div className="flex flex-wrap gap-4 text-xs text-gray-500">
-                <span className="flex items-center gap-1">✓ Inspect before payment</span>
-                <span className="flex items-center gap-1">✓ No hidden charges</span>
-                <span className="flex items-center gap-1">✓ Secure delivery</span>
+                <span className="flex items-center gap-1">
+                  ✓ Inspect before payment
+                </span>
+                <span className="flex items-center gap-1">
+                  ✓ No hidden charges
+                </span>
+                <span className="flex items-center gap-1">
+                  ✓ Secure delivery
+                </span>
               </div>
             </div>
 
@@ -466,7 +668,11 @@ export default function CheckoutPage() {
               disabled={loading || (requireCaptcha && !captchaVerified)}
               className="w-full bg-near-black text-white py-3 text-sm font-bold uppercase tracking-wider hover:bg-gold transition rounded disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Processing..." : (requireCaptcha && !captchaVerified ? "Complete Verification First" : "Review Order")}
+              {loading
+                ? "Processing..."
+                : requireCaptcha && !captchaVerified
+                  ? "Complete Verification First"
+                  : "Review Order"}
             </button>
           </form>
         </div>
@@ -480,26 +686,52 @@ export default function CheckoutPage() {
                 <div key={item.id} className="border-b border-warm-beige pb-4">
                   <div className="flex gap-3">
                     <div className="w-16 h-16 bg-white border rounded overflow-hidden">
-                      <img src={item.images[0]} alt={item.title} className="w-full h-full object-cover" />
+                      <img
+                        src={item.images[0]}
+                        alt={item.title}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <div className="flex-1">
                       <h4 className="text-sm font-medium">{item.title}</h4>
-                      <p className="text-xs text-gray-500">QTY: {item.quantity}</p>
-                      <p className="text-sm font-bold">{formatCurrency(item.price * item.quantity)}</p>
+                      <p className="text-xs text-gray-500">
+                        QTY: {item.quantity}
+                      </p>
+                      <p className="text-sm font-bold">
+                        {formatCurrency(item.price * item.quantity)}
+                      </p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
             <div className="border-t pt-3 mt-3 space-y-2">
-              <div className="flex justify-between text-sm"><span>Subtotal</span><span>{formatCurrency(subtotal)}</span></div>
-              <div className="flex justify-between text-sm"><span>Delivery</span><span className="text-mint-700 font-bold">FREE</span></div>
-              <div className="border-t pt-2 flex justify-between font-bold text-lg"><span>Total</span><span className="text-walnut">{formatCurrency(subtotal)}</span></div>
+              <div className="flex justify-between text-sm">
+                <span>Subtotal</span>
+                <span>{formatCurrency(subtotal)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Delivery</span>
+                <span className="text-mint-700 font-bold">FREE</span>
+              </div>
+              <div className="border-t pt-2 flex justify-between font-bold text-lg">
+                <span>Total</span>
+                <span className="text-walnut">{formatCurrency(subtotal)}</span>
+              </div>
             </div>
             <div className="mt-4 pt-3 border-t space-y-2">
-              <div className="flex items-center gap-2 text-xs text-gray-600"><Truck className="w-4 h-4 text-mint-700" /><span>Free delivery within 1-3 days (UK)</span></div>
-              <div className="flex items-center gap-2 text-xs text-gray-600"><ShieldCheck className="w-4 h-4 text-mint-700" /><span>14-day returns policy</span></div>
-              <div className="flex items-center gap-2 text-xs text-gray-600"><ShoppingBag className="w-4 h-4 text-mint-700" /><span>White glove placement included</span></div>
+              <div className="flex items-center gap-2 text-xs text-gray-600">
+                <Truck className="w-4 h-4 text-mint-700" />
+                <span>Free delivery within 1-3 days (UK)</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-600">
+                <ShieldCheck className="w-4 h-4 text-mint-700" />
+                <span>14-day returns policy</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-600">
+                <ShoppingBag className="w-4 h-4 text-mint-700" />
+                <span>White glove placement included</span>
+              </div>
             </div>
           </div>
         </aside>
@@ -508,23 +740,49 @@ export default function CheckoutPage() {
       {/* Confirmation Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setShowConfirmModal(false)} />
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowConfirmModal(false)}
+          />
           <div className="bg-white max-w-md w-full rounded-lg overflow-hidden relative z-10">
             <div className="p-5 border-b flex justify-between items-center">
               <h3 className="text-lg font-display">Confirm Order</h3>
-              <button onClick={() => setShowConfirmModal(false)}><X className="w-5 h-5" /></button>
+              <button onClick={() => setShowConfirmModal(false)}>
+                <X className="w-5 h-5" />
+              </button>
             </div>
             <div className="p-5 space-y-4 max-h-[60vh] overflow-y-auto">
-              <div><h4 className="text-xs font-bold uppercase text-walnut mb-2">Delivery Details</h4>
-                <p className="text-sm"><strong>Name:</strong> {formData.fullName}</p>
-                <p className="text-sm"><strong>Phone:</strong> {selectedCountryCode.code} {formData.phone}</p>
-                {formData.alternativePhone && <p className="text-sm"><strong>Alt Phone:</strong> {selectedCountryCode.code} {formData.alternativePhone}</p>}
-                <p className="text-sm"><strong>Address:</strong> {formData.address}, {formData.city}, {formData.postalCode}, {formData.country}</p>
+              <div>
+                <h4 className="text-xs font-bold uppercase text-walnut mb-2">
+                  Delivery Details
+                </h4>
+                <p className="text-sm">
+                  <strong>Name:</strong> {formData.fullName}
+                </p>
+                <p className="text-sm">
+                  <strong>Phone:</strong> {selectedCountryCode.code}{" "}
+                  {formData.phone}
+                </p>
+                {formData.alternativePhone && (
+                  <p className="text-sm">
+                    <strong>Alt Phone:</strong> {selectedCountryCode.code}{" "}
+                    {formData.alternativePhone}
+                  </p>
+                )}
+                <p className="text-sm">
+                  <strong>Address:</strong> {formData.address}, {formData.city},{" "}
+                  {formData.postalCode}, {formData.country}
+                </p>
               </div>
-              <div><h4 className="text-xs font-bold uppercase text-walnut mb-2">Order Summary</h4>
+              <div>
+                <h4 className="text-xs font-bold uppercase text-walnut mb-2">
+                  Order Summary
+                </h4>
                 {cart.map((item, idx) => (
                   <div key={idx} className="flex justify-between text-sm mb-1">
-                    <span>{item.title} x{item.quantity}</span>
+                    <span>
+                      {item.title} x{item.quantity}
+                    </span>
                     <span>{formatCurrency(item.price * item.quantity)}</span>
                   </div>
                 ))}
@@ -533,11 +791,24 @@ export default function CheckoutPage() {
                   <span>{formatCurrency(subtotal)}</span>
                 </div>
               </div>
-              <div className="bg-mint-50 p-3 rounded text-center text-sm text-mint-700">✓ Pay when your furniture arrives</div>
+              <div className="bg-mint-50 p-3 rounded text-center text-sm text-mint-700">
+                ✓ Pay when your furniture arrives
+              </div>
             </div>
             <div className="p-5 border-t flex gap-3">
-              <button onClick={() => setShowConfirmModal(false)} className="flex-1 border py-2 text-sm hover:bg-gray-50 rounded">Edit</button>
-              <button onClick={handleConfirmOrder} disabled={loading} className="flex-1 bg-near-black text-white py-2 text-sm hover:bg-gold transition rounded">Confirm Order</button>
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="flex-1 border py-2 text-sm hover:bg-gray-50 rounded"
+              >
+                Edit
+              </button>
+              <button
+                onClick={handleConfirmOrder}
+                disabled={loading}
+                className="flex-1 bg-near-black text-white py-2 text-sm hover:bg-gold transition rounded"
+              >
+                Confirm Order
+              </button>
             </div>
           </div>
         </div>

@@ -706,7 +706,7 @@ export default function ProductPage() {
           <button 
             onClick={() => {
               const message = encodeURIComponent(`Hi! I'm interested in customizing the ${product?.title || 'product'}. Can you help with special requirements?`);
-              window.open(`https://wa.me/447123456789?text=${message}`, '_blank');
+              window.open(`https://wa.me/447529661726?text=${message}`, '_blank');
             }}
             className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366] text-white rounded-lg text-[11px] font-bold uppercase tracking-widest hover:bg-[#128C7E] transition-all duration-300"
           >

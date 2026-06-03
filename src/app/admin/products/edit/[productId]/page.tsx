@@ -336,7 +336,7 @@ export default function AdminProductForm() {
           alert(`${file.name} is not an image file. Skipping.`);
           continue;
         }
-        if (file.size > 500 * 1024) {
+        if (file.size > 500 * 1024 * 2) {
           alert(`${file.name} is larger than 500KB. Please compress it first.`);
           continue;
         }

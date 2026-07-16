@@ -38,7 +38,7 @@ export function Footer() {
           <div className="space-y-6">
             <Link href="/" className="flex items-center">
               <h2 className="text-2xl font-bold tracking-tighter text-near-black">
-                Zovallo<span className="text-gold">.</span>
+                Royal Furniture<span className="text-gold">.</span>
               </h2>
             </Link>
             <p className="text-[13px] text-gray-666 leading-relaxed max-w-xs font-light">
@@ -163,7 +163,7 @@ export function Footer() {
           </div>
 
           <p className="text-[10px] text-gray-a0 font-bold uppercase tracking-[0.15em]">
-            © {new Date().getFullYear()} Zovallo FURNITURE LTD
+            © {new Date().getFullYear()} Royal Furniture FURNITURE LTD
           </p>
         </div>
       </div>

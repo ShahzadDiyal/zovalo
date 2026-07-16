@@ -301,7 +301,7 @@ function ProfileContent() {
         </style>
       </head>
       <body>
-        <div class="header"><div class="logo">Zovallo<span>.</span></div><div>TAX INVOICE</div></div>
+        <div class="header"><div class="logo">Royal Furniture<span>.</span></div><div>TAX INVOICE</div></div>
         <div class="info-section">
           <div class="info-box"><h3>ORDER DETAILS</h3><p><strong>Order #:</strong> ${selectedOrder.id.slice(-8).toUpperCase()}</p><p><strong>Date:</strong> ${selectedOrder.createdAt?.toDate().toLocaleDateString()}</p><p><strong>Status:</strong> ${selectedOrder.orderStatus}</p></div>
           <div class="info-box"><h3>CUSTOMER</h3><p><strong>${selectedOrder.customerInfo.fullName}</strong></p><p>${selectedOrder.customerInfo.email}</p><p>${selectedOrder.customerInfo.phone}</p></div>
@@ -311,7 +311,7 @@ function ProfileContent() {
           ${selectedOrder.products.map((p) => `<tr><td><img src="${p.image}" class="product-img" onerror="this.style.display='none'" /></td><td><strong>${p.title}</strong></td><td>${p.quantity}</td><td>${formatCurrency(p.price)}</td><td>${formatCurrency(p.price * p.quantity)}</td></tr>`).join("")}
         </tbody></table>
         <div class="totals"><p><strong>Subtotal:</strong> ${formatCurrency(selectedOrder.totalPrice)}</p><p><strong>Delivery:</strong> FREE</p><div class="grand-total"><strong>GRAND TOTAL:</strong> ${formatCurrency(selectedOrder.totalPrice)}</div></div>
-        <div class="footer"><p>Payment: Cash on Delivery | Thank you for shopping with Zovallo!</p></div>
+        <div class="footer"><p>Payment: Cash on Delivery | Thank you for shopping with Royal Furniture!</p></div>
       </body>
       </html>
     `;

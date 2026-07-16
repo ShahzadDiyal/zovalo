@@ -46,7 +46,7 @@ function LoginForm() {
       const userData = userDoc.data();
       const isAdmin =
         userData?.role === "admin" ||
-        email === "admin@zovallo.com" ||
+        email === "admin@Royal Furniture.com" ||
         email.toLowerCase().startsWith("admin");
 
       // Redirect based on role
@@ -76,7 +76,7 @@ function LoginForm() {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-cream/20">
       <SEO
         title="Sign In"
-        description="Access your Zovallo account to manage your orders and curated furniture collection."
+        description="Access your Royal Furniture account to manage your orders and curated furniture collection."
       />
       <div className="max-w-md w-full space-y-8 bg-white border border-warm-beige p-6 sm:p-8 md:p-12 shadow-sm rounded-sm">
         <div className="text-center space-y-2">

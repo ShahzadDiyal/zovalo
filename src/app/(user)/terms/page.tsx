@@ -14,8 +14,8 @@ const TermsConditions = () => {
   return (
     <>
       <SEO
-        title="Terms & Conditions | LUXWOOD Furniture"
-        description="Read our terms and conditions for purchasing premium furniture. Learn about our policies on orders, payments, and customer obligations at LUXWOOD."
+        title="Terms & Conditions | Royal Furniture"
+        description="Read our terms and conditions for purchasing premium furniture. Learn about our policies on orders, payments, and customer obligations at royalfurniture."
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
         {/* Header */}
@@ -44,10 +44,10 @@ const TermsConditions = () => {
               </h2>
             </div>
             <p className="text-gray-666 leading-relaxed">
-              Welcome to LUXWOOD. By accessing or using our website and
+              Welcome to royalfurniture. By accessing or using our website and
               purchasing our premium furniture products, you agree to be bound
               by these Terms & Conditions. Please read them carefully before
-              placing any order. LUXWOOD reserves the right to modify these
+              placing any order. Royal Furniture reserves the right to modify these
               terms at any time without prior notice.
             </p>
           </section>
@@ -69,7 +69,7 @@ const TermsConditions = () => {
                 confirmation with your order details.
               </p>
               <p>
-                • LUXWOOD reserves the right to limit quantities purchased per
+                • Royal Furniture reserves the right to limit quantities purchased per
                 customer.
               </p>
             </div>
@@ -174,7 +174,7 @@ const TermsConditions = () => {
                 will fit through doorways and into your desired space.
               </p>
               <p>
-                • You must be at least 18 years old to purchase from LUXWOOD.
+                • You must be at least 18 years old to purchase from royalfurniture.
               </p>
               <p>
                 • You agree not to use our website for any unlawful purpose.
@@ -206,7 +206,7 @@ const TermsConditions = () => {
               8. Limitation of Liability
             </h2>
             <p className="text-gray-666 leading-relaxed">
-              LUXWOOD shall not be liable for any indirect, incidental, or
+              Royal Furniture shall not be liable for any indirect, incidental, or
               consequential damages arising from the use of our products or
               website. Our total liability shall not exceed the purchase price
               of the product you purchased.
@@ -226,10 +226,10 @@ const TermsConditions = () => {
               contact us:
             </p>
             <div className="space-y-1 text-sm text-gray-666">
-              <p>📧 Email: support@luxwood.com</p>
-              <p>📞 Phone: +44 20 1234 5678</p>
+              <p>📧 Email: support@royalfurniture.com</p>
+              <p>📞 Phone: +44 7526 661726</p>
               <p>
-                📍 Address: LUXWOOD Furniture, 123 Design Street, London, UK,
+                📍 Address: Royal Furniture, 123 Design Street, London, UK,
                 SW1A 1AA
               </p>
             </div>

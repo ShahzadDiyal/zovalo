@@ -78,7 +78,7 @@ const ContactUs = () => {
   return (
     <>
       <SEO
-        title="Contact Us | Get in Touch with LUXWOOD Furniture"
+        title="Contact Us | Get in Touch with Royal Furniture"
         description="Have questions about our furniture collections, delivery, or returns? Contact our customer support team. We're here to help you create your perfect home."
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
@@ -110,7 +110,7 @@ const ContactUs = () => {
                       Visit Us
                     </h3>
                     <p className="text-gray-666 text-sm">
-                      LUXWOOD Furniture, 123 Design Street,
+                      Royal Furniture, 123 Design Street,
                       <br />
                       London, United Kingdom, SW1A 1AA
                     </p>
@@ -123,7 +123,7 @@ const ContactUs = () => {
                     <h3 className="font-bold text-near-black text-sm">
                       Call Us
                     </h3>
-                    <p className="text-gray-666 text-sm">+44 20 1234 5678</p>
+                    <p className="text-gray-666 text-sm">+44 7526 661726</p>
                     <p className="text-gray-500 text-xs">
                       Mon-Fri, 9 AM - 6 PM GMT
                     </p>
@@ -136,9 +136,9 @@ const ContactUs = () => {
                     <h3 className="font-bold text-near-black text-sm">
                       Email Us
                     </h3>
-                    <p className="text-gray-666 text-sm">support@luxwood.com</p>
+                    <p className="text-gray-666 text-sm">support@royalfurniture.com</p>
                     <p className="text-gray-500 text-xs">
-                      Sales: sales@luxwood.com
+                      Sales: sales@royalfurniture.com
                     </p>
                   </div>
                 </div>

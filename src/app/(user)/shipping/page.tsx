@@ -14,7 +14,7 @@ const ShippingPolicy = () => {
   return (
     <>
       <SEO
-        title="Shipping Policy | Free UK Delivery | LUXWOOD Furniture"
+        title="Shipping Policy | Free UK Delivery | Royal Furniture"
         description="Fast and reliable furniture delivery across UK, Europe, and Canada. Free UK delivery on all orders. Cash on Delivery available. Track your order in real-time."
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
@@ -177,9 +177,9 @@ const ShippingPolicy = () => {
             <div className="bg-cream/30 p-4 rounded-lg text-center">
               <p className="text-sm text-gray-500">
                 Questions about your delivery? Contact our support team at{" "}
-                <strong className="text-near-black">support@luxwood.com</strong>{" "}
+                <strong className="text-near-black">support@royalfurniture.com</strong>{" "}
                 or call{" "}
-                <strong className="text-near-black">+44 20 1234 5678</strong>
+                <strong className="text-near-black">+44 7526 661726</strong>
               </p>
             </div>
           </section>

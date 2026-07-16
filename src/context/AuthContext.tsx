@@ -27,9 +27,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Function to check if email is admin
   const checkIsAdmin = (email: string | null | undefined): boolean => {
     if (!email) return false;
-    // Check if email is exactly admin@zovallo.com OR starts with admin
+    // Check if email is exactly admin@Royal Furniture.com OR starts with admin
     return (
-      email === "admin@zovallo.com" || email.toLowerCase().startsWith("admin")
+      email === "admin@Royal Furniture.com" || email.toLowerCase().startsWith("admin")
     );
   };
 

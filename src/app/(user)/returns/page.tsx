@@ -14,7 +14,7 @@ const ReturnPolicy = () => {
   return (
     <>
       <SEO
-        title="Return Policy | 14-Day Free Returns | LUXWOOD Furniture"
+        title="Return Policy | 14-Day Free Returns | Royal Furniture"
         description="Hassle-free returns within 14 days. Free returns for defective items. Cash on Delivery orders can be returned easily. Customer satisfaction guaranteed."
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
@@ -83,7 +83,7 @@ const ReturnPolicy = () => {
                     Contact Our Support Team
                   </h3>
                   <p className="text-gray-666 text-sm">
-                    Email us at returns@luxwood.com or call +44 20 1234 5678
+                    Email us at returns@royalfurniture.com or call +44 7526 661726
                     within 14 days of delivery.
                   </p>
                 </div>
@@ -186,7 +186,7 @@ const ReturnPolicy = () => {
               <li>
                 Document the damage with photos within 48 hours of delivery
               </li>
-              <li>Contact us immediately at support@luxwood.com</li>
+              <li>Contact us immediately at support@royalfurniture.com</li>
               <li>We will arrange a free replacement or full refund</li>
               <li>No return shipping costs for defective items</li>
             </ul>
@@ -202,8 +202,8 @@ const ReturnPolicy = () => {
               return-related questions.
             </p>
             <div className="space-y-1 text-sm text-gray-666">
-              <p>📧 Email: returns@luxwood.com</p>
-              <p>📞 Phone: +44 20 1234 5678</p>
+              <p>📧 Email: returns@royalfurniture.com</p>
+              <p>📞 Phone: +44 7526 661726</p>
               <p>⏰ Hours: Monday-Friday, 9 AM - 6 PM GMT</p>
             </div>
           </section>

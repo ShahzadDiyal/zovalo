@@ -68,7 +68,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               href="/"
               className="text-xl font-display tracking-tighter hover:text-gold transition-colors"
             >
-              Zovallo{" "}
+              Royal Furniture{" "}
               <span className="text-[10px] tracking-widest font-sans font-bold bg-gold px-2 py-0.5 rounded ml-2">
                 ADMIN
               </span>

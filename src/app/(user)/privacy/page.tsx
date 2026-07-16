@@ -16,8 +16,8 @@ const PrivacyPolicy = () => {
   return (
     <>
       <SEO
-        title="Privacy Policy | Your Data Security | LUXWOOD Furniture"
-        description="We value your privacy. Learn how LUXWOOD collects, uses, and protects your personal information. Secure checkout and data protection guaranteed."
+        title="Privacy Policy | Your Data Security | Royal Furniture"
+        description="We value your privacy. Learn how Royal Furniture collects, uses, and protects your personal information. Secure checkout and data protection guaranteed."
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
         {/* Header */}
@@ -41,7 +41,7 @@ const PrivacyPolicy = () => {
               </h2>
             </div>
             <p className="text-gray-666 leading-relaxed">
-              At LUXWOOD, we are committed to protecting your personal
+              At Royal Furniture, we are committed to protecting your personal
               information and your right to privacy. This Privacy Policy
               explains how we collect, use, disclose, and safeguard your
               information when you visit our website or make a purchase.
@@ -204,9 +204,9 @@ const PrivacyPolicy = () => {
               exercise your privacy rights:
             </p>
             <div className="space-y-1 text-sm text-gray-666">
-              <p>📧 Email: privacy@luxwood.com</p>
-              <p>📞 Phone: +44 20 1234 5678</p>
-              <p>📍 Data Protection Officer: dpo@luxwood.com</p>
+              <p>📧 Email: privacy@royalfurniture.com</p>
+              <p>📞 Phone: +44 7526 661726</p>
+              <p>📍 Data Protection Officer: dpo@royalfurniture.com</p>
             </div>
           </section>
         </div>

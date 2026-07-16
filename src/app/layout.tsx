@@ -4,7 +4,7 @@ import { AuthProvider } from "../context/AuthContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Zovallo - Premium Furniture",
+  title: "Royal Furniture - Premium Furniture",
   description: "Discover our masterfully crafted furniture collection",
 };
 

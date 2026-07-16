@@ -81,14 +81,14 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
           <div className="text-center mb-8 md:mb-12">
             <div className="inline-flex items-center gap-2 bg-gold/10 px-4 py-2 rounded-full mb-4">
               <Sparkles className="w-4 h-4 text-gold animate-pulse" />
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-gold">Welcome to Zovallo</span>
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-gold">Welcome to Royal Furniture</span>
               <Sparkles className="w-4 h-4 text-gold animate-pulse" />
             </div>
             
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-display text-near-black mb-3">
               Welcome to{' '}
               <span className="text-gold relative inline-block">
-                Zovallo
+                Royal Furniture
                 <svg className="absolute -bottom-2 left-0 w-full" height="4" viewBox="0 0 100 4" fill="none">
                   <path d="M0 2 L100 2" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeDasharray="6 6"/>
                 </svg>

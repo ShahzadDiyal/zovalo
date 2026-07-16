@@ -220,7 +220,7 @@ export function Navbar() {
         <div className="flex-shrink-0">
           <Link href="/" className="flex items-center">
             <h1 className="text-xl sm:text-2xl font-bold tracking-tighter text-near-black">
-              Zovallo<span className="text-gold">.</span>
+              Royal Furniture<span className="text-gold">.</span>
             </h1>
           </Link>
         </div>

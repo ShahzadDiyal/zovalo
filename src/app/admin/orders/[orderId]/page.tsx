@@ -100,7 +100,7 @@ export default function AdminOrderDetail() {
       </head>
       <body>
         <div class="header">
-          <div class="logo">ZOVALLO<span>.</span></div>
+          <div class="logo">Royal Furniture<span>.</span></div>
           <h2>TAX INVOICE</h2>
         </div>
         <div class="info-section">
@@ -153,7 +153,7 @@ export default function AdminOrderDetail() {
           <div class="grand-total"><strong>GRAND TOTAL:</strong> ${formatCurrency(order.totalPrice)}</div>
         </div>
         <div class="footer">
-          <p>Payment: Cash on Delivery | Thank you for shopping with ZOVALLO!</p>
+          <p>Payment: Cash on Delivery | Thank you for shopping with Royal Furniture!</p>
         </div>
       </body>
       </html>

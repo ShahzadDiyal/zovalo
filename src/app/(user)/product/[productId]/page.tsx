@@ -247,7 +247,7 @@ export default function ProductPage() {
   const handleShare = async () => {
     const shareUrl = window.location.href;
     const shareTitle = product?.title;
-    const shareText = `Check out ${product?.title} at Zovallo!`;
+    const shareText = `Check out ${product?.title} at Royal Furniture!`;
 
     if (navigator.share) {
       try {
@@ -720,7 +720,7 @@ export default function ProductPage() {
             onClick={() => {
               const subject = encodeURIComponent(`Custom Order Request: ${product?.title || 'Product'}`);
               const body = encodeURIComponent(`Hi Team,\n\nI'm interested in customizing the product:\n\nProduct: ${product?.title}\n\nMy requirements:\n- Color: \n- Seater: \n- Other specifications:\n\nPlease let me know if this is possible.\n\nThank you!`);
-              window.location.href = `mailto:support@zovallo.com?subject=${subject}&body=${body}`;
+              window.location.href = `mailto:support@Royal Furniture.com?subject=${subject}&body=${body}`;
             }}
             className="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg text-[11px] font-bold uppercase tracking-widest hover:bg-gray-700 transition-all duration-300"
           >

@@ -163,7 +163,7 @@ export function Footer() {
           </div>
 
           <p className="text-[10px] text-gray-a0 font-bold uppercase tracking-[0.15em]">
-            © {new Date().getFullYear()} Royal Furniture FURNITURE LTD
+            © {new Date().getFullYear()} Royal FurnitureFURNITURE LTD
           </p>
         </div>
       </div>

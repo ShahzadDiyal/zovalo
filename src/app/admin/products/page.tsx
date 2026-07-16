@@ -113,7 +113,7 @@ export default function AdminProducts() {
     });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
-    const fileName = `Royal Furniture_products_${new Date().toISOString().split("T")[0]}.csv`;
+    const fileName = `Zovallo_products_${new Date().toISOString().split("T")[0]}.csv`;
 
     link.setAttribute("href", url);
     link.setAttribute("download", fileName);

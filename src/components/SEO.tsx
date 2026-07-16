@@ -8,9 +8,9 @@ interface SEOProps {
 }
 
 export function SEO({ title, description, image, url }: SEOProps) {
-  const siteTitle = `${title} | Royal Furniture Furniture`;
-  const siteUrl = url || "https://Royal Furniture.com";
-  const siteImage = image || "https://Royal Furniture.com/og-image.jpg";
+  const siteTitle = `${title} | Royal FurnitureFurniture`;
+  const siteUrl = url || "https://zovallo.com";
+  const siteImage = image || "https://zovallo.com/og-image.jpg";
 
   return (
     <Head>

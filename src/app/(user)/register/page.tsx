@@ -28,7 +28,7 @@ function RegisterForm() {
   // Check if email is admin
   const isAdminEmail = (email: string): boolean => {
     return (
-      email === "admin@Royal Furniture.com" || email.toLowerCase().startsWith("admin")
+      email === "admin@zovallo.com" || email.toLowerCase().startsWith("admin")
     );
   };
 
@@ -94,7 +94,7 @@ function RegisterForm() {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-cream/20">
       <SEO
         title="Create Account"
-        description="Join the Royal Furniture community to manage your curated furniture orders and preferences."
+        description="Join the Royal Furniturecommunity to manage your curated furniture orders and preferences."
       />
       <div className="max-w-md w-full space-y-8 bg-white border border-warm-beige p-6 sm:p-8 md:p-12 shadow-sm rounded-sm">
         <div className="text-center space-y-2">

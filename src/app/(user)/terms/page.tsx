@@ -44,7 +44,7 @@ const TermsConditions = () => {
               </h2>
             </div>
             <p className="text-gray-666 leading-relaxed">
-              Welcome to royalfurniture. By accessing or using our website and
+              Welcome to Royal Furniture. By accessing or using our website and
               purchasing our premium furniture products, you agree to be bound
               by these Terms & Conditions. Please read them carefully before
               placing any order. Royal Furniture reserves the right to modify these

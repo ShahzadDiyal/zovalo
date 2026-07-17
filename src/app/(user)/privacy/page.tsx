@@ -204,9 +204,9 @@ const PrivacyPolicy = () => {
               exercise your privacy rights:
             </p>
             <div className="space-y-1 text-sm text-gray-666">
-              <p>📧 Email: privacy@royalfurniture.com</p>
-              <p>📞 Phone: +44 7526 661726</p>
-              <p>📍 Data Protection Officer: dpo@royalfurniture.com</p>
+              <p>📧 Email: sales@royalfurnitures.store</p>
+              <p>📞 Phone: +44 7529 661726</p>
+              {/* <p>📍 Data Protection Officer: dpo@royalfurniture.com</p> */}
             </div>
           </section>
         </div>

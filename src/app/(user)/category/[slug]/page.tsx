@@ -282,7 +282,7 @@ export default function CategoryPage() {
   const categoryNames = ["All", ...categories.map((c) => c.name)];
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8 sm:py-10 md:py-12 space-y-6 sm:space-y-8 pt-24">
+    <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8 sm:py-10 md:py-12 space-y-6 sm:space-y-8 pt-10 md:pt-18">
       <SEO
         title={categoryName || "Category"}
         description={`Explore our ${categoryName?.toLowerCase() || ""} collection. Premium furniture designed for comfort and crafted to last.`}
@@ -479,7 +479,7 @@ export default function CategoryPage() {
         {/* Main Content */}
         <div className="flex-1 min-w-0 space-y-6 md:space-y-8">
           {/* Controls Bar */}
-          <div className="flex flex-col xs:flex-row justify-between items-center bg-white border-y border-warm-beige py-3 sm:py-4 px-3 sm:px-4 gap-3 sm:gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-center bg-white border border-warm-beige py-3 sm:py-4 px-3 sm:px-4 gap-3 sm:gap-4">
             <div className="flex items-center gap-3 sm:gap-4 w-full xs:w-auto justify-between xs:justify-start">
               <button
                 onClick={() => setShowMobileFilters(true)}
@@ -504,7 +504,7 @@ export default function CategoryPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-cream border border-warm-beige px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-near-black outline-none focus:border-gold cursor-pointer rounded"
+                className="bg-cream border border-warm-beige px-3 sm:px-4 py-1.5 sm:py-2  w-full md:w-fit text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-near-black outline-none focus:border-gold cursor-pointer rounded"
               >
                 <option value="latest">Latest Arrivals</option>
                 <option value="low-to-high">Price: Low to High</option>

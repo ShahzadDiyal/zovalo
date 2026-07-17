@@ -303,7 +303,7 @@ function ShopContent() {
   const categoryNames = ["All", ...categories.map((c) => c.name)];
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8 sm:py-10 md:py-12 space-y-6 sm:space-y-8 pt-24">
+    <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8 sm:py-10 md:py-12 space-y-6 sm:space-y-8 pt-10 md:pt-18">
       <SEO
         title={
           selectedCategory === "All" ? "Shop All" : `Shop ${selectedCategory}`
@@ -505,7 +505,7 @@ function ShopContent() {
         {/* Main Content */}
         <div className="flex-1 min-w-0 space-y-6 md:space-y-8">
           {/* Controls Bar */}
-          <div className="flex flex-col xs:flex-row justify-between items-center bg-white border-y border-warm-beige py-3 sm:py-4 px-3 sm:px-4 gap-3 sm:gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-center bg-white border border-warm-beige py-3 sm:py-4 px-3 sm:px-4 gap-3 sm:gap-4">
             <div className="flex items-center gap-3 sm:gap-4 w-full xs:w-auto justify-between xs:justify-start">
               <button
                 onClick={() => setShowMobileFilters(true)}
@@ -530,7 +530,7 @@ function ShopContent() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-cream border border-warm-beige px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-near-black outline-none focus:border-gold cursor-pointer rounded"
+                className="bg-cream border border-warm-beige px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-near-black outline-none focus:border-gold cursor-pointer rounded w-full md:w-fit"
               >
                 <option value="latest">Latest Arrivals</option>
                 <option value="low-to-high">Price: Low to High</option>
@@ -602,7 +602,7 @@ function ShopContent() {
               />
             </div>
           ) : (
-            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -618,7 +618,7 @@ function ShopContent() {
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setShowMobileFilters(false)}
           />
-          <div className="absolute inset-y-0 left-0 w-[85%] max-w-[320px] bg-white shadow-2xl p-5 sm:p-6 space-y-6 sm:space-y-8 overflow-y-auto animate-slide-in">
+          <div className="absolute inset-y-0 left-0 w-full bg-white shadow-2xl p-5 sm:p-6 space-y-6 sm:space-y-8 overflow-y-auto animate-slide-in">
             <div className="flex justify-between items-center border-b border-warm-beige pb-3 sm:pb-4">
               <h3 className="text-sm font-bold uppercase tracking-widest">
                 Filter & Sort

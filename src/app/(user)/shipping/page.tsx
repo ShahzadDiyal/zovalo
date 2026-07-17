@@ -80,7 +80,7 @@ const ShippingPolicy = () => {
                 International Delivery
               </h2>
             </div>
-            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center p-4 border border-warm-beige rounded-lg">
                 <p className="font-bold text-near-black">France</p>
                 <p className="text-sm text-gray-500">3-5 days</p>
@@ -177,8 +177,10 @@ const ShippingPolicy = () => {
             <div className="bg-cream/30 p-4 rounded-lg text-center">
               <p className="text-sm text-gray-500">
                 Questions about your delivery? Contact our support team at{" "}
-                <strong className="text-near-black">support@royalfurniture.com</strong>{" "}
-                or call{" "}
+                <strong className="text-near-black">
+                  sales@royalfurnitures.store
+                </strong>{" "}
+                <br /> or Whatsapp{" "}
                 <strong className="text-near-black">+44 7526 661726</strong>
               </p>
             </div>

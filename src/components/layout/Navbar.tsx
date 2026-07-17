@@ -200,14 +200,14 @@ export function Navbar() {
     <nav className="fixed top-0 w-full z-50 shadow-sm">
       {/* Header 01: Announcement Bar */}
       <div className="bg-amber-800 text-cream text-[10px] sm:text-[11px] py-2 text-center tracking-[0.15em] font-medium uppercase px-4 flex justify-center items-center gap-4 flex-wrap">
-        <span>
+        <p>
           Free Delivery Across UK | Cash On Delivery Available | Premium
           Furniture Collection
-        </span>
+        </p>
         {isAdmin && (
           <Link
             href="/admin"
-            className="bg-gold text-near-black px-2 py-0.5 rounded text-[9px] font-bold hover:bg-white transition-colors ml-4"
+            className="hidden md:block bg-gold text-near-black px-2 py-0.5 rounded text-[9px] font-bold hover:bg-white transition-colors ml-4"
           >
             GO TO ADMIN PANEL
           </Link>

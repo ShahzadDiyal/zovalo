@@ -36,7 +36,6 @@ const ContactUs = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Basic validation
     if (
       !formData.name.trim() ||
       !formData.email.trim() ||
@@ -56,7 +55,6 @@ const ContactUs = () => {
     setError("");
 
     try {
-      // Save message to Firebase - no authentication required
       await messageApi.createMessage({
         name: formData.name,
         email: formData.email,
@@ -110,9 +108,9 @@ const ContactUs = () => {
                       Visit Us
                     </h3>
                     <p className="text-gray-666 text-sm">
-                      Royal Furniture, 123 Design Street,
+                      Barton Aerodrome, Liverpool Rd, Eccles,
                       <br />
-                      London, United Kingdom, SW1A 1AA
+                      Manchester, United Kingdom, M30 7SA
                     </p>
                   </div>
                 </div>
@@ -121,12 +119,10 @@ const ContactUs = () => {
                   <Phone className="w-5 h-5 text-gold mt-0.5" />
                   <div>
                     <h3 className="font-bold text-near-black text-sm">
-                      Call Us
+                      Whatsapp
                     </h3>
-                    <p className="text-gray-666 text-sm">+44 7526 661726</p>
-                    <p className="text-gray-500 text-xs">
-                      Mon-Fri, 9 AM - 6 PM GMT
-                    </p>
+                    <p className="text-gray-666 text-sm">+44 7529 661726</p>
+                    {/* <p className="text-gray-500 text-xs">Always Open</p> */}
                   </div>
                 </div>
 
@@ -136,9 +132,8 @@ const ContactUs = () => {
                     <h3 className="font-bold text-near-black text-sm">
                       Email Us
                     </h3>
-                    <p className="text-gray-666 text-sm">support@royalfurniture.com</p>
-                    <p className="text-gray-500 text-xs">
-                      Sales: sales@royalfurniture.com
+                    <p className="text-gray-666 text-sm">
+                      sales@royalfurnitures.store
                     </p>
                   </div>
                 </div>
@@ -149,13 +144,10 @@ const ContactUs = () => {
                     <h3 className="font-bold text-near-black text-sm">
                       Business Hours
                     </h3>
-                    <p className="text-gray-666 text-sm">
-                      Monday - Friday: 9 AM - 6 PM
+                    <p className="text-gray-666 text-sm">Always Open</p>
+                    <p className="text-gray-500 text-xs">
+                      24/7 Customer Support
                     </p>
-                    <p className="text-gray-666 text-sm">
-                      Saturday: 10 AM - 4 PM
-                    </p>
-                    <p className="text-gray-666 text-sm">Sunday: Closed</p>
                   </div>
                 </div>
               </div>
@@ -164,26 +156,30 @@ const ContactUs = () => {
             {/* Social Media */}
             <div className="bg-white border border-warm-beige p-6 rounded-lg text-center">
               <h3 className="font-bold text-near-black mb-4">Follow Us</h3>
-              {/* <div className="flex justify-center gap-4">
+              <div className="flex justify-center gap-4">
                 <a
-                  href="#"
+                  href="https://www.facebook.com/profile.php?id=61591759840955"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="p-2 bg-cream rounded-full hover:bg-gold transition-colors group"
+                  aria-label="Follow us on Facebook"
                 >
-                  <Facebook className="w-5 h-5 text-walnut group-hover:text-white" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-walnut group-hover:text-white transition-colors"
+                  >
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                  </svg>
                 </a>
-                <a
-                  href="#"
-                  className="p-2 bg-cream rounded-full hover:bg-gold transition-colors group"
-                >
-                  <Instagram className="w-5 h-5 text-walnut group-hover:text-white" />
-                </a>
-                <a
-                  href="#"
-                  className="p-2 bg-cream rounded-full hover:bg-gold transition-colors group"
-                >
-                  <Twitter className="w-5 h-5 text-walnut group-hover:text-white" />
-                </a>
-              </div> */}
+              </div>
               <p className="text-xs text-gray-500 mt-4">
                 Stay updated with our latest collections and offers
               </p>
@@ -227,7 +223,7 @@ const ContactUs = () => {
                       value={formData.name}
                       onChange={handleChange}
                       className="w-full bg-cream border border-warm-beige py-2.5 px-4 text-sm focus:border-gold outline-none rounded"
-                      placeholder="John Doe"
+                      placeholder="Royal Furnitures"
                     />
                   </div>
                   <div>
@@ -241,7 +237,7 @@ const ContactUs = () => {
                       value={formData.email}
                       onChange={handleChange}
                       className="w-full bg-cream border border-warm-beige py-2.5 px-4 text-sm focus:border-gold outline-none rounded"
-                      placeholder="john@example.com"
+                      placeholder="george@gmail.com"
                     />
                   </div>
                 </div>

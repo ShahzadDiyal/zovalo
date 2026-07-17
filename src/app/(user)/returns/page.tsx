@@ -83,8 +83,8 @@ const ReturnPolicy = () => {
                     Contact Our Support Team
                   </h3>
                   <p className="text-gray-666 text-sm">
-                    Email us at returns@royalfurniture.com or call +44 7526 661726
-                    within 14 days of delivery.
+                    Email us at sales@royalfurnitures.store or call +44 7526
+                    661726 within 14 days of delivery.
                   </p>
                 </div>
               </div>
@@ -186,7 +186,7 @@ const ReturnPolicy = () => {
               <li>
                 Document the damage with photos within 48 hours of delivery
               </li>
-              <li>Contact us immediately at support@royalfurniture.com</li>
+              <li>Contact us immediately at sales@royalfurnitures.store</li>
               <li>We will arrange a free replacement or full refund</li>
               <li>No return shipping costs for defective items</li>
             </ul>
@@ -202,9 +202,9 @@ const ReturnPolicy = () => {
               return-related questions.
             </p>
             <div className="space-y-1 text-sm text-gray-666">
-              <p>📧 Email: returns@royalfurniture.com</p>
+              <p>📧 Email: sales@royalfurnitures.store</p>
               <p>📞 Phone: +44 7526 661726</p>
-              <p>⏰ Hours: Monday-Friday, 9 AM - 6 PM GMT</p>
+              <p>⏰ Hours: Always Open</p>
             </div>
           </section>
         </div>

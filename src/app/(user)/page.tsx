@@ -29,7 +29,7 @@ export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [email, setEmail] = useState("");
   const [newsletterSuccess, setNewsletterSuccess] = useState(false);
-const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   // Hero carousel slides
   const heroSlides = [
@@ -85,7 +85,7 @@ const [products, setProducts] = useState<Product[]>([]);
         categoryApi.getAllCategories(),
       ]);
 
-      setProducts(productsData);  
+      setProducts(productsData);
       // Get featured products
       const featured = productsData.filter((p) => p.featured === true);
       setFeaturedProducts(
@@ -195,8 +195,8 @@ const [products, setProducts] = useState<Product[]>([]);
         description="Discover our masterfully crafted autumnal collection, blending traditional joinery with modern silhouettes for the contemporary home."
       />
 
-      {/* Hero Carousel Section */}
-      <section className="relative h-[70vh] sm:h-[80vh] lg:h-[85vh] overflow-hidden">
+      {/* Hero Carousel Section - Dark & Dramatic */}
+      <section className="relative h-[70vh] sm:h-[80vh] lg:h-[85vh] overflow-hidden bg-near-black">
         {heroSlides.map((slide, index) => (
           <div
             key={index}
@@ -211,23 +211,25 @@ const [products, setProducts] = useState<Product[]>([]);
               className="absolute inset-0 w-full h-full object-cover"
               decoding="async"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
-            <div className="relative z-10 h-full flex items-center justify-start px-4 sm:px-8 lg:px-16 xl:px-24">
-              <div className="space-y-4 sm:space-y-6 md:space-y-8 max-w-full sm:max-w-lg md:max-w-2xl">
-                <span className="text-[8px] sm:text-[10px] md:text-[11px] font-bold text-white uppercase tracking-[0.2em] sm:tracking-[0.3em] block underline decoration-gold underline-offset-4 sm:underline-offset-8">
+            <div className="absolute inset-0 bg-gradient-to-r from-near-black via-near-black/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-near-black/50 to-transparent" />
+
+            <div className="relative z-10 h-full flex items-center px-4 sm:px-8 lg:px-16 xl:px-24">
+              <div className="space-y-4 sm:space-y-6 md:space-y-8 max-w-full sm:max-w-lg md:max-w-2xl border-l-2 border-gold pl-6 sm:pl-8 md:pl-10">
+                <span className="text-[8px] sm:text-[10px] md:text-[11px] font-bold text-gold uppercase tracking-[0.3em] block">
                   {slide.subtitle}
                 </span>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-display font-medium leading-[1.1] sm:leading-[1.05]">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-display font-light leading-[1.1]">
                   {slide.title}
                 </h1>
-                <p className="text-sm sm:text-base md:text-lg text-cream/80 max-w-sm sm:max-w-md font-light leading-relaxed">
+                <p className="text-sm sm:text-base md:text-lg text-white/70 max-w-sm font-light leading-relaxed">
                   {slide.description}
                 </p>
-                <div className="flex flex-wrap gap-3 sm:gap-4 pt-2 sm:pt-4">
+                <div className="flex flex-wrap gap-3 pt-2">
                   <Link href={slide.buttonLink}>
                     <Button
                       size="lg"
-                      className="bg-white text-near-black hover:bg-gold px-6 sm:px-8 md:px-10 py-2 sm:py-3 text-[10px] sm:text-[11px] border-none shadow-xl"
+                      className="bg-transparent border-2 border-gold text-gold hover:bg-gold hover:text-near-black px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-[10px] sm:text-[11px] shadow-xl rounded-none tracking-widest transition-all duration-300"
                     >
                       {slide.buttonText}
                     </Button>
@@ -238,30 +240,30 @@ const [products, setProducts] = useState<Product[]>([]);
           </div>
         ))}
 
-        {/* Carousel Navigation Buttons */}
+        {/* Navigation Buttons */}
         <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full backdrop-blur-sm transition-all duration-300"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-gold text-white hover:text-near-black p-3 rounded-full border border-white/20 backdrop-blur-sm transition-all duration-300"
         >
           <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
         <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full backdrop-blur-sm transition-all duration-300"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-gold text-white hover:text-near-black p-3 rounded-full border border-white/20 backdrop-blur-sm transition-all duration-300"
         >
           <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
 
-        {/* Carousel Dots */}
+        {/* Dots */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
           {heroSlides.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`transition-all duration-300 rounded-full ${
+              className={`transition-all duration-300 ${
                 currentSlide === index
-                  ? "w-8 h-2 bg-gold"
-                  : "w-2 h-2 bg-white/50 hover:bg-white/80"
+                  ? "w-10 h-1 bg-gold"
+                  : "w-4 h-1 bg-white/20 hover:bg-white/40"
               }`}
             />
           ))}
@@ -292,7 +294,7 @@ const [products, setProducts] = useState<Product[]>([]);
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -321,7 +323,7 @@ const [products, setProducts] = useState<Product[]>([]);
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {recentProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -331,7 +333,7 @@ const [products, setProducts] = useState<Product[]>([]);
 
       {/* Why Choose Us */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-12 text-center">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-12 text-center">
           <div className="space-y-3 sm:space-y-4">
             <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-cream border border-warm-beige flex items-center justify-center mx-auto rounded-lg">
               <Award className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-walnut" />
@@ -398,7 +400,7 @@ const [products, setProducts] = useState<Product[]>([]);
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
               {categories.slice(0, 5).map((category) => (
                 <CategoryCard
                   key={category.id}
@@ -461,7 +463,6 @@ const [products, setProducts] = useState<Product[]>([]);
         </div>
       </section>
       <WelcomePopup products={products} />
-
     </div>
   );
 }
@@ -490,10 +491,10 @@ function CategoryCard({
         fetchPriority="high"
       />
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white space-y-1 sm:space-y-2 p-3 sm:p-4 bg-black/10 group-hover:bg-black/40 transition-colors">
-        <span className="text-[7px] sm:text-[8px] md:text-[9px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] transform translate-y-3 sm:translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+        <span className="text-[7px] sm:text-[8px] md:text-[14px] mb-4 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] transform translate-y-3 sm:translate-y-4 group-hover:translate-y-0 transition-all duration-500">
           {subtitle}
         </span>
-        <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white font-display font-medium tracking-tight text-center px-1 sm:px-2 line-clamp-2">
+        <h3 className="text-lg sm:text-xl md:text-2xl lg:text-[30px] text-white font-display font-medium tracking-tight text-center px-1 sm:px-2 line-clamp-2">
           {title}
         </h3>
         <span className="w-0 group-hover:w-6 sm:group-hover:w-8 h-px bg-white transition-all duration-500 ease-out" />

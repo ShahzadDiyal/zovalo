@@ -47,8 +47,8 @@ const TermsConditions = () => {
               Welcome to Royal Furniture. By accessing or using our website and
               purchasing our premium furniture products, you agree to be bound
               by these Terms & Conditions. Please read them carefully before
-              placing any order. Royal Furniture reserves the right to modify these
-              terms at any time without prior notice.
+              placing any order. Royal Furniture reserves the right to modify
+              these terms at any time without prior notice.
             </p>
           </section>
 
@@ -69,8 +69,8 @@ const TermsConditions = () => {
                 confirmation with your order details.
               </p>
               <p>
-                • Royal Furniture reserves the right to limit quantities purchased per
-                customer.
+                • Royal Furniture reserves the right to limit quantities
+                purchased per customer.
               </p>
             </div>
           </section>
@@ -174,7 +174,8 @@ const TermsConditions = () => {
                 will fit through doorways and into your desired space.
               </p>
               <p>
-                • You must be at least 18 years old to purchase from royalfurniture.
+                • You must be at least 18 years old to purchase from
+                royalfurniture.
               </p>
               <p>
                 • You agree not to use our website for any unlawful purpose.
@@ -206,8 +207,8 @@ const TermsConditions = () => {
               8. Limitation of Liability
             </h2>
             <p className="text-gray-666 leading-relaxed">
-              Royal Furniture shall not be liable for any indirect, incidental, or
-              consequential damages arising from the use of our products or
+              Royal Furniture shall not be liable for any indirect, incidental,
+              or consequential damages arising from the use of our products or
               website. Our total liability shall not exceed the purchase price
               of the product you purchased.
             </p>
@@ -226,11 +227,11 @@ const TermsConditions = () => {
               contact us:
             </p>
             <div className="space-y-1 text-sm text-gray-666">
-              <p>📧 Email: support@royalfurniture.com</p>
+              <p>📧 Email: sales@royalfurnitures.store</p>
               <p>📞 Phone: +44 7526 661726</p>
               <p>
-                📍 Address: Royal Furniture, 123 Design Street, London, UK,
-                SW1A 1AA
+                📍 Barton Aerodrome, Liverpool Rd, Eccles,M30 7SA, Manchester,
+                United Kingdom,
               </p>
             </div>
           </section>

@@ -88,14 +88,14 @@ export function Footer() {
                   Shipping Policy
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link
                   href="/returns"
                   className="hover:text-gold transition-colors"
                 >
                   Returns & Exchanges
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link
                   href="/terms"
@@ -123,31 +123,46 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Newsletter */}
+          {/* Contact Information */}
           <div className="space-y-6">
             <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-walnut">
-              Journal
+              Contact Us
             </h4>
-            <p className="text-[13px] text-gray-666 font-light">
-              Subscribe for design inspiration and early access to our seasonal
-              edits.
-            </p>
-            <div className="flex border-b border-warm-beige pb-1 focus-within:border-gold transition-colors">
-              <input
-                type="email"
-                placeholder="Email address"
-                className="bg-transparent px-0 py-2 text-[13px] text-near-black outline-none w-full placeholder:text-gray-a0 font-light"
-              />
-              <button className="text-[11px] font-bold uppercase tracking-widest text-walnut hover:text-gold ml-2">
-                JOIN
-              </button>
+            <div className="space-y-4 text-[13px] text-gray-666 font-light">
+              <div className="space-y-1">
+                <p className="font-medium text-near-black">Address</p>
+                <p className="leading-relaxed">
+                  Barton Aerodrome, Liverpool Rd, Eccles,
+                  <br />
+                  Manchester, United Kingdom,
+                  <br />
+                  M30 7SA
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="font-medium text-near-black">Phone</p>
+                <a
+                  href="tel:+447529661726"
+                  className="hover:text-gold transition-colors"
+                >
+                  +44 7529 661726
+                </a>
+              </div>
+              <div className="space-y-1">
+                <p className="font-medium text-near-black">Hours</p>
+                <p>Always Open</p>
+              </div>
+              <div className="space-y-1">
+                <p className="font-medium text-near-black">Payment</p>
+                <p>Cash on Delivery</p>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Utility Bar */}
         <div className="border-t border-warm-beige pt-8 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-          <div className="flex flex-wrap justify-center gap-8 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-a0">
+          <div className="flex flex-col md:flex-row justify-start md:justify-center gap-2 md:gap-8 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-a0">
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-olive" />
               <span>Cash on Delivery Only</span>
@@ -163,7 +178,7 @@ export function Footer() {
           </div>
 
           <p className="text-[10px] text-gray-a0 font-bold uppercase tracking-[0.15em]">
-            © {new Date().getFullYear()} Royal FurnitureFURNITURE LTD
+            © {new Date().getFullYear()} Royal Furniture LTD
           </p>
         </div>
       </div>

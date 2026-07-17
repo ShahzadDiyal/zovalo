@@ -122,7 +122,7 @@ export function ProductCard({ product }: ProductCardProps) {
             Contact Us
           </button>
         ) : (
-          <div className="flex gap-2">
+          <div className="flex flex-col mdL:flex-row gap-2">
             <button
               onClick={handleAddToCart}
               disabled={isAddingToCart}

@@ -411,7 +411,7 @@ export default function CheckoutPage() {
                     value={formData.fullName}
                     onChange={handleChange}
                     className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
-                    placeholder="John Doe"
+                    placeholder="Royal Furnitures"
                   />
                 </div>
               </div>
@@ -430,7 +430,7 @@ export default function CheckoutPage() {
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
-                    placeholder="john@example.com"
+                    placeholder="george@gmail.com"
                   />
                 </div>
               </div>
@@ -724,10 +724,10 @@ export default function CheckoutPage() {
                 <Truck className="w-4 h-4 text-mint-700" />
                 <span>Free delivery within 1-3 days (UK)</span>
               </div>
-              <div className="flex items-center gap-2 text-xs text-gray-600">
+              {/* <div className="flex items-center gap-2 text-xs text-gray-600">
                 <ShieldCheck className="w-4 h-4 text-mint-700" />
                 <span>14-day returns policy</span>
-              </div>
+              </div> */}
               <div className="flex items-center gap-2 text-xs text-gray-600">
                 <ShoppingBag className="w-4 h-4 text-mint-700" />
                 <span>White glove placement included</span>

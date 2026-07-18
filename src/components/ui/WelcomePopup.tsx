@@ -13,6 +13,7 @@ import { formatCurrency } from "../../lib/utils";
 
 interface Product {
   id: string;
+  slug: string;
   title: string;
   price: number;
   images: string[];
@@ -28,7 +29,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
-    // Show popup on every page load/refresh after 1 second
     const timer = setTimeout(() => {
       setIsOpen(true);
     }, 1000);
@@ -45,7 +45,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
 
   if (!isOpen) return null;
 
-  // Get featured products
   const diningProduct = products.find(
     (p) =>
       p.title?.toLowerCase().includes("dining") ||
@@ -65,7 +64,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center px-4 py-6">
-      {/* Backdrop */}
       <div
         className={`absolute inset-0 transition-opacity duration-500 ${
           isClosing ? "opacity-0" : "opacity-100"
@@ -73,13 +71,11 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
         onClick={handleClose}
       />
 
-      {/* Popup Container */}
       <div
         className={`relative bg-gradient-to-br from-white via-cream/95 to-white rounded-2xl max-w-5xl w-full max-h-[85vh] overflow-y-auto shadow-2xl transform transition-all duration-500 ${
           isClosing ? "scale-95 opacity-0" : "scale-100 opacity-100"
         } animate-slide-up`}
       >
-        {/* Close Button */}
         <button
           onClick={handleClose}
           className="absolute top-4 right-4 z-10 p-2 bg-white/80 hover:bg-red-500 hover:text-white rounded-full transition-all duration-300 shadow-md group"
@@ -87,9 +83,7 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
           <X className="w-5 h-5" />
         </button>
 
-        {/* Content */}
         <div className="p-6 sm:p-8 md:p-10">
-          {/* Header Section */}
           <div className="text-center mb-8 md:mb-12">
             <div className="inline-flex items-center gap-2 bg-gold/10 px-4 py-2 rounded-full mb-4">
               <Sparkles className="w-4 h-4 text-gold animate-pulse" />
@@ -126,7 +120,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
             </p>
           </div>
 
-          {/* Offer Banner */}
           <div className="bg-gradient-to-r from-gold/20 via-gold/10 to-gold/20 border border-gold/30 rounded-xl p-4 sm:p-6 mb-10 text-center relative overflow-hidden">
             <div className="absolute top-0 right-0 w-24 h-24 bg-gold/10 rounded-full -translate-y-12 translate-x-12" />
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-gold/10 rounded-full translate-y-12 -translate-x-12" />
@@ -138,7 +131,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
               <h3 className="text-xl sm:text-2xl md:text-3xl font-display text-near-black mb-2">
                 Get 26% OFF Your First Order
               </h3>
-              {/* <p className="text-gray-500 text-xs sm:text-sm mb-4">Use code: <span className="font-mono font-bold text-gold bg-white px-2 py-1 rounded">WELCOME10</span></p> */}
               <Link
                 href="/shop"
                 onClick={handleClose}
@@ -150,7 +142,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
             </div>
           </div>
 
-          {/* Featured Products Section */}
           <div className="mt-6">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-sm sm:text-base font-bold uppercase tracking-widest text-near-black flex items-center gap-2">
@@ -168,14 +159,11 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
               {featuredProducts.map((product, index) => (
-                <div
+                <Link
                   key={product?.id || index}
-                  className="group cursor-pointer"
-                  onClick={() => {
-                    if (product) {
-                      window.location.href = `/product/${product.id}`;
-                    }
-                  }}
+                  href={`/product/${product?.slug}`}
+                  onClick={handleClose}
+                  className="group cursor-pointer block"
                 >
                   <div className="bg-cream border border-warm-beige rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-1">
                     <div className="aspect-square overflow-hidden">
@@ -204,12 +192,11 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
                       </p>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
 
-          {/* Trust Badges */}
           <div className="mt-8 pt-6 border-t border-warm-beige">
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
               <div className="flex items-center gap-2">

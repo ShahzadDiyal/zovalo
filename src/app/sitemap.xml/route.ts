@@ -1,9 +1,8 @@
-import { NextResponse } from "next/server";
-import { productApi } from "../../services/productApi";
-import { categoryApi } from "@/src/services/categoryApi";
+import { NextResponse } from 'next/server';
 
 interface Product {
   id: string;
+  slug: string;
   updatedAt?: string;
 }
 
@@ -12,16 +11,35 @@ interface Category {
 }
 
 export async function GET() {
-  const baseUrl = "https://royalfurnitures.store";
-
+  const baseUrl = 'https://royalfurnitures.store';
+  
   let products: Product[] = [];
   let categories: Category[] = [];
-
+  
   try {
-    products = await productApi.getAll();
-    categories = await categoryApi.getAllCategories();
+    const productsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/products`, {
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (productsResponse.ok) {
+      products = await productsResponse.json();
+    }
+
+    const categoriesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/categories`, {
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (categoriesResponse.ok) {
+      categories = await categoriesResponse.json();
+    }
   } catch (error) {
-    console.error("Error fetching data for sitemap:", error);
+    console.error('Error fetching data for sitemap:', error);
   }
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -61,35 +79,27 @@ export async function GET() {
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
-  ${products
-    .map(
-      (product: Product) => `
+  ${products.map((product: Product) => `
   <url>
-    <loc>${baseUrl}/product/${product.id}</loc>
+    <loc>${baseUrl}/product/${product.slug}</loc>
     <lastmod>${product.updatedAt || new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  `,
-    )
-    .join("")}
-  ${categories
-    .map(
-      (category: Category) => `
+  `).join('')}
+  ${categories.map((category: Category) => `
   <url>
     <loc>${baseUrl}/category/${category.slug}</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-  `,
-    )
-    .join("")}
+  `).join('')}
 </urlset>`;
 
   return new NextResponse(sitemap, {
     headers: {
-      "Content-Type": "application/xml",
-      "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
+      'Content-Type': 'application/xml',
+      'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
     },
   });
 }

@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { SEO } from "../../../components/SEO";
 import {
@@ -11,6 +10,26 @@ import {
   ShieldCheck,
   Package,
 } from "lucide-react";
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | Royal Furniture",
+  description: "Read our Privacy Policy to understand how Royal Furniture protects your personal information and data.",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "/privacy/",
+  },
+  openGraph: {
+    title: "Privacy Policy | Royal Furniture",
+    description: "Read our Privacy Policy to understand how Royal Furniture protects your data.",
+    url: "https://royalfurnitures.store/privacy/",
+  },
+};
+
 
 const PrivacyPolicy = () => {
   return (

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { CartProvider } from "../context/CartContext";
 import { AuthProvider } from "../context/AuthContext";
+import { Schema } from "../components/SEO/Schema";
+
 import "./globals.css";
 
 const SITE_URL = "https://royalfurnitures.store";
@@ -67,7 +69,6 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   verification: {
-    // Paste the content value from Google Search Console (see setup steps) here:
     google: "PASTE_GOOGLE_SITE_VERIFICATION_CODE_HERE",
   },
 };
@@ -79,9 +80,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Schema type="Organization" />
+        <Schema type="WebSite" />
+      </head>
       <body className="flex flex-col min-h-screen font-sans">
         <AuthProvider>
-          <CartProvider>{children}</CartProvider>
+          <CartProvider>
+            {children}
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>

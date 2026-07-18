@@ -36,11 +36,17 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20 text-near-black">
           {/* Brand */}
           <div className="space-y-6">
-            <Link href="/" className="flex items-center">
-              <h2 className="text-2xl font-bold tracking-tighter text-near-black">
-                Royal Furniture<span className="text-gold">.</span>
-              </h2>
-            </Link>
+            <Link href="/" className="flex flex-row items-center gap-2">
+  <img
+    src="/Royal-furnitures-logo.png"
+    alt="Royal Furniture Logo"
+    className="w-8 h-8 sm:w-60 sm:h-30 object-contain"
+    fetchPriority="high"
+  />
+  {/* <h2 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tighter text-near-black">
+    Royal Furniture<span className="text-gold">.</span>
+  </h2> */}
+</Link>
             <p className="text-[13px] text-gray-666 leading-relaxed max-w-xs font-light">
               Crafting premium furniture for the modern home. Our pieces blend
               traditional joinery with timeless silhouettes.
@@ -110,6 +116,14 @@ export function Footer() {
                   className="hover:text-gold transition-colors"
                 >
                   Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about"
+                  className="hover:text-gold transition-colors"
+                >
+                  About Us
                 </Link>
               </li>
               <li>

@@ -197,7 +197,7 @@ export function Navbar() {
   const topLevelCategories = getTopLevelCategories();
 
   return (
-    <nav className="fixed top-0 w-full z-50 shadow-sm">
+    <nav className="fixed top-0 w-full z-50 shadow-sm" aria-label="Royal Furniture Main navigation">
       {/* Header 01: Announcement Bar */}
       <div className="bg-amber-800 text-cream text-[10px] sm:text-[11px] py-2 text-center tracking-[0.15em] font-medium uppercase px-4 flex justify-center items-center gap-4 flex-wrap">
         <p>
@@ -219,10 +219,16 @@ export function Navbar() {
       </div>
 
       {/* Header 02: Main Header */}
-      <div className="bg-white border-b border-warm-beige px-4 sm:px-8 py-3 flex items-center justify-between gap-4">
+      <div className="bg-white border-b border-warm-beige px-4 sm:px-8 flex items-center justify-between gap-4">
         {/* Left: Logo */}
         <div className="flex-shrink-0">
           <Link href="/" className="flex items-center">
+            <img
+              src="/logo.png"
+              alt="Royal Furniture Logo"
+              className="w-15 h-15 sm:w-20 sm:h-20 object-contain"
+              fetchPriority="high"
+            />
             <h1 className="text-xl sm:text-2xl font-bold tracking-tighter text-near-black">
               Royal Furniture<span className="text-gold">.</span>
             </h1>

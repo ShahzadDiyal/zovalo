@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { SEO } from "../../../components/SEO";
 import {
@@ -9,6 +8,25 @@ import {
   Truck,
   AlertCircle,
 } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms & Conditions | Royal Furniture",
+  description: "Read the Terms & Conditions for Royal Furniture. Learn about our policies, delivery, returns, and more.",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "/terms/",
+  },
+  openGraph: {
+    title: "Terms & Conditions | Royal Furniture",
+    description: "Read the Terms & Conditions for Royal Furniture.",
+    url: "https://royalfurnitures.store/terms/",
+  },
+};
+
 
 const TermsConditions = () => {
   return (

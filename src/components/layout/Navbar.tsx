@@ -201,8 +201,12 @@ export function Navbar() {
       {/* Header 01: Announcement Bar */}
       <div className="bg-amber-800 text-cream text-[10px] sm:text-[11px] py-2 text-center tracking-[0.15em] font-medium uppercase px-4 flex justify-center items-center gap-4 flex-wrap">
         <p>
-          Free Delivery Across UK | Cash On Delivery Available | Premium
-          Furniture Collection
+          Free Delivery Across UK | Cash On Delivery Available{" "}
+          <span className=" italic underline font-bold">
+            {" "}
+            (No Upfront Required){" "}
+          </span>
+          | Premium Furniture Collection
         </p>
         {isAdmin && (
           <Link
@@ -409,7 +413,7 @@ export function Navbar() {
 
       {/* Mobile Menu with Hierarchy */}
       {isOpen && (
-        <div className="md:hidden bg-white border-b border-warm-beige py-6 px-6 space-y-8 shadow-2xl overflow-y-auto max-h-[80vh]">
+        <div className="md:hidden bg-white border-b border-warm-beige py-3 md:py-6 px-2 md:px-6 space-y-4 md:space-y-8 shadow-2xl overflow-y-auto max-h-[80vh]">
           {/* Mobile Search */}
           <form onSubmit={handleSearch} className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-a0" />

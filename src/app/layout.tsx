@@ -6,12 +6,12 @@ import "./globals.css";
 const SITE_URL = "https://royalfurnitures.store";
 const SITE_NAME = "Royal Furniture";
 const DEFAULT_DESCRIPTION =
-  "Shop premium, masterfully crafted furniture at Royal Furniture. Sofas, beds, dining sets and more with fast UK delivery and Cash on Delivery available.";
+  "Shop premium, masterfully crafted furniture at Royal Furniture. Sofas, beds, dining sets and more with fast UK delivery and Cash on Delivery available (No Upfront Fees Required).";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} - Premium Furniture Online`,
+    default: `${SITE_NAME} - Cash Upon Delivery Premium Furniture Online`,
     template: `%s | ${SITE_NAME}`,
   },
   description: DEFAULT_DESCRIPTION,
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
-    title: `${SITE_NAME} - Premium Furniture Online`,
+    title: `${SITE_NAME} - Cash Upon Delivery Premium Furniture Online`,
     description: DEFAULT_DESCRIPTION,
     url: SITE_URL,
     images: [
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} - Premium Furniture Online`,
+    title: `${SITE_NAME} - Cash Upon Delivery Premium Furniture Online`,
     description: DEFAULT_DESCRIPTION,
     images: ["/og-image.jpg"],
   },

@@ -15,7 +15,7 @@ const ShippingPolicy = () => {
     <>
       <SEO
         title="Shipping Policy | Free UK Delivery | Royal Furniture"
-        description="Fast and reliable furniture delivery across UK, Europe, and Canada. Free UK delivery on all orders. Cash on Delivery available. Track your order in real-time."
+        description="Fast and reliable furniture delivery across UK, Europe, and Canada. Free UK delivery on all orders. Cash on Delivery available (No Upfront Fees Required). Track your order in real-time."
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
         {/* Header */}
@@ -117,8 +117,8 @@ const ShippingPolicy = () => {
                     Order Confirmation
                   </h3>
                   <p className="text-gray-666 text-sm">
-                    You'll receive an email confirmation immediately after
-                    placing your order.
+                    Our team calls or texts you to schedule a precise delivery
+                    date and time window.
                   </p>
                 </div>
               </div>
@@ -127,8 +127,8 @@ const ShippingPolicy = () => {
                 <div>
                   <h3 className="font-bold text-near-black">Processing</h3>
                   <p className="text-gray-666 text-sm">
-                    Orders are processed within 24 hours. You'll receive a
-                    tracking number once shipped.
+                    We deliver it to your room, you inspect the quality, and
+                    only then do you pay the driver.
                   </p>
                 </div>
               </div>

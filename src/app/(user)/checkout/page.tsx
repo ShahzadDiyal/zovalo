@@ -628,7 +628,7 @@ export default function CheckoutPage() {
             {/* Order Count Info */}
             <div className="text-center text-[10px] text-gray-400">
               {orderCount === 0 ? (
-                <p>First order? No verification needed.</p>
+                <p className="text-[15px] text-amber-700 italic"> “🚚 Our team will call you within 24 hours to confirm your delivery slot. If you have any questions, you can directly reach us through WhatsApp.”</p>
               ) : orderCount === 1 ? (
                 <p>⚠️ Next order will require security verification.</p>
               ) : (
@@ -672,7 +672,7 @@ export default function CheckoutPage() {
                 ? "Processing..."
                 : requireCaptcha && !captchaVerified
                   ? "Complete Verification First"
-                  : "Review Order"}
+                  : "Confirm Order (Pay After Delivery)"}
             </button>
           </form>
         </div>

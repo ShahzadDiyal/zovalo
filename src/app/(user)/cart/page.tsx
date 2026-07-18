@@ -78,11 +78,16 @@ export default function CartPage() {
                       <Link href={`/product/${item.slug}`}>
                         <h3 className="text-sm sm:text-base md:text-lg font-display text-near-black hover:text-gold transition-colors break-words line-clamp-1">
                           {item.title}
+                          {item.quantity > 1 && (
+                            <span className="text-xs font-sans text-gray-500 font-normal normal-case tracking-normal ml-2">
+                              ({formatCurrency(item.price)} each)
+                            </span>
+                          )}
                         </h3>
                       </Link>
                     </div>
-                    <p className="text-sm sm:text-base md:text-lg font-light text-near-black md:text-center sm:text-right">
-                      {formatCurrency(item.price)}
+                    <p className="text-sm sm:text-base md:text-lg font-light text-near-black md:text-center sm:text-right whitespace-nowrap">
+                      {formatCurrency(item.price * item.quantity)}
                     </p>
                   </div>
 
@@ -174,7 +179,7 @@ export default function CartPage() {
                 <div className="flex items-center gap-2 sm:gap-3">
                   <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-mint-700 flex-shrink-0" />
                   <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest text-gray-666">
-                    Secure Checkout
+                    CASH ON DELIVERY (ZERO UPFRONT PAYMENT)
                   </p>
                 </div>
                 <div className="flex items-center gap-2 sm:gap-3">

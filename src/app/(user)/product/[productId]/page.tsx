@@ -502,7 +502,7 @@ export default function ProductPage() {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-4">
                 {/* Material */}
-                {product.material && (
+                {product.material && product.material.trim() !== "" && (
                   <div className="flex flex-row items-center gap-2 md:col-span-1 col-span-2">
                     <Tag className="w-3.5 h-3.5 text-gold flex-shrink-0" />
                     <span className="text-xs text-gray-600 flex-shrink-0">
@@ -515,7 +515,7 @@ export default function ProductPage() {
                 )}
 
                 {/* Dimensions */}
-                {product.dimensions && (
+                {product.dimensions && product.dimensions.trim() !== "" && (
                   <div className="flex flex-row items-center gap-2 md:col-span-1 col-span-2">
                     <Ruler className="w-3.5 h-3.5 text-gold flex-shrink-0" />
                     <span className="text-xs text-gray-600 flex-shrink-0">
@@ -527,7 +527,7 @@ export default function ProductPage() {
                   </div>
                 )}
 
-                {/* Weight */}
+                {/* Weight - only show if > 0 */}
                 {product.weight && product.weight > 0 && (
                   <div className="flex items-center gap-2 md:col-span-1 col-span-2">
                     <Weight className="w-3.5 h-3.5 text-gold flex-shrink-0" />
@@ -540,18 +540,32 @@ export default function ProductPage() {
                   </div>
                 )}
 
-                {/* Delivery */}
-                {product.estimatedDelivery && (
+                {/* Warranty - only show if > 0 */}
+                {product.warrantyYears && product.warrantyYears > 0 && (
                   <div className="flex items-center gap-2 md:col-span-1 col-span-2">
-                    <Clock className="w-3.5 h-3.5 text-gold flex-shrink-0" />
+                    <Shield className="w-3.5 h-3.5 text-gold flex-shrink-0" />
                     <span className="text-xs text-gray-600 flex-shrink-0">
-                      Delivery:
+                      Warranty:
                     </span>
                     <span className="text-xs font-medium text-near-black">
-                      {product.estimatedDelivery}
+                      {product.warrantyYears} years
                     </span>
                   </div>
                 )}
+
+                {/* Delivery */}
+                {product.estimatedDelivery &&
+                  product.estimatedDelivery.trim() !== "" && (
+                    <div className="flex items-center gap-2 md:col-span-1 col-span-2">
+                      <Clock className="w-3.5 h-3.5 text-gold flex-shrink-0" />
+                      <span className="text-xs text-gray-600 flex-shrink-0">
+                        Delivery:
+                      </span>
+                      <span className="text-xs font-medium text-near-black">
+                        {product.estimatedDelivery}
+                      </span>
+                    </div>
+                  )}
 
                 {/* Ships to */}
                 {product.deliveryCountries &&

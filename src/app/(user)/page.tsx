@@ -34,8 +34,7 @@ export default function HomePage() {
   // Hero carousel slides
   const heroSlides = [
     {
-      image:
-        "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=2000",
+      image: "/images/sofa-bad-design.jpg",
       title: "The Walnut & Olive Edit",
       subtitle: "New Season Arrival",
       description:
@@ -44,8 +43,7 @@ export default function HomePage() {
       buttonLink: "/shop",
     },
     {
-      image:
-        "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&q=80&w=2000",
+      image: "/images/dining-tables.jpg",
       title: "Heritage Collection",
       subtitle: "Limited Edition",
       description:
@@ -54,8 +52,7 @@ export default function HomePage() {
       buttonLink: "/shop",
     },
     {
-      image:
-        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=2000",
+      image: "/images/sofa-bad-interior-desing.jpg",
       title: "Modern Living Redefined",
       subtitle: "Contemporary Designs",
       description:

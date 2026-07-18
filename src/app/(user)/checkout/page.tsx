@@ -341,7 +341,7 @@ export default function CheckoutPage() {
   const RECAPTCHA_SITE_KEY = "6Lfr4ActAAAAAMH7eumd7twNYfKopUrlfWZRzT7t";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 pt-24 lg:pt-6">
+    <div className="max-w-7xl mx-auto px-4 py-8 pt-10">
       <SEO
         title="Secure Checkout"
         description="Complete your order with Cash on Delivery"

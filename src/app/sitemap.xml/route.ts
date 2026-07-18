@@ -4,7 +4,7 @@ import { categoryApi } from "@/src/services/categoryApi";
 
 interface Product {
   id: string;
-   slug: string;
+  slug: string;
   updatedAt?: string;
 }
 

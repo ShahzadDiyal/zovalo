@@ -1,4 +1,6 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import { productApi } from "../../services/productApi";
+import { categoryApi } from "@/src/services/categoryApi";
 
 interface Product {
   id: string;

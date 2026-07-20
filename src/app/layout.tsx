@@ -4,6 +4,7 @@ import { AuthProvider } from "../context/AuthContext";
 import { Schema } from "../components/SEO/Schema";
 
 import "./globals.css";
+import BackToTop from "../components/BackToTop";
 
 const SITE_URL = "https://royalfurnitures.store";
 const SITE_NAME = "Royal Furniture";
@@ -86,9 +87,8 @@ export default function RootLayout({
       </head>
       <body className="flex flex-col min-h-screen font-sans">
         <AuthProvider>
-          <CartProvider>
-            {children}
-          </CartProvider>
+          <CartProvider>{children}</CartProvider>
+          <BackToTop />
         </AuthProvider>
       </body>
     </html>

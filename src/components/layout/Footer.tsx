@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { categoryApi } from "../../services/categoryApi";
 import { Category } from "../../types";
+import SocialLinks from "../SocialLinks";
 
 export function Footer() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -35,18 +36,18 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20 text-near-black">
           {/* Brand */}
-          <div className="space-y-6">
+          <div className="space-y-2 md:space-y-6">
             <Link href="/" className="flex flex-row items-center gap-2">
-  <img
-    src="/Royal-furnitures-logo.png"
-    alt="Royal Furniture Logo"
-    className="w-8 h-8 sm:w-60 sm:h-30 object-contain"
-    fetchPriority="high"
-  />
-  {/* <h2 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tighter text-near-black">
+              <img
+                src="/Royal-furnitures-logo.png"
+                alt="Royal Furniture Logo"
+                className="w-40 h-auto sm:w-60 sm:h-30 object-contain"
+                fetchPriority="high"
+              />
+              {/* <h2 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tighter text-near-black">
     Royal Furniture<span className="text-gold">.</span>
   </h2> */}
-</Link>
+            </Link>
             <p className="text-[13px] text-gray-666 leading-relaxed max-w-xs font-light">
               Crafting premium furniture for the modern home. Our pieces blend
               traditional joinery with timeless silhouettes.
@@ -174,6 +175,8 @@ export function Footer() {
           </div>
         </div>
 
+        <SocialLinks />
+
         {/* Bottom Utility Bar */}
         <div className="border-t border-warm-beige pt-8 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
           <div className="flex flex-col md:flex-row justify-start md:justify-center gap-2 md:gap-8 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-a0">
@@ -192,7 +195,7 @@ export function Footer() {
           </div>
 
           <p className="text-[10px] text-gray-a0 font-bold uppercase tracking-[0.15em]">
-            © {new Date().getFullYear()} Royal Furniture LTD
+            Copyright © {new Date().getFullYear()} Royal Furniture LTD
           </p>
         </div>
       </div>

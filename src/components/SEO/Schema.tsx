@@ -15,27 +15,26 @@ export function Schema({ type, data }: SchemaProps) {
           name: "Royal Furniture",
           url: "https://royalfurnitures.store",
           logo: "https://royalfurnitures.store/logo.png",
-          description: "Premium furniture store offering quality pieces for the modern home. Cash on Delivery available across UK.",
+          description:
+            "Premium furniture store offering quality pieces for the modern home. Cash on Delivery available across UK.",
           address: {
             "@type": "PostalAddress",
             streetAddress: "Barton Aerodrome, Liverpool Rd, Eccles",
             addressLocality: "Manchester",
             addressRegion: "Greater Manchester",
             postalCode: "M30 7SA",
-            addressCountry: "GB"
+            addressCountry: "GB",
           },
           contactPoint: {
             "@type": "ContactPoint",
             telephone: "+44-7529-661726",
             contactType: "Sales",
             availableLanguage: ["English"],
-            areaServed: "GB"
+            areaServed: "GB",
           },
-          sameAs: [
-            "https://www.facebook.com/profile.php?id=61591759840955"
-          ]
+          sameAs: ["https://www.facebook.com/profile.php?id=61591759840955"],
         };
-      
+
       case "WebSite":
         return {
           "@context": "https://schema.org",
@@ -44,11 +43,12 @@ export function Schema({ type, data }: SchemaProps) {
           url: "https://royalfurnitures.store",
           potentialAction: {
             "@type": "SearchAction",
-            target: "https://royalfurnitures.store/search?q={search_term_string}",
-            "query-input": "required name=search_term_string"
-          }
+            target:
+              "https://royalfurnitures.store/search?q={search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
         };
-      
+
       default:
         return null;
     }

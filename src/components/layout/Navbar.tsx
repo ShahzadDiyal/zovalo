@@ -197,7 +197,10 @@ export function Navbar() {
   const topLevelCategories = getTopLevelCategories();
 
   return (
-    <nav className="fixed top-0 w-full z-50 shadow-sm" aria-label="Royal Furniture Main navigation">
+    <nav
+      className="fixed top-0 w-full z-50 shadow-sm"
+      aria-label="Royal Furniture Main navigation"
+    >
       {/* Header 01: Announcement Bar */}
       <div className="bg-amber-800 text-cream text-[10px] sm:text-[11px] py-2 text-center tracking-[0.15em] font-medium uppercase px-4 flex justify-center items-center gap-4 flex-wrap">
         <p>

@@ -35,33 +35,32 @@ export default function HomePage() {
   const heroSlides = [
     {
       image: "/images/sofa-bad-design.jpg",
-      title: "The Walnut & Olive Edit",
-      subtitle: "New Season Arrival",
+      title: "Luxury Beds & Upholstered Frames",
+      subtitle: "Premium Bedroom Furniture",
       description:
-        "Discover our masterfully crafted autumnal collection, blending traditional joinery with modern silhouettes for the contemporary home.",
-      buttonText: "Explore Collection",
-      buttonLink: "/shop",
+        "Upgrade your sleep sanctuary. Shop premium divan beds, gas-lift ottoman storage beds, and luxury velvet sleigh beds engineered for long-lasting comfort.",
+      buttonText: "Shop Beds & Mattresses",
+      buttonLink: "/beds",
     },
     {
       image: "/images/dining-tables.jpg",
-      title: "Heritage Collection",
-      subtitle: "Limited Edition",
+      title: "Modern Dining Tables & Sets",
+      subtitle: "Designed for Entertaining",
       description:
-        "Experience timeless elegance with our Heritage Collection. Each piece tells a story of craftsmanship and dedication.",
-      buttonText: "Discover More",
-      buttonLink: "/shop",
+        "Find the perfect centerpiece. Browse luxury marble dining tables, space-saving extending tables, and solid oak sets tailored for any home layout.",
+      buttonText: "Shop Dining Tables",
+      buttonLink: "/dining-tables",
     },
     {
       image: "/images/sofa-bad-interior-desing.jpg",
-      title: "Modern Living Redefined",
-      subtitle: "Contemporary Designs",
+      title: "Luxury Sofas & Smart Sofa Beds",
+      subtitle: "Contemporary Living Spaces",
       description:
-        "Transform your space with our modern furniture collection. Clean lines, premium materials, lasting comfort.",
-      buttonText: "Shop Now",
-      buttonLink: "/shop",
+        "Discover deep lounging comfort. Explore classic Chesterfield couches, spacious family U-shape sectionals, and modern click-clack guest sofa beds.",
+      buttonText: "Shop The Sofa Collection",
+      buttonLink: "/sofa",
     },
   ];
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -192,75 +191,105 @@ export default function HomePage() {
         description="Discover our masterfully crafted autumnal collection, blending traditional joinery with modern silhouettes for the contemporary home."
       />
 
-      {/* Hero Carousel Section - Dark & Dramatic */}
-      <section className="relative h-[70vh] sm:h-[80vh] lg:h-[85vh] overflow-hidden bg-near-black">
-        {heroSlides.map((slide, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              currentSlide === index ? "opacity-100 z-10" : "opacity-0 z-0"
-            }`}
-          >
-            <img
-              src={slide.image}
-              alt={slide.title}
-              fetchPriority="high"
-              className="absolute inset-0 w-full h-full object-cover"
-              decoding="async"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-near-black via-near-black/60 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-near-black/50 to-transparent" />
+      {/* Hero Carousel Section - Dark, Dramatic & Premium */}
+      <section className="relative h-[75vh] sm:h-[80vh] lg:h-[85vh] overflow-hidden bg-near-black">
+        {heroSlides.map((slide, index) => {
+          const isActive = currentSlide === index;
+          return (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+                isActive
+                  ? "opacity-100 z-10 visible"
+                  : "opacity-0 z-0 invisible"
+              }`}
+            >
+              {/* Animated Background Image with Alt Optimization */}
+              <img
+                src={slide.image}
+                alt={`${slide.title} - Luxury Home Furniture`}
+                fetchPriority={index === 0 ? "high" : "low"}
+                className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[10000ms] ease-out ${
+                  isActive ? "scale-105" : "scale-100"
+                }`}
+                decoding="async"
+              />
 
-            <div className="relative z-10 h-full flex items-center px-4 sm:px-8 lg:px-16 xl:px-24">
-              <div className="space-y-4 sm:space-y-6 md:space-y-8 max-w-full sm:max-w-lg md:max-w-2xl border-l-2 border-gold pl-6 sm:pl-8 md:pl-10">
-                <span className="text-[8px] sm:text-[10px] md:text-[11px] font-bold text-gold uppercase tracking-[0.3em] block">
-                  {slide.subtitle}
-                </span>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-display font-light leading-[1.1]">
-                  {slide.title}
-                </h1>
-                <p className="text-sm sm:text-base md:text-lg text-white/70 max-w-sm font-light leading-relaxed">
-                  {slide.description}
-                </p>
-                <div className="flex flex-wrap gap-3 pt-2">
-                  <Link href={slide.buttonLink}>
-                    <Button
-                      size="lg"
-                      className="bg-transparent border-2 border-gold text-gold hover:bg-gold hover:text-near-black px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-[10px] sm:text-[11px] shadow-xl rounded-none tracking-widest transition-all duration-300"
+              {/* Dynamic Dark Gradients for Crisp Content Contrast */}
+              <div className="absolute inset-0 bg-gradient-to-r from-near-black via-near-black/70 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-near-black/60 via-transparent to-near-black/20" />
+
+              {/* Content Box */}
+              <div className="relative z-10 h-full flex items-center px-6 sm:px-12 lg:px-20 xl:px-32">
+                <div className="space-y-4 sm:space-y-6 md:space-y-4 max-w-xl md:max-w-2xl border-l-2 border-gold pl-6 sm:pl-8 md:pl-10">
+                  {/* Subtitle Accent */}
+                  <span className="text-[9px] sm:text-[11px] font-bold text-gold uppercase tracking-[0.35em] block animate-fadeIn">
+                    {slide.subtitle}
+                  </span>
+
+                  {/* Conditional Semantic Heading for Clean SEO Hierarchy */}
+                  {isActive ? (
+                    <h1 className="text-2xl md:text-4xl lg:text-5xl text-white font-display font-light leading-[1.15] tracking-wide">
+                      {slide.title}
+                    </h1>
+                  ) : (
+                    <h2 className="text-2xl md:text-4xl lg:text-5xl text-white font-display font-light leading-[1.15] tracking-wide">
+                      {slide.title}
+                    </h2>
+                  )}
+
+                  {/* Wider Description block to fit the SEO copy elegantly */}
+                  <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-md lg:max-w-xl font-light leading-relaxed">
+                    {slide.description}
+                  </p>
+
+                  {/* Call to Action Button */}
+                  <div className="flex flex-wrap gap-3 pt-2 ">
+                    <Link
+                      href={slide.buttonLink}
+                      aria-label={`Explore our collection of ${slide.title}`}
                     >
-                      {slide.buttonText}
-                    </Button>
-                  </Link>
+                      <Button
+                        size="lg"
+                        className="bg-transparent border-2 border-gold text-gold hover:bg-gold hover:text-near-black px-8 sm:px-12 py-3 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] shadow-2xl rounded-none transition-all duration-300 transform hover:-translate-y-0.5"
+                      >
+                        {slide.buttonText}
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
-        {/* Navigation Buttons */}
+        {/* Custom Sleek Slider Navigation Controls */}
         <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-gold text-white hover:text-near-black p-3 rounded-full border border-white/20 backdrop-blur-sm transition-all duration-300"
+          aria-label="Previous Slide"
+          className="hidden md:block absolute left-6 top-1/2 -translate-y-1/2 z-20 bg-near-black/40 hover:bg-gold text-white hover:text-near-black p-3 rounded-none border border-white/10 backdrop-blur-md transition-all duration-300 group"
         >
-          <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+          <ChevronLeft className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" />
         </button>
         <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-gold text-white hover:text-near-black p-3 rounded-full border border-white/20 backdrop-blur-sm transition-all duration-300"
+          aria-label="Next Slide"
+          className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-20 bg-near-black/40 hover:bg-gold text-white hover:text-near-black p-3 rounded-none border border-white/10 backdrop-blur-md transition-all duration-300 group"
         >
-          <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+          <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
         </button>
 
-        {/* Dots */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+        {/* Progress-style Bar Indicators */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
           {heroSlides.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`transition-all duration-300 ${
+              aria-label={`Go to slide ${index + 1}`}
+              className={`h-1 transition-all duration-500 ease-out ${
                 currentSlide === index
-                  ? "w-10 h-1 bg-gold"
-                  : "w-4 h-1 bg-white/20 hover:bg-white/40"
+                  ? "w-12 bg-gold"
+                  : "w-5 bg-white/30 hover:bg-white/60"
               }`}
             />
           ))}
@@ -268,7 +297,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Products Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
+      <section className="2xl:w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
           <div className="space-y-2 sm:space-y-3">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-display text-near-black">
@@ -291,7 +320,7 @@ export default function HomePage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6 md:gap-8">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -301,7 +330,7 @@ export default function HomePage() {
 
       {/* Recently Added Section */}
       {recentProducts.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
+        <section className="2xl:w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
             <div className="space-y-2 sm:space-y-3">
               <h3 className="text-[10px] sm:text-[12px] font-bold uppercase tracking-[0.2em] text-gray-a0">
@@ -320,7 +349,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6 md:gap-8">
             {recentProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

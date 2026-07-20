@@ -289,7 +289,7 @@ export default function CategoryPage() {
       />
 
       {/* Page Header */}
-      <div className="text-center space-y-2 sm:space-y-3 md:space-y-4 mb-6 sm:mb-8">
+      <div className="text-center space-y-2 sm:space-y-3 md:space-y-4 mb-6 sm:mb-8 mt-8 md:mt-2">
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display text-near-black tracking-tight px-2">
           {categoryName || "Shop All"}
         </h1>

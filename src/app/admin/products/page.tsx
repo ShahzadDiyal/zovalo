@@ -80,7 +80,7 @@ export default function AdminProducts() {
     ];
 
     const rows = productsToExport.map((product) => {
-      const specs = product.specifications || {};
+      
       return [
         product.id,
         product.id.slice(0, 8).toUpperCase(),
@@ -93,11 +93,7 @@ export default function AdminProducts() {
         product.featured ? "Yes" : "No",
         product.images[0] || "",
         `"${product.images.join("; ")}"`,
-        `"${(specs.Material || "").replace(/"/g, '""')}"`,
-        `"${(specs.Dimensions || "").replace(/"/g, '""')}"`,
-        `"${(specs.Weight || "").replace(/"/g, '""')}"`,
-        `"${(specs.Color || "").replace(/"/g, '""')}"`,
-        `"${(specs.Warranty || "").replace(/"/g, '""')}"`,
+       
         product.createdAt?.toDate?.().toLocaleDateString("en-GB") || "N/A",
         product.updatedAt?.toDate?.().toLocaleDateString("en-GB") || "N/A",
       ];

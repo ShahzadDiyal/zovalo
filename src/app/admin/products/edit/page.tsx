@@ -10,24 +10,16 @@ import {
   Image as ImageIcon,
   Tag,
   Info,
-  Layers,
   ChevronRight,
   Upload,
   Trash2,
-  AlertCircle,
-  Ruler,
-  Weight,
   Palette,
   Sofa,
-  Truck,
-  Shield,
-  Wrench,
   DollarSign,
-  Globe,
-  Clock,
   Filter,
-  PlusCircle,
-  Pencil,
+  List,
+  ListOrdered,
+  HelpCircle,
 } from "lucide-react";
 import { Product, Category } from "../../../../types";
 import { productApi } from "../../../../services/productApi";
@@ -41,33 +33,29 @@ interface SeaterPrice {
   compareAtPrice?: number;
 }
 
+interface FAQ {
+  question: string;
+  answer: string;
+}
+
 export default function AdminProductForm() {
   const params = useParams();
   const productId = params.productId;
-  const productIdStr = typeof productId === "string" ? productId : "";
-
   const router = useRouter();
   const isEdit = !!productId;
 
   const [loading, setLoading] = useState(isEdit);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [uploadingImages, setUploadingImages] = useState<boolean>(false);
-  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [uploadingImages, setUploadingImages] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [editingSeaterIndex, setEditingSeaterIndex] = useState<number | null>(
-    null,
-  );
-  const [tempSeaterPrice, setTempSeaterPrice] = useState<{
-    seater: string;
-    price: number;
-    compareAtPrice?: number;
-  } | null>(null);
+  const [featuresText, setFeaturesText] = useState("");
 
-  // Dynamic input states
   const [newSeater, setNewSeater] = useState("");
   const [newColor, setNewColor] = useState("");
   const [newTag, setNewTag] = useState("");
-  const [newCountry, setNewCountry] = useState("");
+  const [newFaqQuestion, setNewFaqQuestion] = useState("");
+  const [newFaqAnswer, setNewFaqAnswer] = useState("");
 
   const [formData, setFormData] = useState<Partial<Product>>({
     title: "",
@@ -78,23 +66,13 @@ export default function AdminProductForm() {
     category: "",
     images: [],
     stock: 0,
-    seaterCount: [] as string[],
-    seaterPrices: [] as SeaterPrice[],
-    colors: [] as string[],
-    material: "",
-    dimensions: "",
-    weight: 0,
-    warrantyYears: 0,
-    deliveryCountries: [] as string[],
-    estimatedDelivery: "",
-    tags: [] as string[],
-    specifications: {
-      Material: "",
-      Dimensions: "",
-      Weight: "",
-      Warranty: "",
-      CareInstructions: "",
-    },
+    seaterCount: [],
+    seaterPrices: [],
+    colors: [],
+    tags: [],
+    features: [],
+    featuresStyle: "bullet",
+    faqs: [],
     featured: false,
   });
 
@@ -104,21 +82,20 @@ export default function AdminProductForm() {
       setCategories(catsData);
 
       if (isEdit && productId) {
-        const productIdValue = Array.isArray(productId)
-          ? productId[0]
-          : productId;
+        const productIdValue = Array.isArray(productId) ? productId[0] : productId;
         const product = await productApi.getById(productIdValue);
         if (product) {
-          // Initialize seaterPrices from existing data
           if (!product.seaterPrices && product.seaterCount?.length) {
-            const defaultPrices = product.seaterCount.map((seater) => ({
+            product.seaterPrices = product.seaterCount.map((seater) => ({
               seater,
               price: product.price || 0,
               compareAtPrice: product.compareAtPrice || 0,
             }));
-            product.seaterPrices = defaultPrices;
           }
           setFormData(product);
+          if (product.features && product.features.length > 0) {
+            setFeaturesText(product.features.join('\n'));
+          }
         } else {
           alert("Product not found");
           router.push("/admin/products");
@@ -130,9 +107,7 @@ export default function AdminProductForm() {
   }, [productId, isEdit]);
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value, type } = e.target;
     setFormData((prev) => ({
@@ -141,30 +116,29 @@ export default function AdminProductForm() {
     }));
   };
 
-  const handleSpecChange = (key: string, value: string) => {
+  const handleFeaturesTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value;
+    setFeaturesText(text);
+    const features = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+    setFormData(prev => ({ ...prev, features }));
+  };
+
+  const toggleFeaturesStyle = () => {
     setFormData((prev) => ({
       ...prev,
-      specifications: {
-        ...(prev.specifications || {}),
-        [key]: value,
-      },
+      featuresStyle: prev.featuresStyle === "bullet" ? "number" : "bullet",
     }));
   };
 
-  // Dynamic add for Seater Count with Price
   const handleAddSeater = () => {
     if (newSeater.trim() && !formData.seaterCount?.includes(newSeater.trim())) {
-      const newSeaterValue = newSeater.trim();
+      const seater = newSeater.trim();
       setFormData((prev) => ({
         ...prev,
-        seaterCount: [...(prev.seaterCount || []), newSeaterValue],
+        seaterCount: [...(prev.seaterCount || []), seater],
         seaterPrices: [
           ...(prev.seaterPrices || []),
-          {
-            seater: newSeaterValue,
-            price: prev.price || 0,
-            compareAtPrice: prev.compareAtPrice || 0,
-          },
+          { seater, price: prev.price || 0, compareAtPrice: prev.compareAtPrice || 0 },
         ],
       }));
       setNewSeater("");
@@ -175,33 +149,23 @@ export default function AdminProductForm() {
     setFormData((prev) => ({
       ...prev,
       seaterCount: (prev.seaterCount || []).filter((s) => s !== seater),
-      seaterPrices: (prev.seaterPrices || []).filter(
-        (sp) => sp.seater !== seater,
-      ),
+      seaterPrices: (prev.seaterPrices || []).filter((sp) => sp.seater !== seater),
     }));
   };
 
   const handleSeaterPriceChange = (
     seater: string,
     field: "price" | "compareAtPrice",
-    value: number,
+    value: number
   ) => {
     setFormData((prev) => ({
       ...prev,
       seaterPrices: (prev.seaterPrices || []).map((sp) =>
-        sp.seater === seater ? { ...sp, [field]: value } : sp,
+        sp.seater === seater ? { ...sp, [field]: value } : sp
       ),
     }));
   };
 
-  const getPriceForSeater = (seater: string): number => {
-    const seaterPrice = formData.seaterPrices?.find(
-      (sp) => sp.seater === seater,
-    );
-    return seaterPrice?.price || formData.price || 0;
-  };
-
-  // Dynamic add for Colors
   const handleAddColor = () => {
     if (newColor.trim() && !formData.colors?.includes(newColor.trim())) {
       setFormData((prev) => ({
@@ -219,7 +183,6 @@ export default function AdminProductForm() {
     }));
   };
 
-  // Dynamic add for Tags
   const handleAddTag = () => {
     if (newTag.trim() && !formData.tags?.includes(newTag.trim())) {
       setFormData((prev) => ({
@@ -237,29 +200,24 @@ export default function AdminProductForm() {
     }));
   };
 
-  // Dynamic add for Delivery Countries
-  const handleAddCountry = () => {
-    if (
-      newCountry.trim() &&
-      !formData.deliveryCountries?.includes(newCountry.trim())
-    ) {
+  const handleAddFaq = () => {
+    if (newFaqQuestion.trim() && newFaqAnswer.trim()) {
       setFormData((prev) => ({
         ...prev,
-        deliveryCountries: [
-          ...(prev.deliveryCountries || []),
-          newCountry.trim(),
+        faqs: [
+          ...(prev.faqs || []),
+          { question: newFaqQuestion.trim(), answer: newFaqAnswer.trim() },
         ],
       }));
-      setNewCountry("");
+      setNewFaqQuestion("");
+      setNewFaqAnswer("");
     }
   };
 
-  const handleRemoveCountry = (country: string) => {
+  const handleRemoveFaq = (index: number) => {
     setFormData((prev) => ({
       ...prev,
-      deliveryCountries: (prev.deliveryCountries || []).filter(
-        (c) => c !== country,
-      ),
+      faqs: (prev.faqs || []).filter((_, i) => i !== index),
     }));
   };
 
@@ -303,7 +261,7 @@ export default function AdminProductForm() {
               }
             },
             file.type,
-            0.7,
+            0.7
           );
         };
         img.onerror = reject;
@@ -318,9 +276,7 @@ export default function AdminProductForm() {
     const remainingSlots = 5 - currentImages.length;
 
     if (filesArray.length > remainingSlots) {
-      alert(
-        `You can only add ${remainingSlots} more image(s). Maximum 5 images allowed.`,
-      );
+      alert(`You can only add ${remainingSlots} more image(s). Maximum 5 images allowed.`);
       return;
     }
 
@@ -336,7 +292,7 @@ export default function AdminProductForm() {
           alert(`${file.name} is not an image file. Skipping.`);
           continue;
         }
-        if (file.size > 500 * 1024 * 2) {
+        if (file.size > 500 * 1024) {
           alert(`${file.name} is larger than 500KB. Please compress it first.`);
           continue;
         }
@@ -377,22 +333,15 @@ export default function AdminProductForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validImages = (formData.images || []).filter(
-      (img) => img && img.trim() !== "",
-    );
+    const validImages = (formData.images || []).filter((img) => img && img.trim() !== "");
     if (validImages.length === 0) {
       alert("Please add at least one product image");
       return;
     }
 
-    const totalSize = validImages.reduce(
-      (sum, img) => sum + (img.length || 0),
-      0,
-    );
+    const totalSize = validImages.reduce((sum, img) => sum + (img.length || 0), 0);
     if (totalSize > 900 * 1024) {
-      alert(
-        "Total image size is too large. Please use smaller images or reduce number of images.",
-      );
+      alert("Total image size is too large. Please use smaller images or reduce number of images.");
       return;
     }
 
@@ -402,7 +351,6 @@ export default function AdminProductForm() {
       const productData = {
         ...formData,
         images: validImages,
-        // Set base price as the minimum price across seaters or first seater price
         price:
           formData.seaterPrices && formData.seaterPrices.length > 0
             ? Math.min(...formData.seaterPrices.map((sp) => sp.price))
@@ -433,13 +381,10 @@ export default function AdminProductForm() {
     );
   }
 
-  const imageCount = (formData.images || []).filter(
-    (img) => img && img.trim() !== "",
-  ).length;
+  const imageCount = (formData.images || []).filter((img) => img && img.trim() !== "").length;
 
   return (
     <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-5 lg:px-0 space-y-5 sm:space-y-6 md:space-y-8 lg:space-y-12">
-      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-warm-beige pb-4 sm:pb-6 md:pb-8 gap-4 sm:gap-6">
         <div className="flex items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6">
           <Link
@@ -459,19 +404,12 @@ export default function AdminProductForm() {
         </div>
         <div className="flex items-center gap-1.5 sm:gap-2 text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-gray-400">
           Admin <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> Inventory{" "}
-          <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3" />{" "}
-          {isEdit ? "Edit" : "New"}
+          <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {isEdit ? "Edit" : "New"}
         </div>
       </div>
 
-      {/* Form Grid */}
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-10 xl:gap-12"
-      >
-        {/* Left Column - Main Form Fields */}
+      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-10 xl:gap-12">
         <div className="flex-1 space-y-5 sm:space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
-          {/* Core Identity */}
           <section className="bg-white border border-warm-beige p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 space-y-4 sm:space-y-6 md:space-y-8 shadow-sm rounded-lg">
             <div className="flex items-center gap-2 sm:gap-3 border-l-4 border-gold pl-3 sm:pl-4">
               <Info className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
@@ -482,10 +420,7 @@ export default function AdminProductForm() {
 
             <div className="space-y-4 sm:space-y-5 md:space-y-6">
               <div className="space-y-1.5 sm:space-y-2">
-                <label
-                  htmlFor="title"
-                  className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block"
-                >
+                <label htmlFor="title" className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block">
                   Master Title *
                 </label>
                 <input
@@ -501,10 +436,7 @@ export default function AdminProductForm() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
                 <div className="space-y-1.5 sm:space-y-2">
-                  <label
-                    htmlFor="slug"
-                    className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block"
-                  >
+                  <label htmlFor="slug" className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block">
                     Internal Slug
                   </label>
                   <input
@@ -523,10 +455,7 @@ export default function AdminProductForm() {
                   />
                 </div>
                 <div className="space-y-1.5 sm:space-y-2">
-                  <label
-                    htmlFor="category"
-                    className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block"
-                  >
+                  <label htmlFor="category" className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block">
                     Collection Hierarchy *
                   </label>
                   <div className="relative">
@@ -553,10 +482,7 @@ export default function AdminProductForm() {
               </div>
 
               <div className="space-y-1.5 sm:space-y-2">
-                <label
-                  htmlFor="description"
-                  className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block"
-                >
+                <label htmlFor="description" className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block">
                   Physical Narrative *
                 </label>
                 <textarea
@@ -573,7 +499,6 @@ export default function AdminProductForm() {
             </div>
           </section>
 
-          {/* Seater Options with Individual Prices */}
           <section className="bg-white border border-warm-beige p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 space-y-4 sm:space-y-6 md:space-y-8 shadow-sm rounded-lg">
             <div className="flex items-center gap-2 sm:gap-3 border-l-4 border-gold pl-3 sm:pl-4">
               <Sofa className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
@@ -583,7 +508,6 @@ export default function AdminProductForm() {
             </div>
 
             <div className="space-y-4">
-              {/* Add New Seater */}
               <div className="flex flex-wrap gap-2 items-end">
                 <div className="flex-1 min-w-[150px]">
                   <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block mb-1">
@@ -606,50 +530,31 @@ export default function AdminProductForm() {
                 </button>
               </div>
 
-              {/* Seater List with Price Inputs */}
               {(formData.seaterCount || []).length > 0 && (
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[400px]">
                     <thead>
                       <tr className="border-b border-warm-beige">
-                        <th className="text-left py-2 text-[10px] font-bold uppercase text-gray-400">
-                          Seater
-                        </th>
-                        <th className="text-left py-2 text-[10px] font-bold uppercase text-gray-400">
-                          Price (GBP)
-                        </th>
-                        <th className="text-left py-2 text-[10px] font-bold uppercase text-gray-400">
-                          Compare at Price (Optional)
-                        </th>
-                        <th className="text-center py-2 text-[10px] font-bold uppercase text-gray-400">
-                          Action
-                        </th>
+                        <th className="text-left py-2 text-[10px] font-bold uppercase text-gray-400">Seater</th>
+                        <th className="text-left py-2 text-[10px] font-bold uppercase text-gray-400">Price (GBP)</th>
+                        <th className="text-left py-2 text-[10px] font-bold uppercase text-gray-400">Compare at Price (Optional)</th>
+                        <th className="text-center py-2 text-[10px] font-bold uppercase text-gray-400">Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       {(formData.seaterCount || []).map((seater, idx) => {
-                        const seaterPrice = formData.seaterPrices?.find(
-                          (sp) => sp.seater === seater,
-                        );
+                        const seaterPrice = formData.seaterPrices?.find((sp) => sp.seater === seater);
                         return (
                           <tr key={idx} className="border-b border-warm-beige">
-                            <td className="py-2 text-sm font-medium">
-                              {seater}
-                            </td>
+                            <td className="py-2 text-sm font-medium">{seater}</td>
                             <td className="py-2">
                               <div className="relative w-32">
-                                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gold font-bold text-xs">
-                                  £
-                                </span>
+                                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gold font-bold text-xs">£</span>
                                 <input
                                   type="number"
                                   value={seaterPrice?.price || 0}
                                   onChange={(e) =>
-                                    handleSeaterPriceChange(
-                                      seater,
-                                      "price",
-                                      parseFloat(e.target.value) || 0,
-                                    )
+                                    handleSeaterPriceChange(seater, "price", parseFloat(e.target.value) || 0)
                                   }
                                   className="w-full bg-cream border border-warm-beige py-1.5 pl-6 pr-2 text-sm focus:border-gold outline-none rounded"
                                   step="0.01"
@@ -659,18 +564,12 @@ export default function AdminProductForm() {
                             </td>
                             <td className="py-2">
                               <div className="relative w-32">
-                                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xs">
-                                  £
-                                </span>
+                                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xs">£</span>
                                 <input
                                   type="number"
                                   value={seaterPrice?.compareAtPrice || 0}
                                   onChange={(e) =>
-                                    handleSeaterPriceChange(
-                                      seater,
-                                      "compareAtPrice",
-                                      parseFloat(e.target.value) || 0,
-                                    )
+                                    handleSeaterPriceChange(seater, "compareAtPrice", parseFloat(e.target.value) || 0)
                                   }
                                   className="w-full bg-cream border border-warm-beige py-1.5 pl-6 pr-2 text-sm focus:border-gold outline-none rounded"
                                   step="0.01"
@@ -697,24 +596,170 @@ export default function AdminProductForm() {
 
               {(formData.seaterCount || []).length === 0 && (
                 <p className="text-[10px] text-gray-400 text-center py-4">
-                  No seater options added. Add seaters above with their
-                  respective prices.
+                  No seater options added. Add seaters above with their respective prices.
                 </p>
               )}
             </div>
           </section>
 
-          {/* Filterable Attributes Section - Dynamic */}
+          <section className="bg-white border border-warm-beige p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 space-y-4 sm:space-y-6 md:space-y-8 shadow-sm rounded-lg">
+            <div className="flex items-center justify-between border-l-4 border-gold pl-3 sm:pl-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <List className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
+                <h2 className="text-sm sm:text-base md:text-lg font-display text-near-black uppercase">
+                  Features
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={toggleFeaturesStyle}
+                className="flex items-center gap-1.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-gold transition-colors"
+              >
+                {formData.featuresStyle === "bullet" ? (
+                  <>
+                    <ListOrdered className="w-3.5 h-3.5" /> Switch to Numbered
+                  </>
+                ) : (
+                  <>
+                    <List className="w-3.5 h-3.5" /> Switch to Bullet
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block mb-1.5">
+                  Features List (one per line)
+                </label>
+                <div className="space-y-2">
+                  <textarea
+                    value={featuresText}
+                    onChange={handleFeaturesTextChange}
+                    rows={6}
+                    className="w-full bg-cream border border-warm-beige py-2.5 sm:py-3 px-4 text-sm leading-relaxed focus:border-gold outline-none resize-y transition-colors rounded"
+                    placeholder="Solid oak construction&#10;Hand-finished walnut veneer&#10;Durable scratch-resistant surface&#10;Available in 5 colors&#10;2-year warranty"
+                  />
+                  <p className="text-[8px] sm:text-[9px] text-gray-400 italic">
+                    Enter each feature on a new line. They will be displayed as a{" "}
+                    {formData.featuresStyle === "bullet" ? "bullet" : "numbered"} list on the frontend.
+                  </p>
+                </div>
+              </div>
+
+              {(formData.features || []).length > 0 && (
+                <div className="bg-cream p-3 sm:p-4 rounded border border-warm-beige">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                      Preview ({formData.features?.length || 0} features)
+                    </span>
+                  </div>
+                  <ul
+                    className={`space-y-1.5 ${
+                      formData.featuresStyle === "bullet" ? "list-disc list-inside" : "list-decimal list-inside"
+                    }`}
+                  >
+                    {(formData.features || []).map((feature, index) => (
+                      <li key={index} className="text-sm text-gray-700">
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {(formData.features || []).length === 0 && (
+                <p className="text-[10px] text-gray-400 text-center py-2">
+                  No features added. Enter features above, one per line.
+                </p>
+              )}
+            </div>
+          </section>
+
+          <section className="bg-white border border-warm-beige p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 space-y-4 sm:space-y-6 md:space-y-8 shadow-sm rounded-lg">
+            <div className="flex items-center gap-2 sm:gap-3 border-l-4 border-gold pl-3 sm:pl-4">
+              <HelpCircle className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
+              <h2 className="text-sm sm:text-base md:text-lg font-display text-near-black uppercase">
+                Frequently Asked Questions
+              </h2>
+            </div>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block mb-1">
+                    Question
+                  </label>
+                  <input
+                    type="text"
+                    value={newFaqQuestion}
+                    onChange={(e) => setNewFaqQuestion(e.target.value)}
+                    placeholder="e.g., What material is this made of?"
+                    className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
+                  />
+                </div>
+                <div>
+                  <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block mb-1">
+                    Answer
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newFaqAnswer}
+                      onChange={(e) => setNewFaqAnswer(e.target.value)}
+                      placeholder="e.g., Solid oak with walnut finish"
+                      className="flex-1 bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddFaq}
+                      className="bg-gold text-near-black px-4 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-near-black hover:text-white transition rounded whitespace-nowrap"
+                    >
+                      <Plus className="w-3.5 h-3.5 inline mr-1" /> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {(formData.faqs || []).length > 0 && (
+                <div className="space-y-3">
+                  {(formData.faqs || []).map((faq, index) => (
+                    <div key={index} className="bg-cream p-3 sm:p-4 rounded border border-warm-beige group">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <p className="text-xs sm:text-sm font-semibold text-near-black">Q: {faq.question}</p>
+                          <p className="text-xs sm:text-sm text-gray-600 mt-1">A: {faq.answer}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveFaq(index)}
+                          className="text-red-400 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100 shrink-0"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {(formData.faqs || []).length === 0 && (
+                <p className="text-[10px] text-gray-400 text-center py-2">
+                  No FAQs added. Add questions and answers above.
+                </p>
+              )}
+            </div>
+          </section>
+
           <section className="bg-white border border-warm-beige p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 space-y-4 sm:space-y-6 md:space-y-8 shadow-sm rounded-lg">
             <div className="flex items-center gap-2 sm:gap-3 border-l-4 border-gold pl-3 sm:pl-4">
               <Filter className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
               <h2 className="text-sm sm:text-base md:text-lg font-display text-near-black uppercase">
-                Additional Attributes
+                Filterable Attributes
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-              {/* Colors - Dynamic */}
               <div className="space-y-2">
                 <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block flex items-center gap-2">
                   <Palette className="w-3.5 h-3.5" /> Available Colors
@@ -726,10 +771,7 @@ export default function AdminProductForm() {
                     onChange={(e) => {
                       setNewColor(e.target.value);
                       if (e.target.value.includes(",")) {
-                        const colors = e.target.value
-                          .split(",")
-                          .map((c) => c.trim())
-                          .filter((c) => c);
+                        const colors = e.target.value.split(",").map((c) => c.trim()).filter((c) => c);
                         colors.forEach((color) => {
                           if (color && !formData.colors?.includes(color)) {
                             setFormData((prev) => ({
@@ -744,6 +786,13 @@ export default function AdminProductForm() {
                     placeholder="e.g., Black, Walnut, Navy Blue (separate with commas)"
                     className="flex-1 bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
                   />
+                  <button
+                    type="button"
+                    onClick={handleAddColor}
+                    className="bg-gold text-near-black px-3 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-near-black hover:text-white transition rounded whitespace-nowrap"
+                  >
+                    <Plus className="w-3.5 h-3.5 inline" />
+                  </button>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {(formData.colors || []).map((color) => (
@@ -768,13 +817,10 @@ export default function AdminProductForm() {
                   ))}
                 </div>
                 {(formData.colors || []).length === 0 && (
-                  <p className="text-[10px] text-gray-400">
-                    No colors added. Add above.
-                  </p>
+                  <p className="text-[10px] text-gray-400">No colors added. Add above.</p>
                 )}
               </div>
 
-              {/* Tags - Dynamic */}
               <div className="space-y-2">
                 <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block flex items-center gap-2">
                   <Tag className="w-3.5 h-3.5" /> Product Tags
@@ -786,10 +832,7 @@ export default function AdminProductForm() {
                     onChange={(e) => {
                       setNewTag(e.target.value);
                       if (e.target.value.includes(",")) {
-                        const tags = e.target.value
-                          .split(",")
-                          .map((t) => t.trim())
-                          .filter((t) => t);
+                        const tags = e.target.value.split(",").map((t) => t.trim()).filter((t) => t);
                         tags.forEach((tag) => {
                           if (tag && !formData.tags?.includes(tag)) {
                             setFormData((prev) => ({
@@ -804,13 +847,17 @@ export default function AdminProductForm() {
                     placeholder="e.g., New, Best Seller, Limited Edition (separate with commas)"
                     className="flex-1 bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
                   />
+                  <button
+                    type="button"
+                    onClick={handleAddTag}
+                    className="bg-gold text-near-black px-3 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-near-black hover:text-white transition rounded whitespace-nowrap"
+                  >
+                    <Plus className="w-3.5 h-3.5 inline" />
+                  </button>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {(formData.tags || []).map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-near-black text-white rounded-full text-xs"
-                    >
+                    <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 bg-near-black text-white rounded-full text-xs">
                       {tag}
                       <button
                         type="button"
@@ -823,175 +870,12 @@ export default function AdminProductForm() {
                   ))}
                 </div>
                 {(formData.tags || []).length === 0 && (
-                  <p className="text-[10px] text-gray-400">
-                    No tags added. Add above.
-                  </p>
+                  <p className="text-[10px] text-gray-400">No tags added. Add above.</p>
                 )}
               </div>
-
-              {/* Delivery Countries - Dynamic */}
-              <div className="space-y-2">
-                <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block flex items-center gap-2">
-                  <Globe className="w-3.5 h-3.5" /> Delivery Countries
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newCountry}
-                    onChange={(e) => {
-                      setNewCountry(e.target.value);
-                      if (e.target.value.includes(",")) {
-                        const countries = e.target.value
-                          .split(",")
-                          .map((c) => c.trim())
-                          .filter((c) => c);
-                        countries.forEach((country) => {
-                          if (
-                            country &&
-                            !formData.deliveryCountries?.includes(country)
-                          ) {
-                            setFormData((prev) => ({
-                              ...prev,
-                              deliveryCountries: [
-                                ...(prev.deliveryCountries || []),
-                                country,
-                              ],
-                            }));
-                          }
-                        });
-                        setNewCountry("");
-                      }
-                    }}
-                    placeholder="e.g., United Kingdom, France, Germany (separate with commas)"
-                    className="flex-1 bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                  />
-                </div>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {(formData.deliveryCountries || []).map((country) => (
-                    <span
-                      key={country}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-cream text-gray-700 rounded-full text-xs"
-                    >
-                      {country}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveCountry(country)}
-                        className="hover:text-red-500 transition-colors"
-                      >
-                        <X className="w-2.5 h-2.5" />
-                      </button>
-                    </span>
-                  ))}
-                </div>
-                {(formData.deliveryCountries || []).length === 0 && (
-                  <p className="text-[10px] text-gray-400">
-                    No delivery countries added. Add above.
-                  </p>
-                )}
-              </div>
-
-              {/* Material */}
-              <div className="space-y-1.5">
-                <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block flex items-center gap-2">
-                  <Layers className="w-3.5 h-3.5" /> Material
-                </label>
-                <input
-                  name="material"
-                  value={formData.material || ""}
-                  onChange={handleChange}
-                  placeholder="e.g., Solid Oak, Velvet, Marble"
-                  className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                />
-              </div>
             </div>
           </section>
 
-          {/* Dimensions & Weight Section */}
-          <section className="bg-white border border-warm-beige p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 space-y-4 sm:space-y-6 md:space-y-8 shadow-sm rounded-lg">
-            <div className="flex items-center gap-2 sm:gap-3 border-l-4 border-gold pl-3 sm:pl-4">
-              <Ruler className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
-              <h2 className="text-sm sm:text-base md:text-lg font-display text-near-black uppercase">
-                Dimensions & Weight
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-              <div className="space-y-1.5">
-                <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block">
-                  Dimensions (L x W x H)
-                </label>
-                <input
-                  name="dimensions"
-                  value={formData.dimensions || ""}
-                  onChange={handleChange}
-                  placeholder="e.g., 180cm x 90cm x 85cm"
-                  className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block flex items-center gap-2">
-                  <Weight className="w-3.5 h-3.5" /> Weight (kg)
-                </label>
-                <input
-                  type="number"
-                  name="weight"
-                  value={formData.weight || ""}
-                  onChange={handleChange}
-                  placeholder="e.g., 25.5"
-                  step="0.1"
-                  min="0"
-                  className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* Shipping Section */}
-          <section className="bg-white border border-warm-beige p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 space-y-4 sm:space-y-6 md:space-y-8 shadow-sm rounded-lg">
-            <div className="flex items-center gap-2 sm:gap-3 border-l-4 border-gold pl-3 sm:pl-4">
-              <Truck className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
-              <h2 className="text-sm sm:text-base md:text-lg font-display text-near-black uppercase">
-                Shipping & Delivery
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-              <div className="space-y-1.5">
-                <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block flex items-center gap-2">
-                  <Clock className="w-3.5 h-3.5" /> Estimated Delivery
-                </label>
-                <select
-                  name="estimatedDelivery"
-                  value={formData.estimatedDelivery || ""}
-                  onChange={handleChange}
-                  className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                >
-                  <option value="">Select delivery time</option>
-                  <option value="1-3 days">1-3 days (UK Express)</option>
-                  <option value="3-5 days">3-5 days (Standard UK)</option>
-                  <option value="5-7 days">5-7 days (International)</option>
-                </select>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block flex items-center gap-2">
-                  <Shield className="w-3.5 h-3.5" /> Warranty (Years)
-                </label>
-                <input
-                  type="number"
-                  name="warrantyYears"
-                  value={formData.warrantyYears || ""}
-                  onChange={handleChange}
-                  placeholder="e.g., 2"
-                  min="0"
-                  className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* Visual Assets */}
           <section className="bg-white border border-warm-beige p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 space-y-4 sm:space-y-6 md:space-y-8 shadow-sm rounded-lg">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-gold pl-3 sm:pl-4">
               <div className="flex items-center gap-2 sm:gap-3">
@@ -1007,9 +891,7 @@ export default function AdminProductForm() {
 
             <div className="space-y-4 sm:space-y-5 md:space-y-6">
               <div className="p-2.5 sm:p-3 bg-mint-50 border border-mint-200 text-[9px] sm:text-[10px] text-mint-700 rounded">
-                <strong>Tip:</strong> Select multiple images at once (Ctrl+Click
-                or Shift+Click). First image will be the main product image. Max
-                5 images, each under 500KB.
+                <strong>Tip:</strong> Select multiple images at once (Ctrl+Click or Shift+Click). First image will be the main product image. Max 5 images, each under 500KB.
               </div>
 
               {imageCount < 5 && (
@@ -1018,27 +900,20 @@ export default function AdminProductForm() {
                     type="file"
                     accept="image/*"
                     multiple
-                    onChange={(e) =>
-                      e.target.files &&
-                      handleMultipleFilesUpload(e.target.files)
-                    }
+                    onChange={(e) => e.target.files && handleMultipleFilesUpload(e.target.files)}
                     className="hidden"
                     id="multi-file-upload"
                     disabled={uploadingImages}
                   />
                   <label
                     htmlFor="multi-file-upload"
-                    className={`w-full border-2 border-dashed border-warm-beige py-6 sm:py-7 md:py-8 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:border-gold hover:text-gold transition-all flex flex-col items-center justify-center gap-2 sm:gap-3 cursor-pointer rounded-lg ${uploadingImages ? "opacity-50 cursor-not-allowed" : ""}`}
+                    className={`w-full border-2 border-dashed border-warm-beige py-6 sm:py-7 md:py-8 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:border-gold hover:text-gold transition-all flex flex-col items-center justify-center gap-2 sm:gap-3 cursor-pointer rounded-lg ${
+                      uploadingImages ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                   >
                     <Upload className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
-                    <span>
-                      {uploadingImages
-                        ? "Uploading Images..."
-                        : "Click or Drag & Drop Multiple Images"}
-                    </span>
-                    <span className="text-[7px] sm:text-[8px] text-gray-300">
-                      (Max 5 images, 500KB each)
-                    </span>
+                    <span>{uploadingImages ? "Uploading Images..." : "Click or Drag & Drop Multiple Images"}</span>
+                    <span className="text-[7px] sm:text-[8px] text-gray-300">(Max 5 images, 500KB each)</span>
                   </label>
                 </div>
               )}
@@ -1046,10 +921,7 @@ export default function AdminProductForm() {
               {uploadingImages && uploadProgress > 0 && (
                 <div className="space-y-1.5 sm:space-y-2">
                   <div className="w-full h-1 bg-warm-beige rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gold transition-all duration-300"
-                      style={{ width: `${uploadProgress}%` }}
-                    />
+                    <div className="h-full bg-gold transition-all duration-300" style={{ width: `${uploadProgress}%` }} />
                   </div>
                   <p className="text-[7px] sm:text-[8px] text-gray-400 text-center">
                     Processing images... {Math.round(uploadProgress)}%
@@ -1110,26 +982,24 @@ export default function AdminProductForm() {
                             </div>
                           )}
                         </div>
-                      ),
+                      )
                   )}
                 </div>
               )}
 
               {imageCount > 1 && (
                 <div className="text-center text-[7px] sm:text-[8px] text-gray-400">
-                  Hover over images to reorder or delete. First image is the
-                  main product image.
+                  Hover over images to reorder or delete. First image is the main product image.
                 </div>
               )}
             </div>
           </section>
         </div>
 
-        {/* Right Column - Commercial Intel Sidebar */}
         <aside className="lg:w-80 xl:w-96 space-y-5 sm:space-y-6 md:space-y-8">
           <div className="bg-near-black text-white p-5 sm:p-6 md:p-7 lg:p-8 xl:p-10 space-y-5 sm:space-y-6 md:space-y-8 sticky top-20 md:top-32 lg:top-44 rounded-lg">
             <div className="flex items-center gap-2 sm:gap-3 border-l-4 border-gold pl-3 sm:pl-4">
-              <Tag className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
+              <DollarSign className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
               <h2 className="text-sm sm:text-base md:text-lg font-display uppercase">
                 Commercial Intel
               </h2>
@@ -1163,10 +1033,14 @@ export default function AdminProductForm() {
                       featured: !prev.featured,
                     }))
                   }
-                  className={`w-10 sm:w-11 md:w-12 h-5 sm:h-5.5 md:h-6 rounded-full p-1 transition-colors duration-300 ${formData.featured ? "bg-gold" : "bg-gray-600"}`}
+                  className={`w-10 sm:w-11 md:w-12 h-5 sm:h-5.5 md:h-6 rounded-full p-1 transition-colors duration-300 ${
+                    formData.featured ? "bg-gold" : "bg-gray-600"
+                  }`}
                 >
                   <div
-                    className={`w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 bg-white rounded-full transition-transform duration-300 ${formData.featured ? "translate-x-5 sm:translate-x-5.5 md:translate-x-6" : "translate-x-0"}`}
+                    className={`w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 bg-white rounded-full transition-transform duration-300 ${
+                      formData.featured ? "translate-x-5 sm:translate-x-5.5 md:translate-x-6" : "translate-x-0"
+                    }`}
                   />
                 </button>
               </div>
@@ -1177,11 +1051,7 @@ export default function AdminProductForm() {
                 className="w-full bg-gold text-near-black py-3.5 sm:py-4 md:py-5 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hover:bg-white transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 disabled:opacity-50 rounded"
               >
                 <Save className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                {isSubmitting
-                  ? "Authenticating..."
-                  : isEdit
-                    ? "Archive Changes"
-                    : "Publish Entry"}
+                {isSubmitting ? "Authenticating..." : isEdit ? "Archive Changes" : "Publish Entry"}
               </button>
             </div>
           </div>

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { ProductCard } from "../../components/ui/ProductCard";
 import { Button } from "../../components/ui/Button";
 import WelcomePopup from "../../components/ui/WelcomePopup";
-
 import Link from "next/link";
 import {
   Truck,
@@ -14,6 +13,7 @@ import {
   Quote,
   ChevronLeft,
   ChevronRight,
+  Sparkles,
 } from "lucide-react";
 import { SEO } from "../../components/SEO";
 import { productApi } from "../../services/productApi";
@@ -31,7 +31,6 @@ export default function HomePage() {
   const [newsletterSuccess, setNewsletterSuccess] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
 
-  // Hero carousel slides
   const heroSlides = [
     {
       image: "/images/sofa-bad-design.jpg",
@@ -40,7 +39,7 @@ export default function HomePage() {
       description:
         "Upgrade your sleep sanctuary. Shop premium divan beds, gas-lift ottoman storage beds, and luxury velvet sleigh beds engineered for long-lasting comfort.",
       buttonText: "Shop Beds & Mattresses",
-      buttonLink: "/beds",
+      buttonLink: "/shop",
     },
     {
       image: "/images/dining-tables.jpg",
@@ -49,7 +48,7 @@ export default function HomePage() {
       description:
         "Find the perfect centerpiece. Browse luxury marble dining tables, space-saving extending tables, and solid oak sets tailored for any home layout.",
       buttonText: "Shop Dining Tables",
-      buttonLink: "/dining-tables",
+      buttonLink: "/shop",
     },
     {
       image: "/images/sofa-bad-interior-desing.jpg",
@@ -58,14 +57,14 @@ export default function HomePage() {
       description:
         "Discover deep lounging comfort. Explore classic Chesterfield couches, spacious family U-shape sectionals, and modern click-clack guest sofa beds.",
       buttonText: "Shop The Sofa Collection",
-      buttonLink: "/sofa",
+      buttonLink: "/shop",
     },
   ];
+
   useEffect(() => {
     fetchData();
   }, []);
 
-  // Auto-slide carousel
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
@@ -82,13 +81,11 @@ export default function HomePage() {
       ]);
 
       setProducts(productsData);
-      // Get featured products
       const featured = productsData.filter((p) => p.featured === true);
       setFeaturedProducts(
         featured.length > 0 ? featured.slice(0, 4) : productsData.slice(0, 4),
       );
 
-      // Get recent products (last 4 added)
       const recent = [...productsData].sort((a, b) => {
         const dateA = a.createdAt?.toDate?.() || new Date(0);
         const dateB = b.createdAt?.toDate?.() || new Date(0);
@@ -107,7 +104,6 @@ export default function HomePage() {
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
-      // Here you can add API call to save email
       console.log("Newsletter signup:", email);
       setNewsletterSuccess(true);
       setEmail("");
@@ -177,7 +173,7 @@ export default function HomePage() {
     return (
       <div className="flex items-center justify-center min-h-[400px] sm:min-h-[600px]">
         <LoadingSpinner />
-        <span className="ml-3 text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-gold">
+        <span className="ml-3 text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-amber-600">
           Loading Experience...
         </span>
       </div>
@@ -185,14 +181,14 @@ export default function HomePage() {
   }
 
   return (
-    <div className="space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24 pb-12 sm:pb-16 md:pb-20 lg:pb-24">
+    <div className="bg-[#FAF8F5] min-h-screen space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24 pb-12 sm:pb-16 md:pb-20 lg:pb-24">
       <SEO
         title="Home"
         description="Discover our masterfully crafted autumnal collection, blending traditional joinery with modern silhouettes for the contemporary home."
       />
 
-      {/* Hero Carousel Section - Dark, Dramatic & Premium */}
-      <section className="relative h-[75vh] sm:h-[80vh] lg:h-[85vh] overflow-hidden bg-near-black">
+      {/* Hero Carousel Section */}
+      <section className="relative h-[75vh] sm:h-[80vh] lg:h-[85vh] overflow-hidden bg-neutral-900">
         {heroSlides.map((slide, index) => {
           const isActive = currentSlide === index;
           return (
@@ -204,7 +200,6 @@ export default function HomePage() {
                   : "opacity-0 z-0 invisible"
               }`}
             >
-              {/* Animated Background Image with Alt Optimization */}
               <img
                 src={slide.image}
                 alt={`${slide.title} - Luxury Home Furniture`}
@@ -215,43 +210,37 @@ export default function HomePage() {
                 decoding="async"
               />
 
-              {/* Dynamic Dark Gradients for Crisp Content Contrast */}
-              <div className="absolute inset-0 bg-gradient-to-r from-near-black via-near-black/70 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-t from-near-black/60 via-transparent to-near-black/20" />
+              <div className="absolute inset-0 bg-gradient-to-r from-neutral-900 via-neutral-900/70 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/60 via-transparent to-neutral-900/20" />
 
-              {/* Content Box */}
               <div className="relative z-10 h-full flex items-center px-6 sm:px-12 lg:px-20 xl:px-32">
-                <div className="space-y-4 sm:space-y-6 md:space-y-4 max-w-xl md:max-w-2xl border-l-2 border-gold pl-6 sm:pl-8 md:pl-10">
-                  {/* Subtitle Accent */}
-                  <span className="text-[9px] sm:text-[11px] font-bold text-gold uppercase tracking-[0.35em] block animate-fadeIn">
+                <div className="space-y-4 sm:space-y-6 md:space-y-4 max-w-xl md:max-w-2xl border-l-2 border-amber-500 pl-6 sm:pl-8 md:pl-10">
+                  <span className="text-[9px] sm:text-[11px] font-bold text-amber-400 uppercase tracking-[0.35em] block animate-fadeIn">
                     {slide.subtitle}
                   </span>
 
-                  {/* Conditional Semantic Heading for Clean SEO Hierarchy */}
                   {isActive ? (
-                    <h1 className="text-2xl md:text-4xl lg:text-5xl text-white font-display font-light leading-[1.15] tracking-wide">
+                    <h1 className="text-2xl md:text-4xl lg:text-5xl text-white font-serif font-light leading-[1.15] tracking-wide">
                       {slide.title}
                     </h1>
                   ) : (
-                    <h2 className="text-2xl md:text-4xl lg:text-5xl text-white font-display font-light leading-[1.15] tracking-wide">
+                    <h2 className="text-2xl md:text-4xl lg:text-5xl text-white font-serif font-light leading-[1.15] tracking-wide">
                       {slide.title}
                     </h2>
                   )}
 
-                  {/* Wider Description block to fit the SEO copy elegantly */}
                   <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-md lg:max-w-xl font-light leading-relaxed">
                     {slide.description}
                   </p>
 
-                  {/* Call to Action Button */}
-                  <div className="flex flex-wrap gap-3 pt-2 ">
+                  <div className="flex flex-wrap gap-3 pt-2">
                     <Link
                       href={slide.buttonLink}
                       aria-label={`Explore our collection of ${slide.title}`}
                     >
                       <Button
                         size="lg"
-                        className="bg-transparent border-2 border-gold text-gold hover:bg-gold hover:text-near-black px-8 sm:px-12 py-3 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] shadow-2xl rounded-none transition-all duration-300 transform hover:-translate-y-0.5"
+                        className="bg-transparent border-2 border-amber-500 text-amber-400 hover:bg-amber-500 hover:text-neutral-900 px-8 sm:px-12 py-3 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] shadow-2xl rounded-xl transition-all duration-300 transform hover:-translate-y-0.5"
                       >
                         {slide.buttonText}
                       </Button>
@@ -263,23 +252,21 @@ export default function HomePage() {
           );
         })}
 
-        {/* Custom Sleek Slider Navigation Controls */}
         <button
           onClick={prevSlide}
           aria-label="Previous Slide"
-          className="hidden md:block absolute left-6 top-1/2 -translate-y-1/2 z-20 bg-near-black/40 hover:bg-gold text-white hover:text-near-black p-3 rounded-none border border-white/10 backdrop-blur-md transition-all duration-300 group"
+          className="hidden md:block absolute left-6 top-1/2 -translate-y-1/2 z-20 bg-neutral-900/40 hover:bg-amber-500 text-white hover:text-neutral-900 p-3 rounded-xl border border-white/10 backdrop-blur-md transition-all duration-300 group"
         >
           <ChevronLeft className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" />
         </button>
         <button
           onClick={nextSlide}
           aria-label="Next Slide"
-          className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-20 bg-near-black/40 hover:bg-gold text-white hover:text-near-black p-3 rounded-none border border-white/10 backdrop-blur-md transition-all duration-300 group"
+          className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-20 bg-neutral-900/40 hover:bg-amber-500 text-white hover:text-neutral-900 p-3 rounded-xl border border-white/10 backdrop-blur-md transition-all duration-300 group"
         >
           <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
         </button>
 
-        {/* Progress-style Bar Indicators */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
           {heroSlides.map((_, index) => (
             <button
@@ -288,7 +275,7 @@ export default function HomePage() {
               aria-label={`Go to slide ${index + 1}`}
               className={`h-1 transition-all duration-500 ease-out ${
                 currentSlide === index
-                  ? "w-12 bg-gold"
+                  ? "w-12 bg-amber-500"
                   : "w-5 bg-white/30 hover:bg-white/60"
               }`}
             />
@@ -297,17 +284,23 @@ export default function HomePage() {
       </section>
 
       {/* Featured Products Section */}
-      <section className="2xl:w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
           <div className="space-y-2 sm:space-y-3">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display text-near-black">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/50">
+              <Sparkles className="w-3 h-3 text-amber-500" />
+              <span className="text-[9px] font-bold uppercase tracking-widest text-amber-600">
+                Premium Selection
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900">
               Featured Collection
             </h2>
-            <div className="w-12 sm:w-16 h-0.5 bg-gold mx-auto sm:mx-0" />
+            <div className="w-12 sm:w-16 h-0.5 bg-amber-500 mx-auto sm:mx-0" />
           </div>
           <Link
             href="/shop"
-            className="text-[10px] sm:text-[12px] font-bold uppercase tracking-widest text-walnut hover:text-gold transition-colors underline underline-offset-4"
+            className="text-[10px] sm:text-[12px] font-bold uppercase tracking-widest text-neutral-600 hover:text-amber-600 transition-colors underline underline-offset-4"
           >
             Shop All →
           </Link>
@@ -315,12 +308,12 @@ export default function HomePage() {
 
         {featuredProducts.length === 0 ? (
           <div className="text-center py-8 sm:py-12">
-            <p className="text-gray-400 text-sm sm:text-base">
+            <p className="text-neutral-400 text-sm sm:text-base">
               No products found. Add some products in the admin panel.
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -330,26 +323,26 @@ export default function HomePage() {
 
       {/* Recently Added Section */}
       {recentProducts.length > 0 && (
-        <section className="2xl:w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
             <div className="space-y-2 sm:space-y-3">
-              <h3 className="text-[10px] sm:text-[12px] font-bold uppercase tracking-[0.2em] text-gray-a0">
+              <h3 className="text-[10px] sm:text-[12px] font-bold uppercase tracking-[0.2em] text-neutral-400">
                 Just Arrived
               </h3>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display text-near-black">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900">
                 Newest Additions
               </h2>
-              <div className="w-12 sm:w-16 h-0.5 bg-gold mx-auto sm:mx-0" />
+              <div className="w-12 sm:w-16 h-0.5 bg-amber-500 mx-auto sm:mx-0" />
             </div>
             <Link
               href="/shop?sort=latest"
-              className="text-[10px] sm:text-[12px] font-bold uppercase tracking-widest text-walnut hover:text-gold transition-colors underline underline-offset-4"
+              className="text-[10px] sm:text-[12px] font-bold uppercase tracking-widest text-neutral-600 hover:text-amber-600 transition-colors underline underline-offset-4"
             >
               View All New →
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {recentProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -360,47 +353,47 @@ export default function HomePage() {
       {/* Why Choose Us */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-12 text-center">
-          <div className="space-y-3 sm:space-y-4">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-cream border border-warm-beige flex items-center justify-center mx-auto rounded-lg">
-              <Award className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-walnut" />
+          <div className="space-y-3 sm:space-y-4 bg-white p-6 rounded-2xl border border-neutral-200/80 shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-amber-50 border border-amber-200/50 flex items-center justify-center mx-auto rounded-xl">
+              <Award className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-amber-600" />
             </div>
-            <h4 className="text-[10px] sm:text-[11px] md:text-[12px] font-bold uppercase tracking-widest text-near-black">
+            <h4 className="text-[10px] sm:text-[11px] md:text-[12px] font-bold uppercase tracking-widest text-neutral-900">
               Premium Quality
             </h4>
-            <p className="text-[11px] sm:text-[12px] md:text-[13px] text-gray-666 font-light leading-relaxed px-2">
+            <p className="text-[11px] sm:text-[12px] md:text-[13px] text-neutral-500 font-light leading-relaxed px-2">
               Hand-selected materials for lasting elegance.
             </p>
           </div>
-          <div className="space-y-3 sm:space-y-4">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-cream border border-warm-beige flex items-center justify-center mx-auto rounded-lg">
-              <CreditCard className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-walnut" />
+          <div className="space-y-3 sm:space-y-4 bg-white p-6 rounded-2xl border border-neutral-200/80 shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-amber-50 border border-amber-200/50 flex items-center justify-center mx-auto rounded-xl">
+              <CreditCard className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-amber-600" />
             </div>
-            <h4 className="text-[10px] sm:text-[11px] md:text-[12px] font-bold uppercase tracking-widest text-near-black">
+            <h4 className="text-[10px] sm:text-[11px] md:text-[12px] font-bold uppercase tracking-widest text-neutral-900">
               Cash On Delivery
             </h4>
-            <p className="text-[11px] sm:text-[12px] md:text-[13px] text-gray-666 font-light leading-relaxed px-2">
+            <p className="text-[11px] sm:text-[12px] md:text-[13px] text-neutral-500 font-light leading-relaxed px-2">
               Secure payment upon your satisfaction.
             </p>
           </div>
-          <div className="space-y-3 sm:space-y-4">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-cream border border-warm-beige flex items-center justify-center mx-auto rounded-lg">
-              <Truck className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-walnut" />
+          <div className="space-y-3 sm:space-y-4 bg-white p-6 rounded-2xl border border-neutral-200/80 shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-amber-50 border border-amber-200/50 flex items-center justify-center mx-auto rounded-xl">
+              <Truck className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-amber-600" />
             </div>
-            <h4 className="text-[10px] sm:text-[11px] md:text-[12px] font-bold uppercase tracking-widest text-near-black">
+            <h4 className="text-[10px] sm:text-[11px] md:text-[12px] font-bold uppercase tracking-widest text-neutral-900">
               Fast Delivery
             </h4>
-            <p className="text-[11px] sm:text-[12px] md:text-[13px] text-gray-666 font-light leading-relaxed px-2">
+            <p className="text-[11px] sm:text-[12px] md:text-[13px] text-neutral-500 font-light leading-relaxed px-2">
               UK-wide logistics to your doorstep.
             </p>
           </div>
-          <div className="space-y-3 sm:space-y-4">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-cream border border-warm-beige flex items-center justify-center mx-auto rounded-lg">
-              <ShieldCheck className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-walnut" />
+          <div className="space-y-3 sm:space-y-4 bg-white p-6 rounded-2xl border border-neutral-200/80 shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-amber-50 border border-amber-200/50 flex items-center justify-center mx-auto rounded-xl">
+              <ShieldCheck className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-amber-600" />
             </div>
-            <h4 className="text-[10px] sm:text-[11px] md:text-[12px] font-bold uppercase tracking-widest text-near-black">
+            <h4 className="text-[10px] sm:text-[11px] md:text-[12px] font-bold uppercase tracking-widest text-neutral-900">
               Secure Checkout
             </h4>
-            <p className="text-[11px] sm:text-[12px] md:text-[13px] text-gray-666 font-light leading-relaxed px-2">
+            <p className="text-[11px] sm:text-[12px] md:text-[13px] text-neutral-500 font-light leading-relaxed px-2">
               Your data protected by industry standards.
             </p>
           </div>
@@ -408,20 +401,26 @@ export default function HomePage() {
       </section>
 
       {/* Categories Grid */}
-      <section className="bg-warm-beige/30 py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 border-y border-warm-beige">
+      <section className="bg-white border-t border-b border-neutral-200/80 py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto space-y-8 sm:space-y-12 md:space-y-16">
           <div className="text-center space-y-2 sm:space-y-3">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display text-near-black tracking-tight">
-              Shop by Category
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/50">
+              <Sparkles className="w-3 h-3 text-amber-500" />
+              <span className="text-[9px] font-bold uppercase tracking-widest text-amber-600">
+                Shop by Category
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900 tracking-tight">
+              Explore Our Collections
             </h2>
-            <p className="text-gray-666 font-light text-sm sm:text-base">
-              Explore our curated collections
+            <p className="text-neutral-500 font-light text-sm sm:text-base">
+              Curated categories for every space in your home
             </p>
           </div>
 
           {categories.length === 0 ? (
             <div className="text-center py-8 sm:py-12">
-              <p className="text-gray-400 text-sm sm:text-base">
+              <p className="text-neutral-400 text-sm sm:text-base">
                 No categories found. Add some categories in the admin panel.
               </p>
             </div>
@@ -442,23 +441,23 @@ export default function HomePage() {
       </section>
 
       {/* Newsletter Section */}
-      <section className="bg-near-black text-white py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8">
+      <section className="bg-neutral-900 text-white py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center space-y-6 sm:space-y-7 md:space-y-8">
           <div className="space-y-2 sm:space-y-3">
-            <h3 className="text-[9px] sm:text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] sm:tracking-[0.4em] text-gold">
+            <span className="text-[9px] sm:text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] sm:tracking-[0.4em] text-amber-400">
               Join the Collective
-            </h3>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight">
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-medium tracking-tight">
               Signature Style, Delivered.
             </h2>
-            <p className="text-cream/60 font-light text-sm sm:text-base max-w-lg mx-auto px-4">
+            <p className="text-neutral-400 font-light text-sm sm:text-base max-w-lg mx-auto px-4">
               Subscribe for exclusive design inspiration, seasonal collection
               reveals, and artisanal insights.
             </p>
           </div>
 
           {newsletterSuccess && (
-            <div className="bg-mint-50 text-mint-700 py-2 px-4 rounded-lg text-sm">
+            <div className="bg-emerald-50/10 text-emerald-400 py-2 px-4 rounded-xl text-sm border border-emerald-500/20">
               ✓ Thank you for subscribing! Check your inbox soon.
             </div>
           )}
@@ -473,11 +472,11 @@ export default function HomePage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Your email address"
               required
-              className="flex-1 bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-sm outline-none focus:border-gold focus:bg-white/20 transition-all placeholder:text-white/40"
+              className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-sm outline-none focus:border-amber-500 focus:bg-white/20 transition-all placeholder:text-white/40"
             />
             <button
               type="submit"
-              className="bg-gold text-near-black px-6 py-3 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-white transition-colors rounded-lg whitespace-nowrap"
+              className="bg-amber-500 text-neutral-900 px-6 py-3 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-white transition-colors rounded-xl whitespace-nowrap"
             >
               Subscribe
             </button>
@@ -508,7 +507,7 @@ function CategoryCard({
   return (
     <Link
       href={link}
-      className="relative aspect-[3/4] group overflow-hidden bg-walnut block rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+      className="relative aspect-[3/4] group overflow-hidden bg-neutral-800 block rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300"
     >
       <img
         src={image}
@@ -516,14 +515,14 @@ function CategoryCard({
         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
         fetchPriority="high"
       />
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-white space-y-1 sm:space-y-2 p-3 sm:p-4 bg-black/10 group-hover:bg-black/40 transition-colors">
-        <span className="text-[7px] sm:text-[8px] md:text-[14px] mb-4 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] transform translate-y-3 sm:translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-white space-y-1 sm:space-y-2 p-3 sm:p-4 bg-black/10 group-hover:bg-black/40 transition-colors rounded-2xl">
+        <span className="text-[7px] sm:text-[8px] md:text-[14px] mb-4 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] transform translate-y-3 sm:translate-y-4 group-hover:translate-y-0 transition-all duration-500 text-amber-400">
           {subtitle}
         </span>
-        <h3 className="text-lg sm:text-xl md:text-2xl lg:text-[30px] text-white font-display font-medium tracking-tight text-center px-1 sm:px-2 line-clamp-2">
+        <h3 className="text-lg sm:text-xl md:text-2xl lg:text-[30px] text-white font-serif font-medium tracking-tight text-center px-1 sm:px-2 line-clamp-2">
           {title}
         </h3>
-        <span className="w-0 group-hover:w-6 sm:group-hover:w-8 h-px bg-white transition-all duration-500 ease-out" />
+        <span className="w-0 group-hover:w-6 sm:group-hover:w-8 h-px bg-amber-500 transition-all duration-500 ease-out" />
       </div>
     </Link>
   );

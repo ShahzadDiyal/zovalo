@@ -9,14 +9,15 @@ import BackToTop from "../components/BackToTop";
 const SITE_URL = "https://royalfurnitures.store";
 const SITE_NAME = "Royal Furniture";
 const DEFAULT_DESCRIPTION =
-  "Shop premium, masterfully crafted furniture at Royal Furniture. Sofas, beds, dining sets and more with fast UK delivery and Cash on Delivery available (No Upfront Fees Required).";
+  "Save 26% Today! Shop luxury beds, sofas, wardrobes & dining sets at Royal Furniture. Enjoy Next-Day UK Delivery & Cash on Delivery—Pay Nothing Upfront!";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: {
-    default: `${SITE_NAME} - Cash Upon Delivery Premium Furniture Online`,
-    template: `%s | ${SITE_NAME}`,
-  },
+ title: {
+  default: `${SITE_NAME} | 26% OFF Luxury Furniture & Next-Day UK Delivery`,
+  template: `%s | ${SITE_NAME}`,
+},
+
   description: DEFAULT_DESCRIPTION,
   keywords: [
     "furniture",
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
-    title: `${SITE_NAME} - Cash Upon Delivery Premium Furniture Online`,
+    title: `${SITE_NAME} - Cash on Delivery Furniture — Save 26% Today`,
     description: DEFAULT_DESCRIPTION,
     url: SITE_URL,
     images: [
@@ -60,7 +61,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} - Cash Upon Delivery Premium Furniture Online`,
+    title: `${SITE_NAME} - Luxury Beds, Sofas & Wardrobes — Pay on Delivery`,
     description: DEFAULT_DESCRIPTION,
     images: ["/og-image.jpg"],
   },
@@ -68,9 +69,6 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
-  },
-  verification: {
-    google: "PASTE_GOOGLE_SITE_VERIFICATION_CODE_HERE",
   },
 };
 

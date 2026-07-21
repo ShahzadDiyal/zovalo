@@ -1,12 +1,5 @@
 // src/types/index.ts
 
-export interface SeaterPrice {
-  seater: string;
-  price: number;
-  compareAtPrice?: number;
-  images?: string[];  // Add this line for per-seater images
-}
-
 export interface Product {
   id: string;
   title: string;
@@ -14,31 +7,26 @@ export interface Product {
   description: string;
   price: number;
   compareAtPrice?: number;
-  category: string;
+  category: string; // Keep as string for backward compatibility
   reviews: string;
   images: string[];
   stock: number;
   seaterCount?: string[];
-  seaterPrices?: SeaterPrice[];  // Use the SeaterPrice interface instead of inline type
+  seaterPrices?: SeaterPrice[];
   colors?: string[];
-  material?: string;
-  dimensions?: string;
-  weight?: number;
-  warrantyYears?: number;
-  deliveryCountries?: string[];
-  estimatedDelivery?: string;
   tags?: string[];
-  specifications?: {
-    Material?: string;
-    Dimensions?: string;
-    Weight?: string;
-    Warranty?: string;
-    Color?: string;
-    CareInstructions?: string;
-  };
+  features?: string[];
+  featuresStyle?: 'bullet' | 'number';
+  faqs?: { question: string; answer: string }[];
   featured?: boolean;
   createdAt?: any;
   updatedAt?: any;
+}
+
+export interface SeaterPrice {
+  seater: string;
+  price: number;
+  compareAtPrice?: number;
 }
 
 export interface User {

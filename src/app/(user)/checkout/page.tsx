@@ -23,6 +23,7 @@ import {
   AlertCircle,
   X,
   Globe,
+  Sparkles,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -82,7 +83,6 @@ export default function CheckoutPage() {
   );
   const [showWarning, setShowWarning] = useState(false);
 
-  // reCAPTCHA states
   const recaptchaRef = useRef<any>(null);
   const [requireCaptcha, setRequireCaptcha] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
@@ -100,14 +100,12 @@ export default function CheckoutPage() {
     notes: "",
   });
 
-  // Load order count from localStorage on mount
   useEffect(() => {
     const savedOrderCount = parseInt(
       localStorage.getItem("userOrderCount") || "0",
     );
     setOrderCount(savedOrderCount);
 
-    // Require captcha after 2 orders
     if (savedOrderCount >= 2) {
       setRequireCaptcha(true);
     }
@@ -125,7 +123,6 @@ export default function CheckoutPage() {
     setOrderCount(newCount);
     localStorage.setItem("userOrderCount", newCount.toString());
 
-    // Enable captcha for next order after 2 orders
     if (newCount >= 2) {
       setRequireCaptcha(true);
       setCaptchaVerified(false);
@@ -213,7 +210,6 @@ export default function CheckoutPage() {
   const handleProceedToConfirmation = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check if captcha is required and not verified
     if (requireCaptcha && !captchaVerified) {
       setValidationError("Please complete the verification to continue");
       setShowWarning(true);
@@ -265,8 +261,6 @@ export default function CheckoutPage() {
           quantity: item.quantity || 1,
           image: item.images?.[0] || "",
           selectedOptions: item.selectedOptions || {},
-          specifications: item.specifications || {},
-          dimensions: item.dimensions || "",
           color: item.selectedOptions?.color || "",
           seater: item.selectedOptions?.seater || "",
         })),
@@ -280,7 +274,6 @@ export default function CheckoutPage() {
         createdAt: serverTimestamp(),
       });
 
-      // Increment order count after successful order
       incrementOrderCount();
 
       setOrderId(docRef.id);
@@ -296,32 +289,34 @@ export default function CheckoutPage() {
 
   if (orderComplete) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-16 sm:py-32 text-center space-y-6">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-mint-50 rounded-full">
-          <CheckCircle2 className="w-10 h-10 text-mint-700" />
-        </div>
-        <h1 className="text-3xl font-display text-near-black">
-          Thank You For Your Order!
-        </h1>
-        <p className="text-gray-600">
-          Order #{orderId?.slice(-8).toUpperCase()}
-        </p>
-        <p className="text-gray-500">
-          We'll contact you shortly for delivery confirmation.
-        </p>
-        <div className="flex gap-4 justify-center">
-          <Link
-            href="/shop"
-            className="bg-near-black text-white px-6 py-2 text-sm hover:bg-gold transition rounded"
-          >
-            Continue Shopping
-          </Link>
-          <Link
-            href="/profile"
-            className="border border-near-black px-6 py-2 text-sm hover:bg-near-black hover:text-white transition rounded"
-          >
-            View Orders
-          </Link>
+      <div className="bg-[#FAF8F5] min-h-screen py-12 sm:py-16 md:py-20">
+        <div className="max-w-3xl mx-auto px-4 text-center space-y-6">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-50 rounded-full">
+            <CheckCircle2 className="w-10 h-10 text-emerald-600" />
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-serif text-neutral-900">
+            Thank You For Your Order!
+          </h1>
+          <p className="text-neutral-600">
+            Order #{orderId?.slice(-8).toUpperCase()}
+          </p>
+          <p className="text-neutral-500 max-w-md mx-auto">
+            We'll contact you shortly for delivery confirmation. Our team will call you within 24 hours to confirm your delivery slot.
+          </p>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <Link
+              href="/shop"
+              className="bg-neutral-900 text-white px-6 py-2.5 text-sm font-bold uppercase tracking-widest hover:bg-amber-600 transition rounded-xl"
+            >
+              Continue Shopping
+            </Link>
+            <Link
+              href="/profile"
+              className="border-2 border-neutral-900 px-6 py-2.5 text-sm font-bold uppercase tracking-widest hover:bg-neutral-900 hover:text-white transition rounded-xl"
+            >
+              View Orders
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -329,11 +324,13 @@ export default function CheckoutPage() {
 
   if (cart.length === 0) {
     return (
-      <div className="text-center py-32">
-        <h2 className="text-xl">No items to checkout</h2>
-        <Link href="/shop" className="text-gold underline">
-          Go to Shop
-        </Link>
+      <div className="bg-[#FAF8F5] min-h-screen py-12 sm:py-16 md:py-20">
+        <div className="text-center py-12 sm:py-16">
+          <h2 className="text-xl font-serif text-neutral-900">No items to checkout</h2>
+          <Link href="/shop" className="text-amber-600 hover:text-amber-700 underline mt-2 inline-block">
+            Go to Shop
+          </Link>
+        </div>
       </div>
     );
   }
@@ -341,15 +338,36 @@ export default function CheckoutPage() {
   const RECAPTCHA_SITE_KEY = "6Lfr4ActAAAAAMH7eumd7twNYfKopUrlfWZRzT7t";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 pt-10">
+    <div className="bg-[#FAF8F5] min-h-screen">
       <SEO
         title="Secure Checkout"
         description="Complete your order with Cash on Delivery"
       />
 
+      {/* Hero Header Section */}
+      <section className="relative overflow-hidden bg-neutral-900 text-white py-12 sm:py-16 md:py-20 mb-8 sm:mb-12">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
+          <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-xs font-bold uppercase tracking-widest text-amber-300">
+              Secure Checkout
+            </span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight">
+            Complete Your Order
+          </h1>
+          <p className="text-neutral-400 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            Enter your shipping details to confirm your purchase
+          </p>
+        </div>
+      </section>
+
       {/* Warning Banner */}
       {showWarning && validationError && (
-        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-bounce max-w-[90%] sm:max-w-md">
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 animate-bounce max-w-[90%] sm:max-w-md">
           <AlertCircle className="w-5 h-5 flex-shrink-0" />
           <div>
             <p className="text-sm font-medium">Please check your details</p>
@@ -361,451 +379,453 @@ export default function CheckoutPage() {
         </div>
       )}
 
-      {/* reCAPTCHA Info Banner - Shows when captcha is required */}
-      {requireCaptcha && !captchaVerified && (
-        <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
-          <div className="flex items-center gap-3">
-            <ShieldCheck className="w-5 h-5 text-amber-600" />
-            <div>
-              <p className="text-sm font-bold text-amber-800">
-                Security Verification Required
-              </p>
-              <p className="text-xs text-amber-700">
-                You've placed {orderCount} orders. Please complete the
-                verification below to continue.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Checkout Form */}
-        <div className="flex-1">
-          <div className="flex justify-between items-center border-b pb-4 mb-6">
-            <h1 className="text-2xl font-display">Shipping Details</h1>
-            <Link href="/cart" className="text-sm text-walnut hover:text-gold">
-              ← Return to Cart
-            </Link>
-          </div>
-
-          {validationError && !showWarning && (
-            <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg mb-4 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4" />
-              <span className="text-sm">{validationError}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleProceedToConfirmation} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {/* Full Name */}
-              <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    name="fullName"
-                    required
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
-                    placeholder="Royal Furnitures"
-                  />
-                </div>
-              </div>
-
-              {/* Email */}
-              <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">
-                  Email Address <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    name="email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
-                    placeholder="george@gmail.com"
-                  />
-                </div>
-              </div>
-
-              {/* Country */}
-              <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">
-                  Country <span className="text-red-500">*</span>
-                </label>
-                <select
-                  name="country"
-                  value={formData.country}
-                  onChange={handleCountryChange}
-                  className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm rounded"
-                >
-                  {countryCodes.map((c) => (
-                    <option key={c.country} value={c.country}>
-                      {c.country}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Phone Number */}
-              <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">
-                  Phone Number <span className="text-red-500">*</span>
-                </label>
-                <div className="flex gap-2">
-                  <div className="relative w-28">
-                    <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <select
-                      value={selectedCountryCode.code}
-                      onChange={(e) => {
-                        const countryData = countryCodes.find(
-                          (c) => c.code === e.target.value,
-                        );
-                        if (countryData) {
-                          setSelectedCountryCode(countryData);
-                          setFormData((prev) => ({
-                            ...prev,
-                            country: countryData.country,
-                          }));
-                        }
-                      }}
-                      className="w-full bg-cream border border-warm-beige py-2 pl-9 pr-2 text-sm rounded"
-                    >
-                      {countryCodes.map((c) => (
-                        <option key={c.code} value={c.code}>
-                          {c.code}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="relative flex-1">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input
-                      name="phone"
-                      type="tel"
-                      required
-                      value={formData.phone}
-                      onChange={handleChange}
-                      placeholder={selectedCountryCode.example}
-                      className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Alternative Phone Number */}
-              <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">
-                  Alternative Phone Number{" "}
-                  <span className="text-gray-400 text-[8px]">(Optional)</span>
-                </label>
-                <div className="flex gap-2">
-                  <div className="relative w-28">
-                    <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <select
-                      value={selectedCountryCode.code}
-                      className="w-full bg-cream border border-warm-beige py-2 pl-9 pr-2 text-sm rounded"
-                    >
-                      {countryCodes.map((c) => (
-                        <option key={c.code} value={c.code}>
-                          {c.code}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="relative flex-1">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input
-                      name="alternativePhone"
-                      type="tel"
-                      value={formData.alternativePhone}
-                      onChange={handleChange}
-                      placeholder={selectedCountryCode.example}
-                      className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
-                    />
-                  </div>
-                </div>
-                <p className="text-[8px] text-gray-400 mt-1">
-                  We'll use this if we can't reach you on your primary number
-                </p>
-              </div>
-
-              {/* City */}
-              <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">
-                  City <span className="text-red-500">*</span>
-                </label>
-                <input
-                  name="city"
-                  required
-                  value={formData.city}
-                  onChange={handleChange}
-                  className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                  placeholder="London"
-                />
-              </div>
-
-              {/* Postal Code */}
-              <div>
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">
-                  Postal Code <span className="text-red-500">*</span>
-                </label>
-                <input
-                  name="postalCode"
-                  required
-                  value={formData.postalCode}
-                  onChange={handleChange}
-                  className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                  placeholder="SW1A 1AA"
-                />
-              </div>
-
-              {/* Address */}
-              <div className="md:col-span-2">
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">
-                  Street Address <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-                  <textarea
-                    name="address"
-                    required
-                    rows={2}
-                    value={formData.address}
-                    onChange={handleChange}
-                    className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
-                    placeholder="123 Main Street, Apartment 4B"
-                  />
-                </div>
-              </div>
-
-              {/* Notes */}
-              <div className="md:col-span-2">
-                <label className="text-xs font-bold uppercase text-walnut block mb-1">
-                  Order Notes (Optional)
-                </label>
-                <div className="relative">
-                  <MessageSquare className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-                  <textarea
-                    name="notes"
-                    rows={3}
-                    value={formData.notes}
-                    onChange={handleChange}
-                    placeholder="E.g., Gate code, floor number, special instructions..."
-                    className="w-full bg-cream border border-warm-beige py-2 pl-10 pr-3 text-sm focus:border-gold outline-none rounded"
-                  />
-                </div>
-              </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-20">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Checkout Form */}
+          <div className="flex-1">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-neutral-200/80 pb-4 mb-6 gap-2">
+              <h2 className="text-xl sm:text-2xl font-serif text-neutral-900">
+                Shipping Details
+              </h2>
+              <Link href="/cart" className="text-xs sm:text-sm font-bold uppercase tracking-widest text-neutral-500 hover:text-amber-600 transition-colors">
+                ← Return to Cart
+              </Link>
             </div>
 
-            {/* reCAPTCHA - Only shows after 2 orders */}
-            {requireCaptcha && (
-              <div className="flex justify-center my-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                <div className="text-center">
-                  <p className="text-xs text-amber-800 mb-3 font-medium">
-                    🔒 Security Check Required
-                  </p>
-                  <ReCAPTCHA
-                    ref={recaptchaRef}
-                    sitekey={RECAPTCHA_SITE_KEY}
-                    onChange={onCaptchaChange}
-                    theme="light"
-                  />
-                  <p className="text-[10px] text-gray-500 mt-3">
-                    This helps us protect against automated orders
-                  </p>
+            {validationError && !showWarning && (
+              <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl mb-4 flex items-center gap-2">
+                <AlertCircle className="w-4 h-4" />
+                <span className="text-sm">{validationError}</span>
+              </div>
+            )}
+
+            {/* reCAPTCHA Info Banner */}
+            {requireCaptcha && !captchaVerified && (
+              <div className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <div className="flex items-center gap-3">
+                  <ShieldCheck className="w-5 h-5 text-amber-600" />
+                  <div>
+                    <p className="text-sm font-bold text-amber-800">
+                      Security Verification Required
+                    </p>
+                    <p className="text-xs text-amber-700">
+                      You've placed {orderCount} orders. Please complete the
+                      verification below to continue.
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
 
-            {/* Order Count Info */}
-            <div className="text-center text-[10px] text-gray-400">
-              {orderCount === 0 ? (
-                <p className="text-[15px] text-amber-700 italic"> “🚚 Our team will call you within 24 hours to confirm your delivery slot. If you have any questions, you can directly reach us through WhatsApp.”</p>
-              ) : orderCount === 1 ? (
-                <p>⚠️ Next order will require security verification.</p>
-              ) : (
-                <p className="text-amber-600">
-                  ✓ Security verification completed for this order
-                </p>
-              )}
-            </div>
+            <form onSubmit={handleProceedToConfirmation} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* Full Name */}
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
+                    Full Name <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                    <input
+                      name="fullName"
+                      required
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      className="w-full bg-white border border-neutral-200/80 py-2.5 pl-10 pr-3 text-sm focus:border-amber-500 focus:bg-white outline-none transition-all rounded-xl"
+                      placeholder="Royal Furnitures"
+                    />
+                  </div>
+                </div>
 
-            {/* Payment Method */}
-            <div className="bg-mint-50 border border-mint-200 p-4 rounded-lg">
-              <div className="flex items-center gap-3 mb-3">
-                <CreditCard className="w-5 h-5 text-mint-700" />
-                <span className="font-bold text-near-black">
-                  Cash Upon Delivery
-                </span>
-              </div>
-              <p className="text-sm text-gray-600 mb-3">
-                Pay only when your furniture arrives at your doorstep. No
-                advance payment required.
-              </p>
-              <div className="flex flex-wrap gap-4 text-xs text-gray-500">
-                <span className="flex items-center gap-1">
-                  ✓ Inspect before payment
-                </span>
-                <span className="flex items-center gap-1">
-                  ✓ No hidden charges
-                </span>
-                <span className="flex items-center gap-1">
-                  ✓ Secure delivery
-                </span>
-              </div>
-            </div>
+                {/* Email */}
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
+                    Email Address <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full bg-white border border-neutral-200/80 py-2.5 pl-10 pr-3 text-sm focus:border-amber-500 focus:bg-white outline-none transition-all rounded-xl"
+                      placeholder="george@gmail.com"
+                    />
+                  </div>
+                </div>
 
-            <button
-              type="submit"
-              disabled={loading || (requireCaptcha && !captchaVerified)}
-              className="w-full bg-near-black text-white py-3 text-sm font-bold uppercase tracking-wider hover:bg-gold transition rounded disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading
-                ? "Processing..."
-                : requireCaptcha && !captchaVerified
-                  ? "Complete Verification First"
-                  : "Confirm Order (Pay After Delivery)"}
-            </button>
-          </form>
-        </div>
+                {/* Country */}
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
+                    Country <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    name="country"
+                    value={formData.country}
+                    onChange={handleCountryChange}
+                    className="w-full bg-white border border-neutral-200/80 py-2.5 px-3 text-sm focus:border-amber-500 outline-none transition-all rounded-xl"
+                  >
+                    {countryCodes.map((c) => (
+                      <option key={c.country} value={c.country}>
+                        {c.country}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-        {/* Order Summary Sidebar */}
-        <aside className="lg:w-[420px]">
-          <div className="bg-cream/30 border border-warm-beige p-5 rounded-lg sticky top-24">
-            <h2 className="text-lg font-display mb-4">Review Order</h2>
-            <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
-              {cart.map((item) => (
-                <div key={item.id} className="border-b border-warm-beige pb-4">
-                  <div className="flex gap-3">
-                    <div className="w-16 h-16 bg-white border rounded overflow-hidden">
-                      <img
-                        src={item.images[0]}
-                        alt={item.title}
-                        className="w-full h-full object-cover"
-                      />
+                {/* Phone Number */}
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
+                    Phone Number <span className="text-red-500">*</span>
+                  </label>
+                  <div className="flex gap-2">
+                    <div className="relative w-28">
+                      <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                      <select
+                        value={selectedCountryCode.code}
+                        onChange={(e) => {
+                          const countryData = countryCodes.find(
+                            (c) => c.code === e.target.value,
+                          );
+                          if (countryData) {
+                            setSelectedCountryCode(countryData);
+                            setFormData((prev) => ({
+                              ...prev,
+                              country: countryData.country,
+                            }));
+                          }
+                        }}
+                        className="w-full bg-white border border-neutral-200/80 py-2.5 pl-9 pr-2 text-sm focus:border-amber-500 outline-none transition-all rounded-xl"
+                      >
+                        {countryCodes.map((c) => (
+                          <option key={c.code} value={c.code}>
+                            {c.code}
+                          </option>
+                        ))}
+                      </select>
                     </div>
-                    <div className="flex-1">
-                      <h4 className="text-sm font-medium">{item.title}</h4>
-                      <p className="text-xs text-gray-500">
-                        QTY: {item.quantity}
-                      </p>
-                      <p className="text-sm font-bold">
-                        {formatCurrency(item.price * item.quantity)}
-                      </p>
+                    <div className="relative flex-1">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                      <input
+                        name="phone"
+                        type="tel"
+                        required
+                        value={formData.phone}
+                        onChange={handleChange}
+                        placeholder={selectedCountryCode.example}
+                        className="w-full bg-white border border-neutral-200/80 py-2.5 pl-10 pr-3 text-sm focus:border-amber-500 focus:bg-white outline-none transition-all rounded-xl"
+                      />
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-            <div className="border-t pt-3 mt-3 space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Subtotal</span>
-                <span>{formatCurrency(subtotal)}</span>
+
+                {/* Alternative Phone Number */}
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
+                    Alternative Phone Number{" "}
+                    <span className="text-neutral-400 text-[8px]">(Optional)</span>
+                  </label>
+                  <div className="flex gap-2">
+                    <div className="relative w-28">
+                      <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                      <select
+                        value={selectedCountryCode.code}
+                        className="w-full bg-white border border-neutral-200/80 py-2.5 pl-9 pr-2 text-sm focus:border-amber-500 outline-none transition-all rounded-xl"
+                      >
+                        {countryCodes.map((c) => (
+                          <option key={c.code} value={c.code}>
+                            {c.code}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="relative flex-1">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                      <input
+                        name="alternativePhone"
+                        type="tel"
+                        value={formData.alternativePhone}
+                        onChange={handleChange}
+                        placeholder={selectedCountryCode.example}
+                        className="w-full bg-white border border-neutral-200/80 py-2.5 pl-10 pr-3 text-sm focus:border-amber-500 focus:bg-white outline-none transition-all rounded-xl"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-[8px] text-neutral-400 mt-1">
+                    We'll use this if we can't reach you on your primary number
+                  </p>
+                </div>
+
+                {/* City */}
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
+                    City <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    name="city"
+                    required
+                    value={formData.city}
+                    onChange={handleChange}
+                    className="w-full bg-white border border-neutral-200/80 py-2.5 px-3 text-sm focus:border-amber-500 focus:bg-white outline-none transition-all rounded-xl"
+                    placeholder="London"
+                  />
+                </div>
+
+                {/* Postal Code */}
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
+                    Postal Code <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    name="postalCode"
+                    required
+                    value={formData.postalCode}
+                    onChange={handleChange}
+                    className="w-full bg-white border border-neutral-200/80 py-2.5 px-3 text-sm focus:border-amber-500 focus:bg-white outline-none transition-all rounded-xl"
+                    placeholder="SW1A 1AA"
+                  />
+                </div>
+
+                {/* Address */}
+                <div className="md:col-span-2">
+                  <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
+                    Street Address <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-3 w-4 h-4 text-neutral-400" />
+                    <textarea
+                      name="address"
+                      required
+                      rows={2}
+                      value={formData.address}
+                      onChange={handleChange}
+                      className="w-full bg-white border border-neutral-200/80 py-2.5 pl-10 pr-3 text-sm focus:border-amber-500 focus:bg-white outline-none transition-all rounded-xl resize-none"
+                      placeholder="123 Main Street, Apartment 4B"
+                    />
+                  </div>
+                </div>
+
+                {/* Notes */}
+                <div className="md:col-span-2">
+                  <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
+                    Order Notes (Optional)
+                  </label>
+                  <div className="relative">
+                    <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-neutral-400" />
+                    <textarea
+                      name="notes"
+                      rows={3}
+                      value={formData.notes}
+                      onChange={handleChange}
+                      placeholder="E.g., Gate code, floor number, special instructions..."
+                      className="w-full bg-white border border-neutral-200/80 py-2.5 pl-10 pr-3 text-sm focus:border-amber-500 focus:bg-white outline-none transition-all rounded-xl resize-none"
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="flex justify-between text-sm">
-                <span>Delivery</span>
-                <span className="text-mint-700 font-bold">FREE</span>
+
+              {/* reCAPTCHA */}
+              {requireCaptcha && (
+                <div className="flex justify-center my-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                  <div className="text-center">
+                    <p className="text-xs text-amber-800 mb-3 font-medium">
+                      🔒 Security Check Required
+                    </p>
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      sitekey={RECAPTCHA_SITE_KEY}
+                      onChange={onCaptchaChange}
+                      theme="light"
+                    />
+                    <p className="text-[10px] text-neutral-500 mt-3">
+                      This helps us protect against automated orders
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Order Count Info */}
+              <div className="text-center text-[10px] text-neutral-400">
+                {orderCount === 0 ? (
+                  <p className="text-[15px] text-amber-700 italic">🚚 Our team will call you within 24 hours to confirm your delivery slot.</p>
+                ) : orderCount === 1 ? (
+                  <p>⚠️ Next order will require security verification.</p>
+                ) : (
+                  <p className="text-amber-600">
+                    ✓ Security verification completed for this order
+                  </p>
+                )}
               </div>
-              <div className="border-t pt-2 flex justify-between font-bold text-lg">
-                <span>Total</span>
-                <span className="text-walnut">{formatCurrency(subtotal)}</span>
+
+              {/* Payment Method */}
+              <div className="bg-emerald-50/60 border border-emerald-200/80 p-4 rounded-2xl">
+                <div className="flex items-center gap-3 mb-3">
+                  <CreditCard className="w-5 h-5 text-emerald-600" />
+                  <span className="font-bold text-neutral-900">
+                    Cash Upon Delivery
+                  </span>
+                </div>
+                <p className="text-sm text-neutral-600 mb-3">
+                  Pay only when your furniture arrives at your doorstep. No
+                  advance payment required.
+                </p>
+                <div className="flex flex-wrap gap-4 text-xs text-neutral-500">
+                  <span className="flex items-center gap-1">
+                    ✓ Inspect before payment
+                  </span>
+                  <span className="flex items-center gap-1">
+                    ✓ No hidden charges
+                  </span>
+                  <span className="flex items-center gap-1">
+                    ✓ Secure delivery
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="mt-4 pt-3 border-t space-y-2">
-              <div className="flex items-center gap-2 text-xs text-gray-600">
-                <Truck className="w-4 h-4 text-mint-700" />
-                <span>Free delivery within 1-3 days (UK)</span>
-              </div>
-              {/* <div className="flex items-center gap-2 text-xs text-gray-600">
-                <ShieldCheck className="w-4 h-4 text-mint-700" />
-                <span>14-day returns policy</span>
-              </div> */}
-              <div className="flex items-center gap-2 text-xs text-gray-600">
-                <ShoppingBag className="w-4 h-4 text-mint-700" />
-                <span>White glove placement included</span>
-              </div>
-            </div>
+
+              <button
+                type="submit"
+                disabled={loading || (requireCaptcha && !captchaVerified)}
+                className="w-full bg-neutral-900 text-white py-3.5 text-sm font-bold uppercase tracking-widest hover:bg-amber-600 transition-all rounded-xl disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+              >
+                {loading
+                  ? "Processing..."
+                  : requireCaptcha && !captchaVerified
+                    ? "Complete Verification First"
+                    : "Confirm Order (Pay After Delivery)"}
+              </button>
+            </form>
           </div>
-        </aside>
+
+          {/* Order Summary Sidebar */}
+          <aside className="lg:w-[420px]">
+            <div className="bg-white border border-neutral-200/80 p-6 rounded-2xl sticky top-24 shadow-sm">
+              <h2 className="text-xl font-serif text-neutral-900 mb-4">
+                Review Order
+              </h2>
+              <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                {cart.map((item) => (
+                  <div key={item.id} className="border-b border-neutral-200/80 pb-4">
+                    <div className="flex gap-3">
+                      <div className="w-16 h-16 bg-neutral-50 border border-neutral-200/80 rounded-xl overflow-hidden">
+                        <img
+                          src={item.images[0]}
+                          alt={item.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-sm font-medium text-neutral-900 line-clamp-1">{item.title}</h4>
+                        <p className="text-xs text-neutral-500">
+                          QTY: {item.quantity}
+                        </p>
+                        <p className="text-sm font-bold text-neutral-900">
+                          {formatCurrency(item.price * item.quantity)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="border-t border-neutral-200/80 pt-3 mt-3 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-neutral-500">Subtotal</span>
+                  <span className="text-neutral-900">{formatCurrency(subtotal)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-neutral-500">Delivery</span>
+                  <span className="text-emerald-600 font-bold">FREE</span>
+                </div>
+                <div className="border-t border-neutral-200/80 pt-2 flex justify-between font-bold text-lg">
+                  <span className="text-neutral-900">Total</span>
+                  <span className="text-amber-600">{formatCurrency(subtotal)}</span>
+                </div>
+              </div>
+              <div className="mt-4 pt-3 border-t border-neutral-200/80 space-y-2">
+                <div className="flex items-center gap-2 text-xs text-neutral-600">
+                  <Truck className="w-4 h-4 text-emerald-600" />
+                  <span>Free delivery within 1-3 days (UK)</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-neutral-600">
+                  <ShoppingBag className="w-4 h-4 text-emerald-600" />
+                  <span>White glove placement included</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
       </div>
 
       {/* Confirmation Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div
-            className="absolute inset-0 bg-black/50"
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setShowConfirmModal(false)}
           />
-          <div className="bg-white max-w-md w-full rounded-lg overflow-hidden relative z-10">
-            <div className="p-5 border-b flex justify-between items-center">
-              <h3 className="text-lg font-display">Confirm Order</h3>
-              <button onClick={() => setShowConfirmModal(false)}>
+          <div className="bg-white max-w-md w-full rounded-2xl overflow-hidden relative z-10 shadow-2xl">
+            <div className="p-5 border-b border-neutral-200/80 flex justify-between items-center">
+              <h3 className="text-lg font-serif text-neutral-900">Confirm Order</h3>
+              <button onClick={() => setShowConfirmModal(false)} className="hover:text-amber-600 transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <div className="p-5 space-y-4 max-h-[60vh] overflow-y-auto">
               <div>
-                <h4 className="text-xs font-bold uppercase text-walnut mb-2">
+                <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 mb-2">
                   Delivery Details
                 </h4>
-                <p className="text-sm">
-                  <strong>Name:</strong> {formData.fullName}
+                <p className="text-sm text-neutral-600">
+                  <strong className="text-neutral-900">Name:</strong> {formData.fullName}
                 </p>
-                <p className="text-sm">
-                  <strong>Phone:</strong> {selectedCountryCode.code}{" "}
+                <p className="text-sm text-neutral-600">
+                  <strong className="text-neutral-900">Phone:</strong> {selectedCountryCode.code}{" "}
                   {formData.phone}
                 </p>
                 {formData.alternativePhone && (
-                  <p className="text-sm">
-                    <strong>Alt Phone:</strong> {selectedCountryCode.code}{" "}
+                  <p className="text-sm text-neutral-600">
+                    <strong className="text-neutral-900">Alt Phone:</strong> {selectedCountryCode.code}{" "}
                     {formData.alternativePhone}
                   </p>
                 )}
-                <p className="text-sm">
-                  <strong>Address:</strong> {formData.address}, {formData.city},{" "}
+                <p className="text-sm text-neutral-600">
+                  <strong className="text-neutral-900">Address:</strong> {formData.address}, {formData.city},{" "}
                   {formData.postalCode}, {formData.country}
                 </p>
               </div>
               <div>
-                <h4 className="text-xs font-bold uppercase text-walnut mb-2">
+                <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 mb-2">
                   Order Summary
                 </h4>
                 {cart.map((item, idx) => (
-                  <div key={idx} className="flex justify-between text-sm mb-1">
+                  <div key={idx} className="flex justify-between text-sm mb-1 text-neutral-600">
                     <span>
                       {item.title} x{item.quantity}
                     </span>
-                    <span>{formatCurrency(item.price * item.quantity)}</span>
+                    <span className="text-neutral-900">{formatCurrency(item.price * item.quantity)}</span>
                   </div>
                 ))}
-                <div className="border-t pt-2 mt-2 flex justify-between font-bold">
-                  <span>Total</span>
-                  <span>{formatCurrency(subtotal)}</span>
+                <div className="border-t border-neutral-200/80 pt-2 mt-2 flex justify-between font-bold">
+                  <span className="text-neutral-900">Total</span>
+                  <span className="text-amber-600">{formatCurrency(subtotal)}</span>
                 </div>
               </div>
-              <div className="bg-mint-50 p-3 rounded text-center text-sm text-mint-700">
+              <div className="bg-emerald-50/60 p-3 rounded-xl text-center text-sm text-emerald-700 border border-emerald-200/80">
                 ✓ Pay when your furniture arrives
               </div>
             </div>
-            <div className="p-5 border-t flex gap-3">
+            <div className="p-5 border-t border-neutral-200/80 flex gap-3">
               <button
                 onClick={() => setShowConfirmModal(false)}
-                className="flex-1 border py-2 text-sm hover:bg-gray-50 rounded"
+                className="flex-1 border-2 border-neutral-200 py-2.5 text-sm font-bold uppercase tracking-widest text-neutral-700 hover:bg-neutral-50 transition-all rounded-xl"
               >
                 Edit
               </button>
               <button
                 onClick={handleConfirmOrder}
                 disabled={loading}
-                className="flex-1 bg-near-black text-white py-2 text-sm hover:bg-gold transition rounded"
+                className="flex-1 bg-neutral-900 text-white py-2.5 text-sm font-bold uppercase tracking-widest hover:bg-amber-600 transition-all rounded-xl"
               >
                 Confirm Order
               </button>

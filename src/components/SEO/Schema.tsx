@@ -1,7 +1,14 @@
+// src/components/SEO/Schema.tsx
 "use client";
 
 interface SchemaProps {
-  type: "Organization" | "WebSite" | "FAQ" | "SiteNavigationElement";
+  type:
+    | "Organization"
+    | "WebSite"
+    | "FAQ"
+    | "SiteNavigationElement"
+    | "BlogCategory"
+    | "BlogPost";
   data?: any;
 }
 
@@ -49,6 +56,72 @@ export function Schema({ type, data }: SchemaProps) {
           },
         };
 
+      case "SiteNavigationElement":
+        return {
+          "@context": "https://schema.org",
+          "@type": "SiteNavigationElement",
+          name: "Main Navigation",
+          url: "https://royalfurnitures.store",
+          hasPart: [
+            {
+              "@type": "SiteNavigationElement",
+              name: "Home",
+              url: "https://royalfurnitures.store/",
+            },
+            {
+              "@type": "SiteNavigationElement",
+              name: "Shop",
+              url: "https://royalfurnitures.store/shop",
+            },
+            {
+              "@type": "SiteNavigationElement",
+              name: "Blog",
+              url: "https://royalfurnitures.store/blog",
+            },
+            {
+              "@type": "SiteNavigationElement",
+              name: "About",
+              url: "https://royalfurnitures.store/about",
+            },
+            {
+              "@type": "SiteNavigationElement",
+              name: "Contact",
+              url: "https://royalfurnitures.store/contact",
+            },
+          ],
+        };
+
+      case "FAQ":
+        if (!data?.faqs || data.faqs.length === 0) return null;
+        return {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: data.faqs.map((faq: any) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: faq.answer,
+            },
+          })),
+        };
+
+      case "BlogCategory":
+        if (!data?.category) return null;
+        return {
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: data.category.name,
+          description:
+            data.category.description ||
+            `Explore our ${data.category.name} articles`,
+          url: `https://royalfurnitures.store/blog/category/${data.category.slug}`,
+          about: {
+            "@type": "Thing",
+            name: data.category.name,
+          },
+        };
+
       default:
         return null;
     }
@@ -60,7 +133,7 @@ export function Schema({ type, data }: SchemaProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema, null, 2) }}
     />
   );
 }

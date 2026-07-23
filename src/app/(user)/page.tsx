@@ -20,6 +20,7 @@ import { productApi } from "../../services/productApi";
 import { categoryApi } from "../../services/categoryApi";
 import { Product, Category } from "../../types";
 import { LoadingSpinner } from "../../components/ui/Loading";
+import { HomeBlogSection } from "@/src/components/blog/HomeBlogSection";
 
 export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
@@ -487,6 +488,8 @@ export default function HomePage() {
           </p>
         </div>
       </section>
+
+      <HomeBlogSection />
       <WelcomePopup products={products} />
     </div>
   );

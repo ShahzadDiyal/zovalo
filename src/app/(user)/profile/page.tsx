@@ -200,7 +200,9 @@ function ProfileContent() {
   const getOrderStatusIcon = (status: string) => {
     switch (status) {
       case "delivered":
-        return <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />;
+        return (
+          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
+        );
       case "pending":
         return <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" />;
       case "processing":
@@ -208,7 +210,9 @@ function ProfileContent() {
       case "shipped":
         return <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />;
       default:
-        return <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-400" />;
+        return (
+          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-400" />
+        );
     }
   };
 
@@ -340,7 +344,7 @@ function ProfileContent() {
       <section className="relative overflow-hidden bg-neutral-900 text-white py-12 sm:py-16 md:py-20 mb-8 sm:mb-12">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -398,7 +402,9 @@ function ProfileContent() {
               <h3 className="text-base sm:text-lg font-serif text-neutral-900 mt-3 sm:mt-4">
                 {formData.displayName || "User"}
               </h3>
-              <p className="text-xs text-neutral-500 break-all">{formData.email}</p>
+              <p className="text-xs text-neutral-500 break-all">
+                {formData.email}
+              </p>
               <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-neutral-200/80">
                 <button
                   onClick={logout}
@@ -881,7 +887,10 @@ function ProfileContent() {
                     </thead>
                     <tbody>
                       {selectedOrder.products.map((item, idx) => (
-                        <tr key={idx} className="border-b border-neutral-200/80">
+                        <tr
+                          key={idx}
+                          className="border-b border-neutral-200/80"
+                        >
                           <td className="py-2 sm:py-3">
                             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-neutral-50 border border-neutral-200/80 rounded-xl overflow-hidden">
                               <img

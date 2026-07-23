@@ -16,6 +16,11 @@ import {
   Search,
   Bell,
   MessageCircle,
+  FileText,
+  FolderTree,
+  MapPin,
+  Globe,
+  PlusCircle,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
@@ -26,19 +31,26 @@ interface AdminLayoutProps {
 
 export function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedSections, setExpandedSections] = useState<
+    Record<string, boolean>
+  >({
+    blog: true,
+    locations: true,
+  });
   const pathname = usePathname();
   const router = useRouter();
   const { profile, logout } = useAuth();
 
-  const menuItems = [
-    { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
-    { icon: Tags, label: "Categories", path: "/admin/categories" },
-    { icon: Package, label: "Products", path: "/admin/products" },
-    { icon: ShoppingBag, label: "Orders", path: "/admin/orders" },
-    { icon: Users, label: "Customers", path: "/admin/users" },
-    { icon: MessageCircle, label: "Messages", path: "/admin/messages" },
-    // { icon: Settings, label: "Settings", path: "/admin/settings" },
-  ];
+  const toggleSection = (section: string) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
+  const isActive = (path: string) => {
+    return pathname === path || pathname?.startsWith(path + "/");
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -63,7 +75,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       `}
       >
         <div className="p-3 sm:p-5 flex flex-col h-full">
-          <div className="flex items-center justify-between mb-12">
+          <div className="flex items-center justify-between mb-8">
             <Link
               href="/"
               className="text-xl font-display tracking-tighter hover:text-gold transition-colors"
@@ -78,30 +90,244 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             </button>
           </div>
 
-          <nav className="flex-1 space-y-1">
-            {menuItems.map((item) => {
-              const isActive = pathname === item.path;
-              return (
-                <Link
-                  key={item.path}
-                  href={item.path}
-                  className={`
-                    flex items-center justify-between px-4 py-3 rounded text-sm transition-all duration-200
-                    ${
-                      isActive
-                        ? "bg-gold text-near-black font-bold"
-                        : "text-gray-400 hover:text-white hover:bg-near-black/50"
-                    }
-                  `}
-                >
-                  <div className="flex items-center gap-3">
-                    <item.icon className="w-5 h-5" />
-                    {item.label}
-                  </div>
-                  {isActive && <ChevronRight className="w-4 h-4" />}
-                </Link>
-              );
-            })}
+          <nav className="flex-1 overflow-y-auto space-y-1">
+            {/* Dashboard */}
+            <Link
+              href="/admin"
+              className={`
+                flex items-center justify-between px-4 py-3 rounded text-sm transition-all duration-200
+                ${
+                  isActive("/admin")
+                    ? "bg-gold text-near-black font-bold"
+                    : "text-gray-400 hover:text-white hover:bg-near-black/50"
+                }
+              `}
+            >
+              <div className="flex items-center gap-3">
+                <LayoutDashboard className="w-5 h-5" />
+                Dashboard
+              </div>
+              {isActive("/admin") && <ChevronRight className="w-4 h-4" />}
+            </Link>
+
+            {/* Categories */}
+            <Link
+              href="/admin/categories"
+              className={`
+                flex items-center justify-between px-4 py-3 rounded text-sm transition-all duration-200
+                ${
+                  isActive("/admin/categories")
+                    ? "bg-gold text-near-black font-bold"
+                    : "text-gray-400 hover:text-white hover:bg-near-black/50"
+                }
+              `}
+            >
+              <div className="flex items-center gap-3">
+                <Tags className="w-5 h-5" />
+                Categories
+              </div>
+              {isActive("/admin/categories") && (
+                <ChevronRight className="w-4 h-4" />
+              )}
+            </Link>
+
+            {/* Products */}
+            <Link
+              href="/admin/products"
+              className={`
+                flex items-center justify-between px-4 py-3 rounded text-sm transition-all duration-200
+                ${
+                  isActive("/admin/products")
+                    ? "bg-gold text-near-black font-bold"
+                    : "text-gray-400 hover:text-white hover:bg-near-black/50"
+                }
+              `}
+            >
+              <div className="flex items-center gap-3">
+                <Package className="w-5 h-5" />
+                Products
+              </div>
+              {isActive("/admin/products") && (
+                <ChevronRight className="w-4 h-4" />
+              )}
+            </Link>
+
+            {/* Orders */}
+            <Link
+              href="/admin/orders"
+              className={`
+                flex items-center justify-between px-4 py-3 rounded text-sm transition-all duration-200
+                ${
+                  isActive("/admin/orders")
+                    ? "bg-gold text-near-black font-bold"
+                    : "text-gray-400 hover:text-white hover:bg-near-black/50"
+                }
+              `}
+            >
+              <div className="flex items-center gap-3">
+                <ShoppingBag className="w-5 h-5" />
+                Orders
+              </div>
+              {isActive("/admin/orders") && (
+                <ChevronRight className="w-4 h-4" />
+              )}
+            </Link>
+
+            {/* Users/Customers */}
+            <Link
+              href="/admin/users"
+              className={`
+                flex items-center justify-between px-4 py-3 rounded text-sm transition-all duration-200
+                ${
+                  isActive("/admin/users")
+                    ? "bg-gold text-near-black font-bold"
+                    : "text-gray-400 hover:text-white hover:bg-near-black/50"
+                }
+              `}
+            >
+              <div className="flex items-center gap-3">
+                <Users className="w-5 h-5" />
+                Customers
+              </div>
+              {isActive("/admin/users") && <ChevronRight className="w-4 h-4" />}
+            </Link>
+
+            {/* Messages */}
+            <Link
+              href="/admin/messages"
+              className={`
+                flex items-center justify-between px-4 py-3 rounded text-sm transition-all duration-200
+                ${
+                  isActive("/admin/messages")
+                    ? "bg-gold text-near-black font-bold"
+                    : "text-gray-400 hover:text-white hover:bg-near-black/50"
+                }
+              `}
+            >
+              <div className="flex items-center gap-3">
+                <MessageCircle className="w-5 h-5" />
+                Messages
+              </div>
+              {isActive("/admin/messages") && (
+                <ChevronRight className="w-4 h-4" />
+              )}
+            </Link>
+
+            {/* Blog Section */}
+            <div className="mt-4">
+              <button
+                onClick={() => toggleSection("blog")}
+                className="w-full flex items-center justify-between px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-300 transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <FileText className="w-4 h-4" />
+                  Blog
+                </span>
+                <ChevronRight
+                  className={`w-4 h-4 transition-transform ${expandedSections.blog ? "rotate-90" : ""}`}
+                />
+              </button>
+
+              {expandedSections.blog && (
+                <div className="ml-2 space-y-0.5 border-l border-gray-700 pl-2">
+                  <Link
+                    href="/admin/blogs"
+                    className={`
+                      flex items-center gap-3 px-4 py-2.5 rounded text-sm transition-all duration-200
+                      ${
+                        isActive("/admin/blogs") &&
+                        !isActive("/admin/blogs/categories") &&
+                        !isActive("/admin/blogs/create")
+                          ? "bg-gold text-near-black font-bold"
+                          : "text-gray-400 hover:text-white hover:bg-near-black/50"
+                      }
+                    `}
+                  >
+                    <FileText className="w-4 h-4" />
+                    All Posts
+                  </Link>
+                  <Link
+                    href="/admin/blogs/create"
+                    className={`
+                      flex items-center gap-3 px-4 py-2.5 rounded text-sm transition-all duration-200
+                      ${
+                        isActive("/admin/blogs/create")
+                          ? "bg-gold text-near-black font-bold"
+                          : "text-gray-400 hover:text-white hover:bg-near-black/50"
+                      }
+                    `}
+                  >
+                    <PlusCircle className="w-4 h-4" />
+                    Create Post
+                  </Link>
+                  <Link
+                    href="/admin/blogs/categories"
+                    className={`
+                      flex items-center gap-3 px-4 py-2.5 rounded text-sm transition-all duration-200
+                      ${
+                        isActive("/admin/blogs/categories")
+                          ? "bg-gold text-near-black font-bold"
+                          : "text-gray-400 hover:text-white hover:bg-near-black/50"
+                      }
+                    `}
+                  >
+                    <FolderTree className="w-4 h-4" />
+                    Categories
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Locations Section */}
+            <div className="mt-2">
+              <button
+                onClick={() => toggleSection("locations")}
+                className="w-full flex items-center justify-between px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-300 transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  Locations
+                </span>
+                <ChevronRight
+                  className={`w-4 h-4 transition-transform ${expandedSections.locations ? "rotate-90" : ""}`}
+                />
+              </button>
+
+              {expandedSections.locations && (
+                <div className="ml-2 space-y-0.5 border-l border-gray-700 pl-2">
+                  <Link
+                    href="/admin/cities"
+                    className={`
+                      flex items-center gap-3 px-4 py-2.5 rounded text-sm transition-all duration-200
+                      ${
+                        isActive("/admin/cities") &&
+                        !isActive("/admin/cities/create") &&
+                        !isActive("/admin/cities/edit")
+                          ? "bg-gold text-near-black font-bold"
+                          : "text-gray-400 hover:text-white hover:bg-near-black/50"
+                      }
+                    `}
+                  >
+                    <Globe className="w-4 h-4" />
+                    All Cities
+                  </Link>
+                  <Link
+                    href="/admin/cities/create"
+                    className={`
+                      flex items-center gap-3 px-4 py-2.5 rounded text-sm transition-all duration-200
+                      ${
+                        isActive("/admin/cities/create")
+                          ? "bg-gold text-near-black font-bold"
+                          : "text-gray-400 hover:text-white hover:bg-near-black/50"
+                      }
+                    `}
+                  >
+                    <PlusCircle className="w-4 h-4" />
+                    Add New City
+                  </Link>
+                </div>
+              )}
+            </div>
           </nav>
 
           <div className="mt-auto pt-8 border-t border-white/10">
@@ -113,7 +339,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 <p className="text-xs font-bold truncate">
                   {profile?.displayName || "Admin"}
                 </p>
-                <p className="text-[10px] text-gray-400 truncateCapitalize">
+                <p className="text-[10px] text-gray-400 truncate">
                   {profile?.email}
                 </p>
               </div>

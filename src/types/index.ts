@@ -16,7 +16,7 @@ export interface Product {
   colors?: string[];
   tags?: string[];
   features?: string[];
-  featuresStyle?: 'bullet' | 'number';
+  featuresStyle?: "bullet" | "number";
   faqs?: { question: string; answer: string }[];
   featured?: boolean;
   createdAt?: any;
@@ -105,4 +105,79 @@ export interface ContactMessage {
   createdAt: any;
   repliedAt?: any;
   replyMessage?: string;
+}
+
+export interface BlogCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  image?: string;
+  createdAt?: any;
+  updatedAt?: any;
+}
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string;
+  featuredImage: string;
+  category: string; // category ID
+  categoryName: string;
+  tags: string[];
+  author: {
+    name: string;
+    avatar?: string;
+    bio?: string;
+  };
+  status: "draft" | "published";
+  views: number;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string[];
+  publishedAt?: any;
+  createdAt: any;
+  updatedAt: any;
+}
+
+export interface CityPage {
+  id: string;
+  name: string; // e.g., "London"
+  slug: string; // e.g., "london"
+
+  // SEO Fields
+  metaTitle: string;
+  metaDescription: string;
+  h1Heading: string;
+
+  // Content Fields
+  uniqueIntro: string; // 2-3 sentence custom opening
+  nearbyAreas: string[]; // e.g., ["Salford", "Stockport", "Bolton", "Oldham"]
+  localTrustSignals: string[]; // e.g., ["1-3 Day Delivery across Greater London", "Pay Cash on Delivery after inspecting in your home"]
+
+  // Additional Content
+  deliveryInfo: string;
+  whyChooseUs: string[];
+  popularProducts: string[]; // Product IDs or names
+  faqs: {
+    question: string;
+    answer: string;
+  }[];
+
+  // SEO Stats
+  views: number;
+  orderCount: number;
+
+  status: "draft" | "published";
+  featured: boolean;
+
+  createdAt: any;
+  updatedAt: any;
+}
+
+// For API response
+export interface CityPageWithCount extends CityPage {
+  totalOrders?: number;
 }

@@ -89,6 +89,22 @@ export function Footer() {
             <ul className="space-y-3 text-[13px] text-gray-666 font-light">
               <li>
                 <Link
+                  href="/blog"
+                  className="hover:text-gold transition-colors"
+                >
+                  Blogs
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/locations"
+                  className="hover:text-gold transition-colors"
+                >
+                  Locations
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/shipping"
                   className="hover:text-gold transition-colors"
                 >

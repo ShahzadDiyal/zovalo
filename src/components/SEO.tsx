@@ -6,6 +6,7 @@ interface SEOProps {
   image?: string;
   url?: string;
   canonical?: string;
+  website?: string;
   keywords?: string[];
   noIndex?: boolean;
   article?: {

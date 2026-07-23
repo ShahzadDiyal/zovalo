@@ -1,10 +1,23 @@
 import Head from "next/head";
 
 interface SEOProps {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   image?: string;
   url?: string;
+  canonical?: string;
+  keywords?: string[];
+  noIndex?: boolean;
+  article?: {
+    publishedTime?: string;
+    modifiedTime?: string;
+    author?: string;
+    tags?: string[];
+  };
+  schema?: {
+    type: "Organization" | "WebSite" | "FAQ" | "SiteNavigationElement" | "BlogCategory" | "BlogPost";
+    data?: any;
+  };
 }
 
 export function SEO({ title, description, image, url }: SEOProps) {

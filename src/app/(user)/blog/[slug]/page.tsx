@@ -1,9 +1,9 @@
 // src/app/(user)/blog/[slug]/page.tsx
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import Link from "next/link";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import {
   Calendar,
   Tag,
@@ -16,12 +16,11 @@ import {
   Sparkles,
   ArrowLeft,
   MessageCircle,
-} from "lucide-react";
-import { blogService } from "../../../../services/blogService";
-import { BlogPost } from "../../../../types";
-import { SEO } from "../../../../components/SEO";
-import { LoadingSpinner } from "../../../../components/ui/Loading";
-import { formatCurrency } from "../../../../lib/utils";
+} from 'lucide-react';
+import { blogService } from '../../../../services/blogService';
+import { BlogPost } from '../../../../types';
+import { SEO } from '../../../../components/SEO';
+import { LoadingSpinner } from '../../../../components/ui/Loading';
 
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -44,34 +43,32 @@ export default function BlogPostPage() {
       const postData = await blogService.getPostBySlug(slug);
       if (postData) {
         setPost(postData);
-        // Increment views
         await blogService.incrementViews(postData.id);
-
-        // Fetch related posts
+        
         const related = await blogService.getRelatedPosts(
           postData.category,
           postData.id,
-          3,
+          3
         );
         setRelatedPosts(related);
       } else {
-        setError("Post not found");
+        setError('Post not found');
       }
     } catch (error) {
-      console.error("Error fetching post:", error);
-      setError("Failed to load the article. Please try again.");
+      console.error('Error fetching post:', error);
+      setError('Failed to load the article. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const formatDate = (timestamp: any) => {
-    if (!timestamp) return "N/A";
+    if (!timestamp) return 'N/A';
     const date = timestamp.toDate?.() || new Date(timestamp);
-    return date.toLocaleDateString("en-GB", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return date.toLocaleDateString('en-GB', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   };
 
@@ -84,11 +81,11 @@ export default function BlogPostPage() {
           url: window.location.href,
         });
       } catch (error) {
-        console.log("Error sharing:", error);
+        console.log('Error sharing:', error);
       }
     } else {
       await navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard!");
+      alert('Link copied to clipboard!');
     }
   };
 
@@ -113,14 +110,14 @@ export default function BlogPostPage() {
         <div className="text-center">
           <div className="text-6xl mb-4">📄</div>
           <h2 className="text-2xl font-serif text-neutral-900 mb-2">
-            {error || "Post Not Found"}
+            {error || 'Post Not Found'}
           </h2>
           <p className="text-neutral-500 mb-6">
             The article you're looking for doesn't exist or has been removed.
           </p>
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 bg-neutral-900 text-white px-6 pt-6 text-[10px] font-bold uppercase tracking-widest hover:bg-amber-600 transition-colors rounded-xl"
+            className="inline-flex items-center gap-2 bg-neutral-900 text-white px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-amber-600 transition-colors rounded-xl"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Blog
           </Link>
@@ -133,11 +130,8 @@ export default function BlogPostPage() {
     <div className="bg-[#FAF8F5] min-h-screen">
       <SEO
         title={post.seoTitle || post.title}
-        description={
-          post.seoDescription || post.excerpt || post.content?.substring(0, 160)
-        }
+        description={post.seoDescription || post.excerpt || post.content?.substring(0, 160)}
         image={post.featuredImage}
-        type="article"
         article={{
           publishedTime: post.publishedAt?.toDate?.()?.toISOString(),
           modifiedTime: post.updatedAt?.toDate?.()?.toISOString(),
@@ -147,12 +141,12 @@ export default function BlogPostPage() {
         keywords={post.seoKeywords || post.tags}
         schema={{
           type: "BlogPost",
-          data: { post },
+          data: { post }
         }}
       />
 
       {/* Back Button */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12">
         <Link
           href="/blog"
           className="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-amber-600 transition-colors"
@@ -162,26 +156,24 @@ export default function BlogPostPage() {
       </div>
 
       {/* Article */}
-      <article className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <header className="mb-8">
-          {/* Category Badge */}
           <Link
             href={`/blog?category=${post.category}`}
             className="inline-block px-3 py-1 bg-amber-50 text-amber-600 text-[10px] font-bold uppercase tracking-widest rounded-full mb-4 hover:bg-amber-100 transition-colors"
           >
-            {post.categoryName || "Blog"}
+            {post.categoryName || 'Blog'}
           </Link>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-neutral-900 leading-tight mb-4">
             {post.title}
           </h1>
 
-          {/* Meta */}
           <div className="flex flex-wrap items-center gap-4 text-sm text-neutral-500">
             <span className="flex items-center gap-1.5">
               <User className="w-4 h-4" />
-              {post.author?.name || "Royal Furniture"}
+              {post.author?.name || 'Royal Furniture'}
             </span>
             <span className="flex items-center gap-1.5">
               <Calendar className="w-4 h-4" />
@@ -211,17 +203,15 @@ export default function BlogPostPage() {
 
         {/* Content */}
         <div className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-neutral-900 prose-p:text-neutral-600 prose-a:text-amber-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-neutral-900 prose-li:text-neutral-600 prose-blockquote:border-l-amber-500 prose-blockquote:bg-amber-50/50 prose-blockquote:p-4 prose-blockquote:rounded-r-xl prose-blockquote:border-l-4 prose-img:rounded-xl">
-          <div dangerouslySetInnerHTML={{ __html: post.content || "" }} />
+          <div dangerouslySetInnerHTML={{ __html: post.content || '' }} />
         </div>
 
         {/* Tags */}
         {post.tags && post.tags.length > 0 && (
           <div className="mt-8 pt-8 border-t border-neutral-200/80">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm font-medium text-neutral-600">
-                Tags:
-              </span>
-              {post.tags.map((tag) => (
+              <span className="text-sm font-medium text-neutral-600">Tags:</span>
+              {post.tags.map(tag => (
                 <Link
                   key={tag}
                   href={`/blog?search=${tag}`}
@@ -241,12 +231,12 @@ export default function BlogPostPage() {
               onClick={() => setIsLiked(!isLiked)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${
                 isLiked
-                  ? "bg-amber-50 text-amber-600 border border-amber-200"
-                  : "bg-white border border-neutral-200/80 text-neutral-600 hover:bg-neutral-50"
+                  ? 'bg-amber-50 text-amber-600 border border-amber-200'
+                  : 'bg-white border border-neutral-200/80 text-neutral-600 hover:bg-neutral-50'
               }`}
             >
-              <Heart className={`w-4 h-4 ${isLiked ? "fill-amber-600" : ""}`} />
-              {isLiked ? "Liked" : "Like"}
+              <Heart className={`w-4 h-4 ${isLiked ? 'fill-amber-600' : ''}`} />
+              {isLiked ? 'Liked' : 'Like'}
             </button>
             <button
               onClick={handleShare}
@@ -268,11 +258,11 @@ export default function BlogPostPage() {
 
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
           <h2 className="text-2xl font-serif text-neutral-900 mb-6">
             Related Articles
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {relatedPosts.map((relatedPost) => (
               <Link
                 key={relatedPost.id}
@@ -297,13 +287,10 @@ export default function BlogPostPage() {
                     {relatedPost.title}
                   </h3>
                   <p className="text-sm text-neutral-500 line-clamp-2 mt-1">
-                    {relatedPost.excerpt ||
-                      relatedPost.content?.substring(0, 100) + "..."}
+                    {relatedPost.excerpt || relatedPost.content?.substring(0, 100) + '...'}
                   </p>
                   <div className="mt-3 text-[10px] text-neutral-400">
-                    {formatDate(
-                      relatedPost.publishedAt || relatedPost.createdAt,
-                    )}
+                    {formatDate(relatedPost.publishedAt || relatedPost.createdAt)}
                   </div>
                 </div>
               </Link>

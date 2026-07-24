@@ -1,4 +1,6 @@
+// src/components/ui/WelcomePopup.tsx
 "use client";
+
 import React, { useState, useEffect, useRef } from "react";
 import {
   X,
@@ -10,6 +12,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { formatCurrency } from "../../lib/utils";
 
 interface Product {
@@ -29,13 +32,24 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const hasShownRef = useRef(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsOpen(true);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    // Only show on homepage and only once per session
+    if (pathname === "/" && !hasShownRef.current) {
+      // Check if already shown in this session
+      const hasShown = sessionStorage.getItem("welcomePopupShown");
+      if (!hasShown) {
+        const timer = setTimeout(() => {
+          setIsOpen(true);
+          hasShownRef.current = true;
+          sessionStorage.setItem("welcomePopupShown", "true");
+        }, 1000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [pathname]);
 
   const handleClose = () => {
     setIsClosing(true);
@@ -47,7 +61,7 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
 
   const scrollCarousel = (direction: "left" | "right") => {
     if (!carouselRef.current) return;
-    const scrollAmount = 260; // Approximate width of a card + gap
+    const scrollAmount = 260;
     carouselRef.current.scrollBy({
       left: direction === "left" ? -scrollAmount : scrollAmount,
       behavior: "smooth",
@@ -69,7 +83,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
     (p) => p.title?.toLowerCase().includes("bed") || p.category === "Beds",
   );
 
-  // Fallback to general products if specific categories aren't found
   const featuredProducts = [sofaProduct, diningProduct, bedProduct]
     .filter(Boolean)
     .concat(
@@ -80,11 +93,10 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
           p.id !== bedProduct?.id,
       ),
     )
-    .slice(0, 6); // Cap at 6 items for clean carousel navigation
+    .slice(0, 6);
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center px-4 py-4">
-      {/* Dimmed Overlay Backdrop */}
       <div
         className={`absolute inset-0 bg-neutral-900/60 backdrop-blur-sm transition-opacity duration-500 ${
           isClosing ? "opacity-0" : "opacity-100"
@@ -92,7 +104,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
         onClick={handleClose}
       />
 
-      {/* Main Popup Modal */}
       <div
         className={`relative bg-white rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-neutral-100 transform transition-all duration-500 ${
           isClosing
@@ -100,7 +111,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
             : "scale-100 opacity-100 translate-y-0"
         } animate-slide-up scrollbar-thin scrollbar-thumb-neutral-200`}
       >
-        {/* Close Button */}
         <button
           onClick={handleClose}
           className="absolute top-3 right-3 z-20 p-2 text-neutral-400 hover:text-neutral-900 bg-neutral-50 hover:bg-neutral-100 rounded-full transition-all duration-200 shadow-sm border border-neutral-200/60"
@@ -110,7 +120,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
         </button>
 
         <div className="p-5 sm:p-7 md:p-8">
-          {/* Header Section */}
           <div className="text-center mb-5">
             <div className="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200/60 px-3 py-1 rounded-full mb-2.5">
               <Sparkles className="w-3 h-3 text-amber-600 animate-pulse" />
@@ -134,7 +143,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
             </p>
           </div>
 
-          {/* Promotional Banner Card */}
           <div className="relative bg-gradient-to-br from-neutral-900 via-neutral-850 to-neutral-900 border border-neutral-800 rounded-xl p-4 sm:p-5 mb-5 text-center sm:text-left overflow-hidden shadow-lg">
             <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-full -translate-y-8 translate-x-8 blur-xl pointer-events-none" />
 
@@ -164,7 +172,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
             </div>
           </div>
 
-          {/* Featured Carousel Feed */}
           <div className="mt-4 relative group/carousel">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-[10px] font-bold uppercase tracking-widest text-neutral-800 flex items-center gap-1.5">
@@ -172,7 +179,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
                 Curated Favorites
               </h3>
 
-              {/* Slider Controller Navigation */}
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => scrollCarousel("left")}
@@ -191,7 +197,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
               </div>
             </div>
 
-            {/* Horizontal Scrollable Wrapper */}
             <div
               ref={carouselRef}
               className="flex gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-2 scroll-smooth"
@@ -205,7 +210,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
                   className="group block flex-shrink-0 w-[190px] sm:w-[220px] snap-start"
                 >
                   <div className="bg-neutral-50/50 border border-neutral-200/60 rounded-xl overflow-hidden transition-all duration-300 group-hover:shadow-sm group-hover:border-neutral-300 group-hover:bg-white">
-                    {/* Compact Image Window */}
                     <div className="aspect-[4/3] overflow-hidden bg-neutral-100 relative">
                       {product?.images?.[0] ? (
                         <img
@@ -224,7 +228,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
                         -26%
                       </div>
                     </div>
-                    {/* Meta Fields */}
                     <div className="p-2.5 space-y-0.5">
                       <h4 className="text-[11px] font-semibold text-neutral-800 line-clamp-1 transition-colors group-hover:text-amber-600">
                         {product?.title || "Premium Furniture Piece"}
@@ -248,7 +251,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
             </div>
           </div>
 
-          {/* Core Trust Seals Banner */}
           <div className="mt-5 pt-4 border-t border-neutral-100">
             <div className="flex flex-wrap justify-center items-center gap-y-2 gap-x-6">
               <div className="flex items-center gap-1.5">
@@ -332,7 +334,6 @@ export default function WelcomePopup({ products }: WelcomePopupProps) {
         .animate-slide-up {
           animation: slideUpAnimation 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        /* Hide scrollbars for cleaner aesthetic */
         .scrollbar-none::-webkit-scrollbar {
           display: none;
         }

@@ -1,66 +1,40 @@
-// src/app/(user)/blog/[slug]/page.tsx
+// src/app/(user)/blog/[slug]/BlogPostClient.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   Calendar,
-  Tag,
-  ChevronLeft,
   Eye,
   User,
   Clock,
   Share2,
   Heart,
-  Sparkles,
   ArrowLeft,
   MessageCircle,
 } from "lucide-react";
-import { blogService } from "../../../../services/blogService";
 import { BlogPost } from "../../../../types";
-import { SEO } from "../../../../components/SEO";
-import { LoadingSpinner } from "../../../../components/ui/Loading";
+import { blogService } from "../../../../services/blogService";
 
-export default function BlogPostPage() {
-  const { slug } = useParams<{ slug: string }>();
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface BlogPostClientProps {
+  post: BlogPost;
+  relatedPosts: BlogPost[];
+}
+
+export function BlogPostClient({
+  post: initialPost,
+  relatedPosts: initialRelatedPosts,
+}: BlogPostClientProps) {
+  const [post] = useState(initialPost);
+  const [relatedPosts] = useState(initialRelatedPosts);
   const [isLiked, setIsLiked] = useState(false);
 
+  // Increment views on client-side
   useEffect(() => {
-    if (slug) {
-      fetchPost();
+    if (post.id) {
+      blogService.incrementViews(post.id).catch(console.error);
     }
-  }, [slug]);
-
-  const fetchPost = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const postData = await blogService.getPostBySlug(slug);
-      if (postData) {
-        setPost(postData);
-        await blogService.incrementViews(postData.id);
-
-        const related = await blogService.getRelatedPosts(
-          postData.category,
-          postData.id,
-          3,
-        );
-        setRelatedPosts(related);
-      } else {
-        setError("Post not found");
-      }
-    } catch (error) {
-      console.error("Error fetching post:", error);
-      setError("Failed to load the article. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [post.id]);
 
   const formatDate = (timestamp: any) => {
     if (!timestamp) return "N/A";
@@ -89,64 +63,8 @@ export default function BlogPostPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="bg-[#FAF8F5] min-h-screen">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <LoadingSpinner />
-            <p className="mt-4 text-[10px] font-bold uppercase tracking-widest text-amber-600">
-              Loading Article...
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !post) {
-    return (
-      <div className="bg-[#FAF8F5] min-h-screen flex items-center justify-center px-4">
-        <div className="text-center">
-          <div className="text-6xl mb-4">📄</div>
-          <h2 className="text-2xl font-serif text-neutral-900 mb-2">
-            {error || "Post Not Found"}
-          </h2>
-          <p className="text-neutral-500 mb-6">
-            The article you're looking for doesn't exist or has been removed.
-          </p>
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 bg-neutral-900 text-white px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-amber-600 transition-colors rounded-xl"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to Blog
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="bg-[#FAF8F5] min-h-screen">
-      <SEO
-        title={post.seoTitle || post.title}
-        description={
-          post.seoDescription || post.excerpt || post.content?.substring(0, 160)
-        }
-        image={post.featuredImage}
-        article={{
-          publishedTime: post.publishedAt?.toDate?.()?.toISOString(),
-          modifiedTime: post.updatedAt?.toDate?.()?.toISOString(),
-          author: post.author?.name,
-          tags: post.tags,
-        }}
-        keywords={post.seoKeywords || post.tags}
-        schema={{
-          type: "BlogPost",
-          data: { post },
-        }}
-      />
-
+    <>
       {/* Back Button */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12">
         <Link
@@ -305,6 +223,6 @@ export default function BlogPostPage() {
           </div>
         </section>
       )}
-    </div>
+    </>
   );
 }

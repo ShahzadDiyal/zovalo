@@ -775,4 +775,3 @@ export default function EditBlogPost() {
 function setSearchTerm(arg0: string) {
   throw new Error("Function not implemented.");
 }
-

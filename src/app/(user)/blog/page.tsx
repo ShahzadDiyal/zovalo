@@ -1,9 +1,9 @@
 // src/app/(user)/blog/page.tsx
-'use client';
+"use client";
 
-import React, { useState, useEffect, Suspense } from 'react';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Search,
   Calendar,
@@ -12,26 +12,28 @@ import {
   Clock,
   Eye,
   User,
-  AlertCircle
-} from 'lucide-react';
-import { blogService } from '../../../services/blogService';
-import { BlogPost, BlogCategory } from '../../../types';
-import { SEO } from '../../../components/SEO';
-import { LoadingSpinner } from '../../../components/ui/Loading';
+  AlertCircle,
+} from "lucide-react";
+import { blogService } from "../../../services/blogService";
+import { BlogPost, BlogCategory } from "../../../types";
+import { SEO } from "../../../components/SEO";
+import { LoadingSpinner } from "../../../components/ui/Loading";
 
 // Main Blog Component - Wrapped in Suspense
 export default function BlogPage() {
   return (
-    <Suspense fallback={
-      <div className="bg-[#FAF8F5] min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <LoadingSpinner />
-          <p className="mt-4 text-[10px] font-bold uppercase tracking-widest text-amber-600">
-            Loading Blog...
-          </p>
+    <Suspense
+      fallback={
+        <div className="bg-[#FAF8F5] min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <LoadingSpinner />
+            <p className="mt-4 text-[10px] font-bold uppercase tracking-widest text-amber-600">
+              Loading Blog...
+            </p>
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <BlogContent />
     </Suspense>
   );
@@ -41,17 +43,17 @@ export default function BlogPage() {
 function BlogContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const categorySlug = searchParams.get('category');
-  const searchQuery = searchParams.get('search');
-  
+  const categorySlug = searchParams.get("category");
+  const searchQuery = searchParams.get("search");
+
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
   const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [filtering, setFiltering] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(searchQuery || '');
+  const [searchTerm, setSearchTerm] = useState(searchQuery || "");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedCategoryName, setSelectedCategoryName] = useState<string>('');
+  const [selectedCategoryName, setSelectedCategoryName] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -70,15 +72,15 @@ function BlogContent() {
     try {
       const [categoriesData, postsData] = await Promise.all([
         blogService.getAllCategories(),
-        blogService.getPublishedPosts()
+        blogService.getPublishedPosts(),
       ]);
-      
+
       setCategories(categoriesData);
       setAllPosts(postsData);
       applyFilters(categoriesData, postsData);
     } catch (error: any) {
-      console.error('Error fetching blog data:', error);
-      setError('Failed to load blog posts. Please try again.');
+      console.error("Error fetching blog data:", error);
+      setError("Failed to load blog posts. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -87,29 +89,30 @@ function BlogContent() {
   const applyFilters = (cats: BlogCategory[], allPostsData: BlogPost[]) => {
     let filteredPosts = [...allPostsData];
     let categoryId = null;
-    let categoryName = '';
+    let categoryName = "";
 
     if (categorySlug) {
-      const category = cats.find(c => c.slug === categorySlug);
+      const category = cats.find((c) => c.slug === categorySlug);
       if (category) {
         categoryId = category.id;
         categoryName = category.name;
-        filteredPosts = filteredPosts.filter(p => p.category === category.id);
+        filteredPosts = filteredPosts.filter((p) => p.category === category.id);
         setSelectedCategory(categoryId);
         setSelectedCategoryName(categoryName);
       }
     } else {
       setSelectedCategory(null);
-      setSelectedCategoryName('');
+      setSelectedCategoryName("");
     }
 
     if (searchQuery) {
       const searchLower = searchQuery.toLowerCase();
-      filteredPosts = filteredPosts.filter(post => 
-        post.title.toLowerCase().includes(searchLower) ||
-        (post.content && post.content.toLowerCase().includes(searchLower)) ||
-        (post.excerpt && post.excerpt.toLowerCase().includes(searchLower)) ||
-        post.tags?.some(tag => tag.toLowerCase().includes(searchLower))
+      filteredPosts = filteredPosts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(searchLower) ||
+          (post.content && post.content.toLowerCase().includes(searchLower)) ||
+          (post.excerpt && post.excerpt.toLowerCase().includes(searchLower)) ||
+          post.tags?.some((tag) => tag.toLowerCase().includes(searchLower)),
       );
       setSearchTerm(searchQuery);
     }
@@ -123,87 +126,98 @@ function BlogContent() {
 
   const handleSearch = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    
+
     if (!searchTerm.trim()) {
-      router.push('/blog', { scroll: false });
+      router.push("/blog", { scroll: false });
       setPosts(allPosts);
       setSelectedCategory(null);
-      setSelectedCategoryName('');
+      setSelectedCategoryName("");
       return;
     }
 
     setFiltering(true);
     setError(null);
-    
+
     try {
       const searchLower = searchTerm.toLowerCase();
       let filtered = [...allPosts];
-      
+
       if (selectedCategory) {
-        filtered = filtered.filter(p => p.category === selectedCategory);
+        filtered = filtered.filter((p) => p.category === selectedCategory);
       }
-      
-      filtered = filtered.filter(post => 
-        post.title.toLowerCase().includes(searchLower) ||
-        (post.content && post.content.toLowerCase().includes(searchLower)) ||
-        (post.excerpt && post.excerpt.toLowerCase().includes(searchLower)) ||
-        post.tags?.some(tag => tag.toLowerCase().includes(searchLower))
+
+      filtered = filtered.filter(
+        (post) =>
+          post.title.toLowerCase().includes(searchLower) ||
+          (post.content && post.content.toLowerCase().includes(searchLower)) ||
+          (post.excerpt && post.excerpt.toLowerCase().includes(searchLower)) ||
+          post.tags?.some((tag) => tag.toLowerCase().includes(searchLower)),
       );
-      
+
       setPosts(filtered);
-      router.push(`/blog?search=${encodeURIComponent(searchTerm)}`, { scroll: false });
+      router.push(`/blog?search=${encodeURIComponent(searchTerm)}`, {
+        scroll: false,
+      });
     } catch (error) {
-      console.error('Error searching posts:', error);
-      setError('Failed to search posts. Please try again.');
+      console.error("Error searching posts:", error);
+      setError("Failed to search posts. Please try again.");
     } finally {
       setFiltering(false);
     }
   };
 
-  const handleCategoryFilter = (categoryId: string | null, categorySlug?: string) => {
+  const handleCategoryFilter = (
+    categoryId: string | null,
+    categorySlug?: string,
+  ) => {
     setFiltering(true);
     setError(null);
-    
+
     try {
       let filtered = [...allPosts];
-      
+
       if (categoryId) {
-        filtered = filtered.filter(p => p.category === categoryId);
-        const category = categories.find(c => c.id === categoryId);
+        filtered = filtered.filter((p) => p.category === categoryId);
+        const category = categories.find((c) => c.id === categoryId);
         setSelectedCategory(categoryId);
-        setSelectedCategoryName(category?.name || '');
-        router.push(`/blog?category=${categorySlug || category?.slug}`, { scroll: false });
+        setSelectedCategoryName(category?.name || "");
+        router.push(`/blog?category=${categorySlug || category?.slug}`, {
+          scroll: false,
+        });
       } else {
         setSelectedCategory(null);
-        setSelectedCategoryName('');
-        router.push('/blog', { scroll: false });
+        setSelectedCategoryName("");
+        router.push("/blog", { scroll: false });
       }
-      
+
       if (searchTerm.trim()) {
         const searchLower = searchTerm.toLowerCase();
-        filtered = filtered.filter(post => 
-          post.title.toLowerCase().includes(searchLower) ||
-          (post.content && post.content.toLowerCase().includes(searchLower)) ||
-          (post.excerpt && post.excerpt.toLowerCase().includes(searchLower)) ||
-          post.tags?.some(tag => tag.toLowerCase().includes(searchLower))
+        filtered = filtered.filter(
+          (post) =>
+            post.title.toLowerCase().includes(searchLower) ||
+            (post.content &&
+              post.content.toLowerCase().includes(searchLower)) ||
+            (post.excerpt &&
+              post.excerpt.toLowerCase().includes(searchLower)) ||
+            post.tags?.some((tag) => tag.toLowerCase().includes(searchLower)),
         );
       }
-      
+
       setPosts(filtered);
     } catch (error) {
-      console.error('Error filtering posts:', error);
-      setError('Failed to filter posts. Please try again.');
+      console.error("Error filtering posts:", error);
+      setError("Failed to filter posts. Please try again.");
     } finally {
       setFiltering(false);
     }
   };
 
   const clearFilters = () => {
-    setSearchTerm('');
+    setSearchTerm("");
     setPosts(allPosts);
     setSelectedCategory(null);
-    setSelectedCategoryName('');
-    router.push('/blog', { scroll: false });
+    setSelectedCategoryName("");
+    router.push("/blog", { scroll: false });
   };
 
   if (loading) {
@@ -227,30 +241,40 @@ function BlogContent() {
     <div className="bg-[#FAF8F5] min-h-screen">
       <SEO
         title={selectedCategoryName ? `${selectedCategoryName} - Blog` : "Blog"}
-        description={selectedCategoryName 
-          ? `Explore our ${selectedCategoryName} articles and insights from Royal Furniture experts.`
-          : "Discover expert tips, design inspiration, and furniture care guides from Royal Furniture."}
+        description={
+          selectedCategoryName
+            ? `Explore our ${selectedCategoryName} articles and insights from Royal Furniture experts.`
+            : "Discover expert tips, design inspiration, and furniture care guides from Royal Furniture."
+        }
       />
 
       {/* Hero Header */}
       <section className="relative overflow-hidden bg-neutral-900 text-white py-12 sm:py-16 md:py-20">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-xs font-bold uppercase tracking-widest text-amber-300">
-              {searchQuery ? 'Search Results' : selectedCategoryName ? `Category: ${selectedCategoryName}` : "Royal Blog"}
+              {searchQuery
+                ? "Search Results"
+                : selectedCategoryName
+                  ? `Category: ${selectedCategoryName}`
+                  : "Royal Blog"}
             </span>
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight">
-            {searchQuery ? `Search: "${searchQuery}"` : selectedCategoryName ? selectedCategoryName : "Design & Inspiration"}
+            {searchQuery
+              ? `Search: "${searchQuery}"`
+              : selectedCategoryName
+                ? selectedCategoryName
+                : "Design & Inspiration"}
           </h1>
           <p className="text-neutral-400 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            {searchQuery 
+            {searchQuery
               ? `Found ${posts.length} results for "${searchQuery}"`
-              : selectedCategoryName 
+              : selectedCategoryName
                 ? `Explore our collection of ${selectedCategoryName} articles and expert insights`
                 : "Discover expert tips, design inspiration, and furniture care guides from Royal Furniture experts."}
           </p>
@@ -269,7 +293,10 @@ function BlogContent() {
 
         {/* Search & Filter Bar */}
         <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 sm:p-6 mb-8 shadow-sm">
-          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
+          <form
+            onSubmit={handleSearch}
+            className="flex flex-col sm:flex-row gap-4"
+          >
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
               <input
@@ -286,7 +313,7 @@ function BlogContent() {
                 disabled={isFiltering}
                 className="px-6 py-2.5 bg-neutral-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-600 transition-colors rounded-xl disabled:opacity-50"
               >
-                {isFiltering ? 'Searching...' : 'Search'}
+                {isFiltering ? "Searching..." : "Search"}
               </button>
               {(selectedCategory || searchTerm) && (
                 <button
@@ -307,8 +334,8 @@ function BlogContent() {
             onClick={() => handleCategoryFilter(null)}
             className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all ${
               !selectedCategory
-                ? 'bg-neutral-900 text-white'
-                : 'bg-white border border-neutral-200/80 text-neutral-600 hover:bg-neutral-50'
+                ? "bg-neutral-900 text-white"
+                : "bg-white border border-neutral-200/80 text-neutral-600 hover:bg-neutral-50"
             }`}
           >
             All
@@ -319,8 +346,8 @@ function BlogContent() {
               onClick={() => handleCategoryFilter(category.id, category.slug)}
               className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all ${
                 selectedCategory === category.id
-                  ? 'bg-neutral-900 text-white'
-                  : 'bg-white border border-neutral-200/80 text-neutral-600 hover:bg-neutral-50'
+                  ? "bg-neutral-900 text-white"
+                  : "bg-white border border-neutral-200/80 text-neutral-600 hover:bg-neutral-50"
               }`}
             >
               {category.name}
@@ -339,11 +366,13 @@ function BlogContent() {
         ) : posts.length === 0 ? (
           <div className="text-center py-16 bg-white border border-neutral-200/80 rounded-2xl">
             <div className="text-6xl mb-4">📝</div>
-            <h3 className="text-xl font-serif text-neutral-900 mb-2">No articles found</h3>
+            <h3 className="text-xl font-serif text-neutral-900 mb-2">
+              No articles found
+            </h3>
             <p className="text-neutral-500">
-              {searchTerm 
+              {searchTerm
                 ? `No results found for "${searchTerm}"`
-                : selectedCategoryName 
+                : selectedCategoryName
                   ? `No articles in "${selectedCategoryName}" yet`
                   : "Check back soon for new content"}
             </p>
@@ -371,12 +400,12 @@ function BlogContent() {
 // Blog Card Component
 function BlogCard({ post }: { post: BlogPost }) {
   const formatDate = (timestamp: any) => {
-    if (!timestamp) return 'N/A';
+    if (!timestamp) return "N/A";
     const date = timestamp.toDate?.() || new Date(timestamp);
-    return date.toLocaleDateString('en-GB', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return date.toLocaleDateString("en-GB", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -415,7 +444,7 @@ function BlogCard({ post }: { post: BlogPost }) {
           </h3>
 
           <p className="text-sm text-neutral-500 line-clamp-2 flex-1">
-            {post.excerpt || post.content?.substring(0, 120) + '...'}
+            {post.excerpt || post.content?.substring(0, 120) + "..."}
           </p>
 
           <div className="flex flex-wrap items-center justify-between mt-4 pt-4 border-t border-neutral-100">
@@ -424,7 +453,7 @@ function BlogCard({ post }: { post: BlogPost }) {
                 <User className="w-4 h-4 text-amber-600" />
               </div>
               <span className="text-xs text-neutral-600">
-                {post.author?.name || 'Royal Furniture'}
+                {post.author?.name || "Royal Furniture"}
               </span>
             </div>
             <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 group-hover:text-neutral-900 transition-colors flex items-center gap-1">
@@ -434,8 +463,11 @@ function BlogCard({ post }: { post: BlogPost }) {
 
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-3">
-              {post.tags.slice(0, 3).map(tag => (
-                <span key={tag} className="text-[8px] text-neutral-400 bg-neutral-50 px-2 py-0.5 rounded-full">
+              {post.tags.slice(0, 3).map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[8px] text-neutral-400 bg-neutral-50 px-2 py-0.5 rounded-full"
+                >
                   #{tag}
                 </span>
               ))}

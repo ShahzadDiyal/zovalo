@@ -12,7 +12,8 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions | Royal Furniture",
-  description: "Read the Terms & Conditions for Royal Furniture. Learn about our policies, delivery, returns, and more.",
+  description:
+    "Read the Terms & Conditions for Royal Furniture. Learn about our policies, delivery, returns, and more.",
   robots: {
     index: true,
     follow: true,
@@ -26,7 +27,6 @@ export const metadata: Metadata = {
     url: "https://royalfurnitures.store/terms/",
   },
 };
-
 
 const TermsConditions = () => {
   return (

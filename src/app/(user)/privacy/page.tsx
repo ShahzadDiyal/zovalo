@@ -12,10 +12,10 @@ import {
 } from "lucide-react";
 import { Metadata } from "next";
 
-
 export const metadata: Metadata = {
   title: "Privacy Policy | Royal Furniture",
-  description: "Read our Privacy Policy to understand how Royal Furniture protects your personal information and data.",
+  description:
+    "Read our Privacy Policy to understand how Royal Furniture protects your personal information and data.",
   robots: {
     index: true,
     follow: true,
@@ -25,11 +25,11 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Privacy Policy | Royal Furniture",
-    description: "Read our Privacy Policy to understand how Royal Furniture protects your data.",
+    description:
+      "Read our Privacy Policy to understand how Royal Furniture protects your data.",
     url: "https://royalfurnitures.store/privacy/",
   },
 };
-
 
 const PrivacyPolicy = () => {
   return (

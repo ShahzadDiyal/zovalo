@@ -5,7 +5,7 @@ interface SEOProps {
   description?: string;
   image?: string;
   url?: string;
-  canonical?: string;
+  a?: string;
   website?: string;
   type?: string;
   keywords?: string[];
@@ -17,7 +17,13 @@ interface SEOProps {
     tags?: string[];
   };
   schema?: {
-    type: "Organization" | "WebSite" | "FAQ" | "SiteNavigationElement" | "BlogCategory" | "BlogPost";
+    type:
+      | "Organization"
+      | "WebSite"
+      | "FAQ"
+      | "SiteNavigationElement"
+      | "BlogCategory"
+      | "BlogPost";
     data?: any;
   };
 }

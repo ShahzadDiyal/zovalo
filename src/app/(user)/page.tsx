@@ -280,7 +280,7 @@ const FeaturedProductsSection = lazy(() =>
         </section>
       );
     },
-  }),
+  }) as any,
 );
 
 const RecentProductsSection = lazy(() =>
@@ -319,7 +319,7 @@ const RecentProductsSection = lazy(() =>
         </section>
       );
     },
-  }),
+  }) as any,
 );
 
 const CategoriesSection = lazy(() =>
@@ -420,7 +420,7 @@ const CategoriesSection = lazy(() =>
         </section>
       );
     },
-  }),
+  })  as any, 
 );
 
 // Main Page Component

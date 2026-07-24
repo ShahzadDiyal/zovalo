@@ -1,4 +1,6 @@
-"use client";
+// src/app/(user)/checkout/page.tsx
+'use client';
+
 import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "../../../context/CartContext";
@@ -6,7 +8,6 @@ import { useAuth } from "../../../context/AuthContext";
 import { db } from "../../../lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { formatCurrency } from "../../../lib/utils";
-import { Order } from "../../../types";
 import { SEO } from "../../../components/SEO";
 import {
   ShieldCheck,
@@ -82,6 +83,7 @@ export default function CheckoutPage() {
     countryCodes[0],
   );
   const [showWarning, setShowWarning] = useState(false);
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
   const recaptchaRef = useRef<any>(null);
   const [requireCaptcha, setRequireCaptcha] = useState(false);
@@ -234,6 +236,7 @@ export default function CheckoutPage() {
   const handleConfirmOrder = async () => {
     setShowConfirmModal(false);
     setLoading(true);
+    setEmailStatus('sending');
 
     try {
       const fullPhoneNumber = `${selectedCountryCode.code} ${formData.phone}`;
@@ -269,19 +272,77 @@ export default function CheckoutPage() {
         paymentMethod: "COD",
       };
 
+      // Save order to Firestore
       const docRef = await addDoc(collection(db, "orders"), {
         ...orderData,
         createdAt: serverTimestamp(),
       });
 
-      incrementOrderCount();
-
-      setOrderId(docRef.id);
+      const orderIdValue = docRef.id;
+      setOrderId(orderIdValue);
       setOrderComplete(true);
       clearCart();
+
+      // Prepare email data
+      const emailData = {
+        orderId: orderIdValue,
+        customerName: formData.fullName || "",
+        customerEmail: formData.email || "",
+        customerPhone: fullPhoneNumber || "",
+        customerAddress: formData.address || "",
+        customerCity: formData.city || "",
+        customerPostalCode: formData.postalCode || "",
+        customerCountry: formData.country || "",
+        products: cart.map((item) => ({
+          title: item.title || "",
+          price: item.price || 0,
+          quantity: item.quantity || 1,
+          image: item.images?.[0] || "",
+          color: item.selectedOptions?.color || "",
+          seater: item.selectedOptions?.seater || "",
+        })),
+        totalPrice: subtotal || 0,
+        orderDate: new Date().toLocaleString("en-GB", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        deliveryNotes: formData.notes || "",
+      };
+
+      // Send emails via API
+      try {
+        const emailResponse = await fetch('/api/order-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ orderData: emailData }),
+        });
+
+        const emailResult = await emailResponse.json();
+        
+        if (emailResponse.ok && emailResult.success) {
+          setEmailStatus('sent');
+          console.log('Order emails sent successfully');
+        } else {
+          setEmailStatus('error');
+          console.error('Failed to send order emails:', emailResult.message);
+        }
+      } catch (emailError) {
+        setEmailStatus('error');
+        console.error('Error sending order emails:', emailError);
+      }
+
+      // Increment order count after successful order
+      incrementOrderCount();
+
     } catch (error) {
       console.error("Error placing order:", error);
       setValidationError("Failed to place order. Please try again.");
+      setEmailStatus('error');
     } finally {
       setLoading(false);
     }
@@ -300,6 +361,16 @@ export default function CheckoutPage() {
           <p className="text-neutral-600">
             Order #{orderId?.slice(-8).toUpperCase()}
           </p>
+          {emailStatus === 'sent' && (
+            <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-3 rounded-xl max-w-md mx-auto">
+              <p className="text-sm font-medium">📧 Order confirmation sent to {formData.email}</p>
+            </div>
+          )}
+          {emailStatus === 'error' && (
+            <div className="bg-amber-50 border border-amber-200 text-amber-700 p-3 rounded-xl max-w-md mx-auto">
+              <p className="text-sm font-medium">⚠️ We'll send your confirmation email shortly</p>
+            </div>
+          )}
           <p className="text-neutral-500 max-w-md mx-auto">
             We'll contact you shortly for delivery confirmation. Our team will call you within 24 hours to confirm your delivery slot.
           </p>

@@ -1,18 +1,8 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import {
   Search,
-  Filter,
-  ExternalLink,
   Package,
-  Truck,
-  CheckCircle,
-  XCircle,
-  ChevronDown,
-  Mail,
-  Phone,
-  MapPin,
-  Clock,
   Eye,
 } from "lucide-react";
 import { formatCurrency } from "../../../lib/utils";

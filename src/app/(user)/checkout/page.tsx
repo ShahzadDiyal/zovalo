@@ -1,5 +1,5 @@
 // src/app/(user)/checkout/page.tsx
-'use client';
+"use client";
 
 import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
@@ -83,7 +83,9 @@ export default function CheckoutPage() {
     countryCodes[0],
   );
   const [showWarning, setShowWarning] = useState(false);
-  const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [emailStatus, setEmailStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
 
   const recaptchaRef = useRef<any>(null);
   const [requireCaptcha, setRequireCaptcha] = useState(false);
@@ -236,7 +238,7 @@ export default function CheckoutPage() {
   const handleConfirmOrder = async () => {
     setShowConfirmModal(false);
     setLoading(true);
-    setEmailStatus('sending');
+    setEmailStatus("sending");
 
     try {
       const fullPhoneNumber = `${selectedCountryCode.code} ${formData.phone}`;
@@ -314,35 +316,34 @@ export default function CheckoutPage() {
 
       // Send emails via API
       try {
-        const emailResponse = await fetch('/api/order-email', {
-          method: 'POST',
+        const emailResponse = await fetch("/api/order-email", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ orderData: emailData }),
         });
 
         const emailResult = await emailResponse.json();
-        
+
         if (emailResponse.ok && emailResult.success) {
-          setEmailStatus('sent');
-          console.log('Order emails sent successfully');
+          setEmailStatus("sent");
+          console.log("Order emails sent successfully");
         } else {
-          setEmailStatus('error');
-          console.error('Failed to send order emails:', emailResult.message);
+          setEmailStatus("error");
+          console.error("Failed to send order emails:", emailResult.message);
         }
       } catch (emailError) {
-        setEmailStatus('error');
-        console.error('Error sending order emails:', emailError);
+        setEmailStatus("error");
+        console.error("Error sending order emails:", emailError);
       }
 
       // Increment order count after successful order
       incrementOrderCount();
-
     } catch (error) {
       console.error("Error placing order:", error);
       setValidationError("Failed to place order. Please try again.");
-      setEmailStatus('error');
+      setEmailStatus("error");
     } finally {
       setLoading(false);
     }
@@ -361,18 +362,23 @@ export default function CheckoutPage() {
           <p className="text-neutral-600">
             Order #{orderId?.slice(-8).toUpperCase()}
           </p>
-          {emailStatus === 'sent' && (
+          {emailStatus === "sent" && (
             <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-3 rounded-xl max-w-md mx-auto">
-              <p className="text-sm font-medium">📧 Order confirmation sent to {formData.email}</p>
+              <p className="text-sm font-medium">
+                📧 Order confirmation sent to {formData.email}
+              </p>
             </div>
           )}
-          {emailStatus === 'error' && (
+          {emailStatus === "error" && (
             <div className="bg-amber-50 border border-amber-200 text-amber-700 p-3 rounded-xl max-w-md mx-auto">
-              <p className="text-sm font-medium">⚠️ We'll send your confirmation email shortly</p>
+              <p className="text-sm font-medium">
+                ⚠️ We'll send your confirmation email shortly
+              </p>
             </div>
           )}
           <p className="text-neutral-500 max-w-md mx-auto">
-            We'll contact you shortly for delivery confirmation. Our team will call you within 24 hours to confirm your delivery slot.
+            We'll contact you shortly for delivery confirmation. Our team will
+            call you within 24 hours to confirm your delivery slot.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Link
@@ -397,8 +403,13 @@ export default function CheckoutPage() {
     return (
       <div className="bg-[#FAF8F5] min-h-screen py-12 sm:py-16 md:py-20">
         <div className="text-center py-12 sm:py-16">
-          <h2 className="text-xl font-serif text-neutral-900">No items to checkout</h2>
-          <Link href="/shop" className="text-amber-600 hover:text-amber-700 underline mt-2 inline-block">
+          <h2 className="text-xl font-serif text-neutral-900">
+            No items to checkout
+          </h2>
+          <Link
+            href="/shop"
+            className="text-amber-600 hover:text-amber-700 underline mt-2 inline-block"
+          >
             Go to Shop
           </Link>
         </div>
@@ -406,7 +417,9 @@ export default function CheckoutPage() {
     );
   }
 
-  const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6Lc2uGQtAAAAANLkB16rm3SSOMJhkt8SF1Sw3Nqp';
+  const RECAPTCHA_SITE_KEY =
+    process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ||
+    "6Lc2uGQtAAAAANLkB16rm3SSOMJhkt8SF1Sw3Nqp";
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen">
@@ -419,7 +432,7 @@ export default function CheckoutPage() {
       <section className="relative overflow-hidden bg-neutral-900 text-white py-12 sm:py-16 md:py-20 mb-8 sm:mb-12">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -458,7 +471,10 @@ export default function CheckoutPage() {
               <h2 className="text-xl sm:text-2xl font-serif text-neutral-900">
                 Shipping Details
               </h2>
-              <Link href="/cart" className="text-xs sm:text-sm font-bold uppercase tracking-widest text-neutral-500 hover:text-amber-600 transition-colors">
+              <Link
+                href="/cart"
+                className="text-xs sm:text-sm font-bold uppercase tracking-widest text-neutral-500 hover:text-amber-600 transition-colors"
+              >
                 ← Return to Cart
               </Link>
             </div>
@@ -596,7 +612,9 @@ export default function CheckoutPage() {
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
                     Alternative Phone Number{" "}
-                    <span className="text-neutral-400 text-[8px]">(Optional)</span>
+                    <span className="text-neutral-400 text-[8px]">
+                      (Optional)
+                    </span>
                   </label>
                   <div className="flex gap-2">
                     <div className="relative w-28">
@@ -720,7 +738,10 @@ export default function CheckoutPage() {
               {/* Order Count Info */}
               <div className="text-center text-[10px] text-neutral-400">
                 {orderCount === 0 ? (
-                  <p className="text-[15px] text-amber-700 italic">🚚 Our team will call you within 24 hours to confirm your delivery slot.</p>
+                  <p className="text-[15px] text-amber-700 italic">
+                    🚚 Our team will call you within 24 hours to confirm your
+                    delivery slot.
+                  </p>
                 ) : orderCount === 1 ? (
                   <p>⚠️ Next order will require security verification.</p>
                 ) : (
@@ -777,7 +798,10 @@ export default function CheckoutPage() {
               </h2>
               <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
                 {cart.map((item) => (
-                  <div key={item.id} className="border-b border-neutral-200/80 pb-4">
+                  <div
+                    key={item.id}
+                    className="border-b border-neutral-200/80 pb-4"
+                  >
                     <div className="flex gap-3">
                       <div className="w-16 h-16 bg-neutral-50 border border-neutral-200/80 rounded-xl overflow-hidden">
                         <img
@@ -787,7 +811,9 @@ export default function CheckoutPage() {
                         />
                       </div>
                       <div className="flex-1">
-                        <h4 className="text-sm font-medium text-neutral-900 line-clamp-1">{item.title}</h4>
+                        <h4 className="text-sm font-medium text-neutral-900 line-clamp-1">
+                          {item.title}
+                        </h4>
                         <p className="text-xs text-neutral-500">
                           QTY: {item.quantity}
                         </p>
@@ -802,7 +828,9 @@ export default function CheckoutPage() {
               <div className="border-t border-neutral-200/80 pt-3 mt-3 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-neutral-500">Subtotal</span>
-                  <span className="text-neutral-900">{formatCurrency(subtotal)}</span>
+                  <span className="text-neutral-900">
+                    {formatCurrency(subtotal)}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-neutral-500">Delivery</span>
@@ -810,7 +838,9 @@ export default function CheckoutPage() {
                 </div>
                 <div className="border-t border-neutral-200/80 pt-2 flex justify-between font-bold text-lg">
                   <span className="text-neutral-900">Total</span>
-                  <span className="text-amber-600">{formatCurrency(subtotal)}</span>
+                  <span className="text-amber-600">
+                    {formatCurrency(subtotal)}
+                  </span>
                 </div>
               </div>
               <div className="mt-4 pt-3 border-t border-neutral-200/80 space-y-2">
@@ -837,8 +867,13 @@ export default function CheckoutPage() {
           />
           <div className="bg-white max-w-md w-full rounded-2xl overflow-hidden relative z-10 shadow-2xl">
             <div className="p-5 border-b border-neutral-200/80 flex justify-between items-center">
-              <h3 className="text-lg font-serif text-neutral-900">Confirm Order</h3>
-              <button onClick={() => setShowConfirmModal(false)} className="hover:text-amber-600 transition-colors">
+              <h3 className="text-lg font-serif text-neutral-900">
+                Confirm Order
+              </h3>
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="hover:text-amber-600 transition-colors"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -848,21 +883,23 @@ export default function CheckoutPage() {
                   Delivery Details
                 </h4>
                 <p className="text-sm text-neutral-600">
-                  <strong className="text-neutral-900">Name:</strong> {formData.fullName}
+                  <strong className="text-neutral-900">Name:</strong>{" "}
+                  {formData.fullName}
                 </p>
                 <p className="text-sm text-neutral-600">
-                  <strong className="text-neutral-900">Phone:</strong> {selectedCountryCode.code}{" "}
-                  {formData.phone}
+                  <strong className="text-neutral-900">Phone:</strong>{" "}
+                  {selectedCountryCode.code} {formData.phone}
                 </p>
                 {formData.alternativePhone && (
                   <p className="text-sm text-neutral-600">
-                    <strong className="text-neutral-900">Alt Phone:</strong> {selectedCountryCode.code}{" "}
-                    {formData.alternativePhone}
+                    <strong className="text-neutral-900">Alt Phone:</strong>{" "}
+                    {selectedCountryCode.code} {formData.alternativePhone}
                   </p>
                 )}
                 <p className="text-sm text-neutral-600">
-                  <strong className="text-neutral-900">Address:</strong> {formData.address}, {formData.city},{" "}
-                  {formData.postalCode}, {formData.country}
+                  <strong className="text-neutral-900">Address:</strong>{" "}
+                  {formData.address}, {formData.city}, {formData.postalCode},{" "}
+                  {formData.country}
                 </p>
               </div>
               <div>
@@ -870,16 +907,23 @@ export default function CheckoutPage() {
                   Order Summary
                 </h4>
                 {cart.map((item, idx) => (
-                  <div key={idx} className="flex justify-between text-sm mb-1 text-neutral-600">
+                  <div
+                    key={idx}
+                    className="flex justify-between text-sm mb-1 text-neutral-600"
+                  >
                     <span>
                       {item.title} x{item.quantity}
                     </span>
-                    <span className="text-neutral-900">{formatCurrency(item.price * item.quantity)}</span>
+                    <span className="text-neutral-900">
+                      {formatCurrency(item.price * item.quantity)}
+                    </span>
                   </div>
                 ))}
                 <div className="border-t border-neutral-200/80 pt-2 mt-2 flex justify-between font-bold">
                   <span className="text-neutral-900">Total</span>
-                  <span className="text-amber-600">{formatCurrency(subtotal)}</span>
+                  <span className="text-amber-600">
+                    {formatCurrency(subtotal)}
+                  </span>
                 </div>
               </div>
               <div className="bg-emerald-50/60 p-3 rounded-xl text-center text-sm text-emerald-700 border border-emerald-200/80">

@@ -1,9 +1,9 @@
 // src/components/ui/WhatsAppProductButton.tsx
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { MessageCircle, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
-import { Product } from './../../types';
+import React, { useState } from "react";
+import { MessageCircle, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
+import { Product } from "./../../types";
 
 interface WhatsAppProductButtonProps {
   product: Product;
@@ -13,24 +13,24 @@ interface WhatsAppProductButtonProps {
   quantity?: number;
 }
 
-export function WhatsAppProductButton({ 
-  product, 
-  selectedSeater, 
-  selectedColor, 
+export function WhatsAppProductButton({
+  product,
+  selectedSeater,
+  selectedColor,
   currentPrice,
-  quantity = 1
+  quantity = 1,
 }: WhatsAppProductButtonProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [customQuery, setCustomQuery] = useState('');
+  const [customQuery, setCustomQuery] = useState("");
 
   const handleWhatsAppClick = () => {
-    const productName = product.title || 'Product';
+    const productName = product.title || "Product";
     const productUrl = `https://royalfurnitures.store/product/${product.slug}`;
     const price = currentPrice || product.price || 0;
-    const seater = selectedSeater || 'Not specified';
-    const color = selectedColor || 'Not specified';
+    const seater = selectedSeater || "Not specified";
+    const color = selectedColor || "Not specified";
     const qty = quantity || 1;
-    
+
     // Shorter, cleaner message to avoid URL length issues
     let message = `Hi Royal Furniture,\n\n`;
     message += `I'm interested in:\n`;
@@ -40,20 +40,20 @@ export function WhatsAppProductButton({
     message += `Color: ${color}\n`;
     message += `Qty: ${qty}\n`;
     message += `Link: ${productUrl}\n\n`;
-    
+
     if (customQuery.trim()) {
       message += `Question: ${customQuery.trim()}\n\n`;
     }
-    
+
     message += `Please let me know if this is available.`;
 
     // Use a shorter encoded message
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/447529661726?text=${encodedMessage}`;
-    
+
     // Open WhatsApp with a slight delay to prevent connection issues
     setTimeout(() => {
-      window.open(whatsappUrl, '_blank');
+      window.open(whatsappUrl, "_blank");
     }, 100);
   };
 

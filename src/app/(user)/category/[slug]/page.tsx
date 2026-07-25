@@ -252,7 +252,7 @@ export default function CategoryPage() {
       <section className="relative overflow-hidden bg-neutral-900 text-white py-12 sm:py-16 md:py-20 mb-8 sm:mb-12">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -264,7 +264,9 @@ export default function CategoryPage() {
             {categoryName || "Shop All"}
           </h1>
           <p className="text-neutral-400 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Discover our curated selection of {categoryName?.toLowerCase() || ""} pieces, designed for comfort and crafted to last.
+            Discover our curated selection of{" "}
+            {categoryName?.toLowerCase() || ""} pieces, designed for comfort and
+            crafted to last.
           </p>
         </div>
       </section>
@@ -395,7 +397,7 @@ export default function CategoryPage() {
               )}
 
               {/* Tags Filter */}
-              {availableTags.length > 0 && (
+              {/* {availableTags.length > 0 && (
                 <div className="space-y-2.5">
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 flex items-center gap-1.5">
                     <Tag className="w-3.5 h-3.5 text-amber-600" /> Tags
@@ -419,13 +421,15 @@ export default function CategoryPage() {
                     })}
                   </div>
                 </div>
-              )}
+              )} */}
 
               {/* Price Range */}
               <div className="space-y-3 pt-2 border-t border-neutral-200/60">
                 <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700">
                   <span>Price Range</span>
-                  <span className="text-amber-600 font-semibold">Max: £{priceRange[1]}</span>
+                  <span className="text-amber-600 font-semibold">
+                    Max: £{priceRange[1]}
+                  </span>
                 </div>
                 <input
                   type="range"
@@ -470,7 +474,11 @@ export default function CategoryPage() {
                   )}
                 </button>
                 <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest">
-                  Showing <span className="text-neutral-900 font-extrabold">{filteredProducts.length}</span> {filteredProducts.length === 1 ? "Product" : "Products"}
+                  Showing{" "}
+                  <span className="text-neutral-900 font-extrabold">
+                    {filteredProducts.length}
+                  </span>{" "}
+                  {filteredProducts.length === 1 ? "Product" : "Products"}
                 </p>
               </div>
 
@@ -502,7 +510,10 @@ export default function CategoryPage() {
                 {selectedCategory !== "All" && (
                   <span className="px-2.5 py-1 bg-amber-50 text-[11px] text-neutral-900 font-medium rounded-md border border-amber-200/50 flex items-center gap-1.5">
                     Category: {selectedCategory}
-                    <button onClick={() => setSelectedCategory("All")} className="hover:text-amber-600">
+                    <button
+                      onClick={() => setSelectedCategory("All")}
+                      className="hover:text-amber-600"
+                    >
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -513,7 +524,10 @@ export default function CategoryPage() {
                     className="px-2.5 py-1 bg-amber-50 text-[11px] text-neutral-900 font-medium rounded-md border border-amber-200/50 flex items-center gap-1.5"
                   >
                     Color: {color}
-                    <button onClick={() => toggleColor(color)} className="hover:text-amber-600">
+                    <button
+                      onClick={() => toggleColor(color)}
+                      className="hover:text-amber-600"
+                    >
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -524,7 +538,10 @@ export default function CategoryPage() {
                     className="px-2.5 py-1 bg-amber-50 text-[11px] text-neutral-900 font-medium rounded-md border border-amber-200/50 flex items-center gap-1.5"
                   >
                     {seater}
-                    <button onClick={() => toggleSeater(seater)} className="hover:text-amber-600">
+                    <button
+                      onClick={() => toggleSeater(seater)}
+                      className="hover:text-amber-600"
+                    >
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -535,7 +552,10 @@ export default function CategoryPage() {
                     className="px-2.5 py-1 bg-amber-50 text-[11px] text-neutral-900 font-medium rounded-md border border-amber-200/50 flex items-center gap-1.5"
                   >
                     #{tag}
-                    <button onClick={() => toggleTag(tag)} className="hover:text-amber-600">
+                    <button
+                      onClick={() => toggleTag(tag)}
+                      className="hover:text-amber-600"
+                    >
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -543,7 +563,10 @@ export default function CategoryPage() {
                 {searchQuery && (
                   <span className="px-2.5 py-1 bg-amber-50 text-[11px] text-neutral-900 font-medium rounded-md border border-amber-200/50 flex items-center gap-1.5">
                     Search: "{searchQuery}"
-                    <button onClick={() => setSearchQuery("")} className="hover:text-amber-600">
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="hover:text-amber-600"
+                    >
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -562,8 +585,9 @@ export default function CategoryPage() {
               <div className="py-16 bg-white border border-dashed border-neutral-200/80 rounded-2xl text-center">
                 <EmptyState
                   icon={PackageOpen}
-                  title="No matches found"
-                  description="We couldn't find any products matching your current filters. Try adjusting your search or clearing the filters."
+                  title="Product Might Be Available!"
+                  description="The product you're looking for may not be listed yet, but we might have it in stock or can arrange it for you."
+                  showWhatsApp={true}
                   actionText="Clear all filters"
                   onAction={clearAllFilters}
                 />
@@ -695,7 +719,9 @@ export default function CategoryPage() {
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700">
                   <span>Price Range</span>
-                  <span className="text-amber-600 font-semibold">Max: £{priceRange[1]}</span>
+                  <span className="text-amber-600 font-semibold">
+                    Max: £{priceRange[1]}
+                  </span>
                 </div>
                 <input
                   type="range"

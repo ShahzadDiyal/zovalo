@@ -406,7 +406,7 @@ export default function CheckoutPage() {
     );
   }
 
-  const RECAPTCHA_SITE_KEY = "6Lfr4ActAAAAAMH7eumd7twNYfKopUrlfWZRzT7t";
+  const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6Lc2uGQtAAAAANLkB16rm3SSOMJhkt8SF1Sw3Nqp';
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen">

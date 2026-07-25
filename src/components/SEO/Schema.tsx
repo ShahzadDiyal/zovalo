@@ -243,8 +243,8 @@ export function Schema({ type, data }: SchemaProps) {
           },
           aggregateRating: {
             "@type": "AggregateRating",
-            ratingValue: product.rating || 4.5,
-            reviewCount: product.reviewCount || 10,
+            ratingValue: product.rating || 4.9,
+            reviewCount: product.reviewCount || 49,
           },
         };
 

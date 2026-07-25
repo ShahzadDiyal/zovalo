@@ -675,81 +675,112 @@ export default function AdminProductForm() {
               )}
             </div>
           </section>
+<section className="bg-white border border-warm-beige p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 space-y-4 sm:space-y-6 md:space-y-8 shadow-sm rounded-lg">
+  <div className="flex items-center gap-2 sm:gap-3 border-l-4 border-gold pl-3 sm:pl-4">
+    <HelpCircle className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
+    <h2 className="text-sm sm:text-base md:text-lg font-display text-near-black uppercase">
+      Frequently Asked Questions
+    </h2>
+  </div>
 
-          <section className="bg-white border border-warm-beige p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 space-y-4 sm:space-y-6 md:space-y-8 shadow-sm rounded-lg">
-            <div className="flex items-center gap-2 sm:gap-3 border-l-4 border-gold pl-3 sm:pl-4">
-              <HelpCircle className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
-              <h2 className="text-sm sm:text-base md:text-lg font-display text-near-black uppercase">
-                Frequently Asked Questions
-              </h2>
-            </div>
+  <div className="space-y-4">
+    <div>
+      <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block mb-1.5">
+        FAQs (Question: Answer format)
+      </label>
+      <div className="space-y-2">
+        <textarea
+          rows={8}
+          className="w-full bg-cream border border-warm-beige py-2.5 sm:py-3 px-4 text-sm leading-relaxed focus:border-gold outline-none resize-y transition-colors rounded"
+          placeholder='Question: Are the colored accent scatter cushions included?&#10;Answer: Yes! The complete set comes with all shown scatter cushions.&#10;Question: Is the linen-blend upholstery easy to clean?&#10;Answer: Yes, the woven linen blend is treated for stain resistance.'
+          onChange={(e) => {
+            const text = e.target.value;
+            const lines = text.split('\n').filter(line => line.trim());
+            
+           const newFaqs: Array<{ question: string; answer: string }> = [];
 
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block mb-1">
-                    Question
-                  </label>
-                  <input
-                    type="text"
-                    value={newFaqQuestion}
-                    onChange={(e) => setNewFaqQuestion(e.target.value)}
-                    placeholder="e.g., What material is this made of?"
-                    className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                  />
-                </div>
-                <div>
-                  <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block mb-1">
-                    Answer
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={newFaqAnswer}
-                      onChange={(e) => setNewFaqAnswer(e.target.value)}
-                      placeholder="e.g., Solid oak with walnut finish"
-                      className="flex-1 bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleAddFaq}
-                      className="bg-gold text-near-black px-4 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-near-black hover:text-white transition rounded whitespace-nowrap"
-                    >
-                      <Plus className="w-3.5 h-3.5 inline mr-1" /> Add
-                    </button>
-                  </div>
-                </div>
+            let currentQuestion = '';
+            let currentAnswer = ''; // Initialize here
+            
+            for (const line of lines) {
+              const trimmedLine = line.trim();
+              
+              if (trimmedLine.toLowerCase().startsWith('question:')) {
+                // If we have a previous question and answer, save it
+                if (currentQuestion && currentAnswer) {
+                  newFaqs.push({ question: currentQuestion, answer: currentAnswer });
+                  currentAnswer = '';
+                }
+                currentQuestion = trimmedLine.substring(9).trim(); // Remove "Question: "
+              } else if (trimmedLine.toLowerCase().startsWith('answer:')) {
+                currentAnswer = trimmedLine.substring(7).trim(); // Remove "Answer: "
+                // Save immediately if both exist
+                if (currentQuestion && currentAnswer) {
+                  newFaqs.push({ question: currentQuestion, answer: currentAnswer });
+                  currentQuestion = '';
+                  currentAnswer = '';
+                }
+              }
+            }
+            
+            // Handle last FAQ if not saved
+            if (currentQuestion && currentAnswer) {
+              newFaqs.push({ question: currentQuestion, answer: currentAnswer });
+            }
+            
+            if (newFaqs.length > 0) {
+              setFormData(prev => ({
+                ...prev,
+                faqs: [...(prev.faqs || []), ...newFaqs]
+              }));
+              e.target.value = '';
+            }
+          }}
+        />
+        <p className="text-[8px] sm:text-[9px] text-gray-400 italic">
+          Enter each FAQ using format: <strong>Question: ...</strong> and <strong>Answer: ...</strong> (one per line)
+        </p>
+      </div>
+    </div>
+
+    {/* FAQ Preview - Without labels */}
+    {(formData.faqs || []).length > 0 && (
+      <div className="bg-cream p-3 sm:p-4 rounded border border-warm-beige">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-gray-400">
+            Preview ({formData.faqs?.length || 0} FAQs)
+          </span>
+        </div>
+        <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+          {(formData.faqs || []).map((faq, index) => (
+            <div key={index} className="flex items-start gap-3 group border-b border-warm-beige pb-3 last:border-0 last:pb-0">
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-near-black">{faq.question}</p>
+                <p className="text-sm text-gray-600 mt-0.5">{faq.answer}</p>
               </div>
-
-              {(formData.faqs || []).length > 0 && (
-                <div className="space-y-3">
-                  {(formData.faqs || []).map((faq, index) => (
-                    <div key={index} className="bg-cream p-3 sm:p-4 rounded border border-warm-beige group">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1">
-                          <p className="text-xs sm:text-sm font-semibold text-near-black">Q: {faq.question}</p>
-                          <p className="text-xs sm:text-sm text-gray-600 mt-1">A: {faq.answer}</p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveFaq(index)}
-                          className="text-red-400 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100 shrink-0"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {(formData.faqs || []).length === 0 && (
-                <p className="text-[10px] text-gray-400 text-center py-2">
-                  No FAQs added. Add questions and answers above.
-                </p>
-              )}
+              <button
+                type="button"
+                onClick={() => handleRemoveFaq(index)}
+                className="text-red-400 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100 shrink-0 mt-1"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
             </div>
-          </section>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {(formData.faqs || []).length === 0 && (
+      <div className="text-center py-8 border-2 border-dashed border-warm-beige rounded-lg">
+        <HelpCircle className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+        <p className="text-[10px] text-gray-400">
+          No FAQs added. Enter FAQs above using format: <strong>Question: ...</strong> and <strong>Answer: ...</strong>
+        </p>
+      </div>
+    )}
+  </div>
+</section>
 
           <section className="bg-white border border-warm-beige p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 space-y-4 sm:space-y-6 md:space-y-8 shadow-sm rounded-lg">
             <div className="flex items-center gap-2 sm:gap-3 border-l-4 border-gold pl-3 sm:pl-4">

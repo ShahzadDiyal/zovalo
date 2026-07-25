@@ -3,7 +3,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Breadcrumb } from "../../../../components/ui/Breadcrumb";
+import { WhatsAppProductButton } from "../../../../components/ui/WhatsAppProductButton";
+
 import Link from "next/link";
 import {
   Minus,
@@ -426,7 +427,32 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                 ))}
               </div>
             )}
+                <div className="pt-4 pb-2">
+              <div className="bg-amber-50/60 border border-amber-200/80 rounded-2xl p-4">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <MessageCircle className="w-4 h-4 text-amber-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">
+                      Looking for a different color or seater?
+                    </p>
+                    <p className="text-xs text-neutral-500">
+                      Contact us directly on WhatsApp and we'll customize it for
+                      you!
+                    </p>
+                  </div>
+                </div>
+                <WhatsAppProductButton
+                  product={product}
+                  selectedSeater={selectedSeater}
+                  selectedColor={selectedColor}
+                  currentPrice={currentPrice}
+                />
+              </div>
+            </div>
           </div>
+          
 
           {/* Product Info */}
           <div className="lg:w-1/2 space-y-4 sm:space-y-5 md:space-y-6">
@@ -578,6 +604,8 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                 )}
               </div>
             )}
+
+        
 
             {/* Quantity & Action Buttons */}
             <div className="space-y-4 pt-2">

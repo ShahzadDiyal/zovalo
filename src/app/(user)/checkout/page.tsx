@@ -417,9 +417,7 @@ export default function CheckoutPage() {
     );
   }
 
-  const RECAPTCHA_SITE_KEY =
-    process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ||
-    "6Lc2uGQtAAAAANLkB16rm3SSOMJhkt8SF1Sw3Nqp";
+const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LfwWVQtAAAAACmScZEoGpi1Sx5IXEVY-84SAbMT';
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen">

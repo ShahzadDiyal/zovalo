@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { Breadcrumb } from "../../../../components/ui/Breadcrumb";
 import Link from "next/link";
 import {
   Minus,

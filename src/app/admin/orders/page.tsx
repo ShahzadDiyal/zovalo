@@ -1,10 +1,6 @@
 "use client";
-import  { useState, useEffect } from "react";
-import {
-  Search,
-  Package,
-  Eye,
-} from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Package, Eye } from "lucide-react";
 import { formatCurrency } from "../../../lib/utils";
 import { Order } from "../../../types";
 import { orderApi } from "../../../services/orderApi";

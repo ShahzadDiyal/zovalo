@@ -1,5 +1,5 @@
 // src/services/emailService.ts
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 interface OrderEmailData {
   orderId: string;
@@ -29,12 +29,12 @@ class EmailService {
 
   constructor() {
     this.isConfigured = false;
-    
+
     // Check if SMTP credentials are configured
     if (process.env.SMTP_USER && process.env.SMTP_PASS) {
       this.transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST || 'smtp.gmail.com',
-        port: parseInt(process.env.SMTP_PORT || '587'),
+        host: process.env.SMTP_HOST || "smtp.gmail.com",
+        port: parseInt(process.env.SMTP_PORT || "587"),
         secure: false,
         auth: {
           user: process.env.SMTP_USER,
@@ -42,15 +42,19 @@ class EmailService {
         },
       });
       this.isConfigured = true;
-      console.log('✅ Email service configured with shahzaddiyal786@gmail.com');
+      console.log("✅ Email service configured with shahzaddiyal786@gmail.com");
     } else {
-      console.warn('⚠️ Email service not configured. SMTP credentials missing.');
+      console.warn(
+        "⚠️ Email service not configured. SMTP credentials missing.",
+      );
     }
   }
 
-  async sendOrderEmails(orderData: OrderEmailData): Promise<{ adminSent: boolean; customerSent: boolean }> {
+  async sendOrderEmails(
+    orderData: OrderEmailData,
+  ): Promise<{ adminSent: boolean; customerSent: boolean }> {
     if (!this.isConfigured) {
-      console.error('❌ Email service not configured. Cannot send emails.');
+      console.error("❌ Email service not configured. Cannot send emails.");
       return { adminSent: false, customerSent: false };
     }
 
@@ -59,82 +63,102 @@ class EmailService {
     return { adminSent, customerSent };
   }
 
-  private async sendOrderNotification(orderData: OrderEmailData): Promise<boolean> {
+  private async sendOrderNotification(
+    orderData: OrderEmailData,
+  ): Promise<boolean> {
     try {
-      console.log(`📧 Sending order notification for order #${orderData.orderId.slice(-8).toUpperCase()}...`);
-      console.log(`📧 Sending to: ${process.env.ADMIN_EMAIL || 'shahzaddiyal786@gmail.com'}`);
-      
+      console.log(
+        `📧 Sending order notification for order #${orderData.orderId.slice(-8).toUpperCase()}...`,
+      );
+      console.log(
+        `📧 Sending to: ${process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com"}`,
+      );
+
       const htmlContent = this.generateOrderEmailHTML(orderData);
       const textContent = this.generateOrderEmailText(orderData);
 
       const mailOptions = {
-        from: process.env.SMTP_FROM || 'shahzaddiyal786@gmail.com',
-        to: process.env.ADMIN_EMAIL || 'shahzaddiyal786@gmail.com',
+        from: process.env.SMTP_FROM || "shahzaddiyal786@gmail.com",
+        to: process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com",
         subject: `🛍️ NEW ORDER #${orderData.orderId.slice(-8).toUpperCase()} - Royal Furniture`,
         text: textContent,
         html: htmlContent,
         // Also send a copy to yourself
-        bcc: process.env.BCC_EMAIL || 'shahzaddiyal786@gmail.com',
+        bcc: process.env.BCC_EMAIL || "shahzaddiyal786@gmail.com",
         // Add reply-to so you can reply directly
         replyTo: orderData.customerEmail,
       };
 
       const info = await this.transporter.sendMail(mailOptions);
-      console.log(`✅ Order email sent successfully! Message ID: ${info.messageId}`);
-      console.log(`✅ Admin notified at: ${process.env.ADMIN_EMAIL || 'shahzaddiyal786@gmail.com'}`);
+      console.log(
+        `✅ Order email sent successfully! Message ID: ${info.messageId}`,
+      );
+      console.log(
+        `✅ Admin notified at: ${process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com"}`,
+      );
       return true;
     } catch (error) {
-      console.error('❌ Error sending order email:', error);
+      console.error("❌ Error sending order email:", error);
       if (error instanceof Error) {
-        console.error('Error details:', error.message);
+        console.error("Error details:", error.message);
       }
       return false;
     }
   }
 
-  private async sendCustomerConfirmation(orderData: OrderEmailData): Promise<boolean> {
+  private async sendCustomerConfirmation(
+    orderData: OrderEmailData,
+  ): Promise<boolean> {
     try {
-      console.log(`📧 Sending customer confirmation to ${orderData.customerEmail}...`);
-      
+      console.log(
+        `📧 Sending customer confirmation to ${orderData.customerEmail}...`,
+      );
+
       const htmlContent = this.generateCustomerEmailHTML(orderData);
       const textContent = this.generateCustomerEmailText(orderData);
 
       const mailOptions = {
-        from: process.env.SMTP_FROM || 'shahzaddiyal786@gmail.com',
+        from: process.env.SMTP_FROM || "shahzaddiyal786@gmail.com",
         to: orderData.customerEmail,
         subject: `✅ Order Confirmation #${orderData.orderId.slice(-8).toUpperCase()} - Royal Furniture`,
         text: textContent,
         html: htmlContent,
-        replyTo: process.env.ADMIN_EMAIL || 'shahzaddiyal786@gmail.com',
+        replyTo: process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com",
         // Send a copy to admin as well
-        bcc: process.env.ADMIN_EMAIL || 'shahzaddiyal786@gmail.com',
+        bcc: process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com",
       };
 
       const info = await this.transporter.sendMail(mailOptions);
-      console.log(`✅ Customer confirmation sent successfully! Message ID: ${info.messageId}`);
+      console.log(
+        `✅ Customer confirmation sent successfully! Message ID: ${info.messageId}`,
+      );
       return true;
     } catch (error) {
-      console.error('❌ Error sending customer confirmation:', error);
+      console.error("❌ Error sending customer confirmation:", error);
       if (error instanceof Error) {
-        console.error('Error details:', error.message);
+        console.error("Error details:", error.message);
       }
       return false;
     }
   }
 
   private generateOrderEmailHTML(data: OrderEmailData): string {
-    const productRows = data.products.map(p => `
+    const productRows = data.products
+      .map(
+        (p) => `
       <tr>
         <td style="padding: 10px; border-bottom: 1px solid #e5e5e5;">
           <strong>${p.title}</strong>
-          ${p.color ? `<br><small style="color: #666;">Color: ${p.color}</small>` : ''}
-          ${p.seater ? `<br><small style="color: #666;">Seater: ${p.seater}</small>` : ''}
+          ${p.color ? `<br><small style="color: #666;">Color: ${p.color}</small>` : ""}
+          ${p.seater ? `<br><small style="color: #666;">Seater: ${p.seater}</small>` : ""}
         </td>
         <td style="padding: 10px; border-bottom: 1px solid #e5e5e5; text-align: center;">${p.quantity}</td>
         <td style="padding: 10px; border-bottom: 1px solid #e5e5e5; text-align: right;">£${p.price.toFixed(2)}</td>
         <td style="padding: 10px; border-bottom: 1px solid #e5e5e5; text-align: right;">£${(p.price * p.quantity).toFixed(2)}</td>
       </tr>
-    `).join('');
+    `,
+      )
+      .join("");
 
     return `
       <!DOCTYPE html>
@@ -190,7 +214,7 @@ class EmailService {
               <div class="info-row"><span class="info-label">Phone:</span><span class="info-value">${data.customerPhone}</span></div>
               <div class="info-row"><span class="info-label">Address:</span><span class="info-value">${data.customerAddress}, ${data.customerCity}, ${data.customerPostalCode}</span></div>
               <div class="info-row"><span class="info-label">Country:</span><span class="info-value">${data.customerCountry}</span></div>
-              ${data.deliveryNotes ? `<div class="info-row"><span class="info-label">Notes:</span><span class="info-value">${data.deliveryNotes}</span></div>` : ''}
+              ${data.deliveryNotes ? `<div class="info-row"><span class="info-label">Notes:</span><span class="info-value">${data.deliveryNotes}</span></div>` : ""}
             </div>
 
             <div class="section">
@@ -247,9 +271,12 @@ class EmailService {
   }
 
   private generateOrderEmailText(data: OrderEmailData): string {
-    const productList = data.products.map(p => 
-      `  - ${p.title} x${p.quantity} = £${(p.price * p.quantity).toFixed(2)}`
-    ).join('\n');
+    const productList = data.products
+      .map(
+        (p) =>
+          `  - ${p.title} x${p.quantity} = £${(p.price * p.quantity).toFixed(2)}`,
+      )
+      .join("\n");
 
     return `
 🚨 NEW ORDER - Royal Furniture
@@ -266,7 +293,7 @@ Email: ${data.customerEmail}
 Phone: ${data.customerPhone}
 Address: ${data.customerAddress}, ${data.customerCity}, ${data.customerPostalCode}
 Country: ${data.customerCountry}
-${data.deliveryNotes ? `Notes: ${data.deliveryNotes}` : ''}
+${data.deliveryNotes ? `Notes: ${data.deliveryNotes}` : ""}
 
 ORDER ITEMS
 -----------
@@ -328,13 +355,17 @@ This notification sent to shahzaddiyal786@gmail.com
                 </tr>
               </thead>
               <tbody>
-                ${data.products.map(p => `
+                ${data.products
+                  .map(
+                    (p) => `
                   <tr>
                     <td style="padding: 8px; border-bottom: 1px solid #e5e5e5;">${p.title}</td>
                     <td style="padding: 8px; border-bottom: 1px solid #e5e5e5; text-align: center;">${p.quantity}</td>
                     <td style="padding: 8px; border-bottom: 1px solid #e5e5e5; text-align: right;">£${(p.price * p.quantity).toFixed(2)}</td>
                   </tr>
-                `).join('')}
+                `,
+                  )
+                  .join("")}
               </tbody>
               <tfoot>
                 <tr>
@@ -378,7 +409,7 @@ Thank you for your order, ${data.customerName}!
 Order #${data.orderId.slice(-8).toUpperCase()}
 
 Order Items:
-${data.products.map(p => `  - ${p.title} x${p.quantity}`).join('\n')}
+${data.products.map((p) => `  - ${p.title} x${p.quantity}`).join("\n")}
 
 Total: £${data.totalPrice.toFixed(2)}
 Delivery: Free UK Delivery • 1-3 Business Days

@@ -4,7 +4,7 @@
 import { useEffect, useState, lazy, Suspense } from "react";
 import { ProductCard } from "../../components/ui/ProductCard";
 import { Button } from "../../components/ui/Button";
-import WelcomePopup from "../../components/ui/WelcomePopup";
+// import WelcomePopup from "../../components/ui/WelcomePopup";
 import Link from "next/link";
 import {
   Truck,
@@ -234,193 +234,196 @@ function HeroSection() {
 }
 
 // Lazy loaded sections
-const FeaturedProductsSection = lazy(() =>
-  Promise.resolve({
-    default: function FeaturedProductsSection({
-      products,
-    }: {
-      products: Product[];
-    }) {
-      return (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
-            <div className="space-y-2 sm:space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/50">
-                <Sparkles className="w-3 h-3 text-amber-500" />
-                <span className="text-[9px] font-bold uppercase tracking-widest text-amber-600">
-                  Premium Selection
-                </span>
+const FeaturedProductsSection = lazy(
+  () =>
+    Promise.resolve({
+      default: function FeaturedProductsSection({
+        products,
+      }: {
+        products: Product[];
+      }) {
+        return (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+              <div className="space-y-2 sm:space-y-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/50">
+                  <Sparkles className="w-3 h-3 text-amber-500" />
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-amber-600">
+                    Premium Selection
+                  </span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900">
+                  Featured Collection
+                </h2>
+                <div className="w-12 sm:w-16 h-0.5 bg-amber-500 mx-auto sm:mx-0" />
               </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900">
-                Featured Collection
-              </h2>
-              <div className="w-12 sm:w-16 h-0.5 bg-amber-500 mx-auto sm:mx-0" />
+              <Link
+                href="/shop"
+                className="text-[10px] sm:text-[12px] font-bold uppercase tracking-widest text-neutral-600 hover:text-amber-600 transition-colors underline underline-offset-4"
+              >
+                Shop All →
+              </Link>
             </div>
-            <Link
-              href="/shop"
-              className="text-[10px] sm:text-[12px] font-bold uppercase tracking-widest text-neutral-600 hover:text-amber-600 transition-colors underline underline-offset-4"
-            >
-              Shop All →
-            </Link>
-          </div>
 
-          {products.length === 0 ? (
-            <div className="text-center py-8 sm:py-12">
-              <p className="text-neutral-400 text-sm sm:text-base">
-                No products found. Add some products in the admin panel.
-              </p>
+            {products.length === 0 ? (
+              <div className="text-center py-8 sm:py-12">
+                <p className="text-neutral-400 text-sm sm:text-base">
+                  No products found. Add some products in the admin panel.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            )}
+          </section>
+        );
+      },
+    }) as any,
+);
+
+const RecentProductsSection = lazy(
+  () =>
+    Promise.resolve({
+      default: function RecentProductsSection({
+        products,
+      }: {
+        products: Product[];
+      }) {
+        if (products.length === 0) return null;
+        return (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+              <div className="space-y-2 sm:space-y-3">
+                <h3 className="text-[10px] sm:text-[12px] font-bold uppercase tracking-[0.2em] text-neutral-400">
+                  Just Arrived
+                </h3>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900">
+                  Newest Additions
+                </h2>
+                <div className="w-12 sm:w-16 h-0.5 bg-amber-500 mx-auto sm:mx-0" />
+              </div>
+              <Link
+                href="/shop?sort=latest"
+                className="text-[10px] sm:text-[12px] font-bold uppercase tracking-widest text-neutral-600 hover:text-amber-600 transition-colors underline underline-offset-4"
+              >
+                View All New →
+              </Link>
             </div>
-          ) : (
+
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-          )}
-        </section>
-      );
-    },
-  }) as any,
-);
-
-const RecentProductsSection = lazy(() =>
-  Promise.resolve({
-    default: function RecentProductsSection({
-      products,
-    }: {
-      products: Product[];
-    }) {
-      if (products.length === 0) return null;
-      return (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
-            <div className="space-y-2 sm:space-y-3">
-              <h3 className="text-[10px] sm:text-[12px] font-bold uppercase tracking-[0.2em] text-neutral-400">
-                Just Arrived
-              </h3>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900">
-                Newest Additions
-              </h2>
-              <div className="w-12 sm:w-16 h-0.5 bg-amber-500 mx-auto sm:mx-0" />
-            </div>
-            <Link
-              href="/shop?sort=latest"
-              className="text-[10px] sm:text-[12px] font-bold uppercase tracking-widest text-neutral-600 hover:text-amber-600 transition-colors underline underline-offset-4"
-            >
-              View All New →
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </section>
-      );
-    },
-  }) as any,
-);
-
-const CategoriesSection = lazy(() =>
-  Promise.resolve({
-    default: function CategoriesSection({
-      categories,
-    }: {
-      categories: Category[];
-    }) {
-      const getCategoryImage = (category: Category): string => {
-        if (category.image && category.image.startsWith("data:image"))
-          return category.image;
-        if (category.image && category.image.startsWith("http"))
-          return category.image;
-        const fallbackImages: Record<string, string> = {
-          "Sofa Sets":
-            "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800",
-          "Dining Tables":
-            "https://images.unsplash.com/photo-1577146333359-39f99d73010b?auto=format&fit=crop&q=80&w=800",
-          Beds: "https://images.unsplash.com/photo-1505691938895-1758d7eaa511?auto=format&fit=crop&q=80&w=800",
-          Mattresses:
-            "https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&q=80&w=800",
-          "Acoustic Wall Panels":
-            "https://images.unsplash.com/photo-1615876234586-44c13824bba3?auto=format&fit=crop&q=80&w=800",
-          "Coffee Tables":
-            "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&q=80&w=800",
-          "Office Chairs":
-            "https://images.unsplash.com/photo-1505797149-43b00fe1eeac?auto=format&fit=crop&q=80&w=800",
-          Wardrobes:
-            "https://images.unsplash.com/photo-1595428774223-ef52624120ec?auto=format&fit=crop&q=80&w=800",
-        };
-        return (
-          fallbackImages[category.name] ||
-          "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=800"
+          </section>
         );
-      };
+      },
+    }) as any,
+);
 
-      const getCategorySubtitle = (categoryName: string): string => {
-        const subtitles: Record<string, string> = {
-          "Sofa Sets": "Living Area",
-          "Dining Tables": "The Feast",
-          Beds: "Nightly Rest",
-          Mattresses: "Sleep",
-          "Acoustic Wall Panels": "Acoustics",
-          "Coffee Tables": "Centerpiece",
-          "Office Chairs": "Workspace",
-          Wardrobes: "Storage",
+const CategoriesSection = lazy(
+  () =>
+    Promise.resolve({
+      default: function CategoriesSection({
+        categories,
+      }: {
+        categories: Category[];
+      }) {
+        const getCategoryImage = (category: Category): string => {
+          if (category.image && category.image.startsWith("data:image"))
+            return category.image;
+          if (category.image && category.image.startsWith("http"))
+            return category.image;
+          const fallbackImages: Record<string, string> = {
+            "Sofa Sets":
+              "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800",
+            "Dining Tables":
+              "https://images.unsplash.com/photo-1577146333359-39f99d73010b?auto=format&fit=crop&q=80&w=800",
+            Beds: "https://images.unsplash.com/photo-1505691938895-1758d7eaa511?auto=format&fit=crop&q=80&w=800",
+            Mattresses:
+              "https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&q=80&w=800",
+            "Acoustic Wall Panels":
+              "https://images.unsplash.com/photo-1615876234586-44c13824bba3?auto=format&fit=crop&q=80&w=800",
+            "Coffee Tables":
+              "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&q=80&w=800",
+            "Office Chairs":
+              "https://images.unsplash.com/photo-1505797149-43b00fe1eeac?auto=format&fit=crop&q=80&w=800",
+            Wardrobes:
+              "https://images.unsplash.com/photo-1595428774223-ef52624120ec?auto=format&fit=crop&q=80&w=800",
+          };
+          return (
+            fallbackImages[category.name] ||
+            "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=800"
+          );
         };
-        return subtitles[categoryName] || "Collection";
-      };
 
-      if (categories.length === 0) return null;
+        const getCategorySubtitle = (categoryName: string): string => {
+          const subtitles: Record<string, string> = {
+            "Sofa Sets": "Living Area",
+            "Dining Tables": "The Feast",
+            Beds: "Nightly Rest",
+            Mattresses: "Sleep",
+            "Acoustic Wall Panels": "Acoustics",
+            "Coffee Tables": "Centerpiece",
+            "Office Chairs": "Workspace",
+            Wardrobes: "Storage",
+          };
+          return subtitles[categoryName] || "Collection";
+        };
 
-      return (
-        <section className="bg-white border-t border-b border-neutral-200/80 py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto space-y-8 sm:space-y-12 md:space-y-16">
-            <div className="text-center space-y-2 sm:space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/50">
-                <Sparkles className="w-3 h-3 text-amber-500" />
-                <span className="text-[9px] font-bold uppercase tracking-widest text-amber-600">
-                  Shop by Category
-                </span>
+        if (categories.length === 0) return null;
+
+        return (
+          <section className="bg-white border-t border-b border-neutral-200/80 py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto space-y-8 sm:space-y-12 md:space-y-16">
+              <div className="text-center space-y-2 sm:space-y-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/50">
+                  <Sparkles className="w-3 h-3 text-amber-500" />
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-amber-600">
+                    Shop by Category
+                  </span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900 tracking-tight">
+                  Explore Our Collections
+                </h2>
+                <p className="text-neutral-500 font-light text-sm sm:text-base">
+                  Curated categories for every space in your home
+                </p>
               </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900 tracking-tight">
-                Explore Our Collections
-              </h2>
-              <p className="text-neutral-500 font-light text-sm sm:text-base">
-                Curated categories for every space in your home
-              </p>
-            </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
-              {categories.slice(0, 5).map((category) => (
-                <Link
-                  key={category.id}
-                  href={`/category/${category.slug}`}
-                  className="relative aspect-[3/4] group overflow-hidden bg-neutral-800 block rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300"
-                >
-                  <img
-                    src={getCategoryImage(category)}
-                    alt={category.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
-                    fetchPriority="high"
-                  />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-white space-y-1 sm:space-y-2 p-3 sm:p-4 bg-black/10 group-hover:bg-black/40 transition-colors rounded-2xl">
-                    <span className="text-[7px] sm:text-[8px] md:text-[14px] mb-4 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] transform translate-y-3 sm:translate-y-4 group-hover:translate-y-0 transition-all duration-500 text-amber-400">
-                      {getCategorySubtitle(category.name)}
-                    </span>
-                    <h3 className="text-lg sm:text-xl md:text-2xl lg:text-[30px] text-white font-serif font-medium tracking-tight text-center px-1 sm:px-2 line-clamp-2">
-                      {category.name}
-                    </h3>
-                    <span className="w-0 group-hover:w-6 sm:group-hover:w-8 h-px bg-amber-500 transition-all duration-500 ease-out" />
-                  </div>
-                </Link>
-              ))}
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
+                {categories.slice(0, 5).map((category) => (
+                  <Link
+                    key={category.id}
+                    href={`/category/${category.slug}`}
+                    className="relative aspect-[3/4] group overflow-hidden bg-neutral-800 block rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300"
+                  >
+                    <img
+                      src={getCategoryImage(category)}
+                      alt={category.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+                      fetchPriority="high"
+                    />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white space-y-1 sm:space-y-2 p-3 sm:p-4 bg-black/10 group-hover:bg-black/40 transition-colors rounded-2xl">
+                      <span className="text-[7px] sm:text-[8px] md:text-[14px] mb-4 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] transform translate-y-3 sm:translate-y-4 group-hover:translate-y-0 transition-all duration-500 text-amber-400">
+                        {getCategorySubtitle(category.name)}
+                      </span>
+                      <h3 className="text-lg sm:text-xl md:text-2xl lg:text-[30px] text-white font-serif font-medium tracking-tight text-center px-1 sm:px-2 line-clamp-2">
+                        {category.name}
+                      </h3>
+                      <span className="w-0 group-hover:w-6 sm:group-hover:w-8 h-px bg-amber-500 transition-all duration-500 ease-out" />
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      );
-    },
-  })  as any, 
+          </section>
+        );
+      },
+    }) as any,
 );
 
 // Main Page Component
@@ -687,7 +690,7 @@ export default function HomePage() {
       </section>
 
       <HomeBlogSection />
-      <WelcomePopup products={products} />
+      {/* <WelcomePopup products={products} /> */}
     </div>
   );
 }

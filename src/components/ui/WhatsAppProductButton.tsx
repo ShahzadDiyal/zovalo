@@ -68,7 +68,7 @@ export function WhatsAppProductButton({
         <Sparkles className="w-3.5 h-3.5 opacity-75" />
       </button>
 
-      <p className="text-[8px] text-center text-gray-400 mt-1.5">
+      <p className="text-[12px] text-center text-gray-400 mt-1.5">
         Get a personalized quote for your custom requirements
       </p>
 
@@ -102,7 +102,7 @@ export function WhatsAppProductButton({
               rows={3}
               className="w-full bg-cream border border-warm-beige py-2.5 px-3 text-sm focus:border-gold outline-none rounded-xl resize-none"
             />
-            <p className="text-[8px] text-gray-400 mt-1">
+            <p className="text-[12px] text-gray-400 mt-1">
               This will be sent with your inquiry on WhatsApp.
             </p>
           </div>

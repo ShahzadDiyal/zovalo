@@ -21,6 +21,7 @@ import {
   MapPin,
   Globe,
   PlusCircle,
+  Palette,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
@@ -212,6 +213,13 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 <ChevronRight className="w-4 h-4" />
               )}
             </Link>
+            <Link
+  href="/admin/colors"
+  className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:bg-cream hover:text-near-black rounded transition-colors"
+>
+  <Palette className="w-4 h-4" />
+  Colors
+</Link>
 
             {/* Blog Section */}
             <div className="mt-4">

@@ -92,7 +92,7 @@ export default function CartPage() {
                   <div className="flex-1 flex flex-col justify-between py-0">
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-2">
                       <div className="text-left">
-                        <p className="text-[8px] sm:text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-0.5">
+                        <p className="text-[12px] sm:text-[14px] font-bold text-neutral-400 uppercase tracking-widest mb-0.5">
                           {item.category}
                         </p>
                         <Link href={`/product/${item.slug}`}>
@@ -105,6 +105,25 @@ export default function CartPage() {
                             )}
                           </h3>
                         </Link>
+
+                        {(item.selectedOptions?.color || item.selectedOptions?.seater) && (
+  <div className="flex flex-wrap items-center gap-2 mt-1">
+    {item.selectedOptions?.color && (
+      <span className="inline-flex items-center gap-1 text-[12px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-full">
+        <span 
+          className="w-2.5 h-2.5 rounded-full border border-gray-300"
+          style={{ backgroundColor: item.selectedOptions.color.toLowerCase() }}
+        />
+        {item.selectedOptions.color}
+      </span>
+    )}
+    {item.selectedOptions?.seater && (
+      <span className="inline-flex items-center gap-1 text-[12px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-full">
+        {item.selectedOptions.seater}
+      </span>
+    )}
+  </div>
+)}
                       </div>
                       <p className="text-sm sm:text-base md:text-lg font-light text-neutral-900 md:text-center sm:text-right whitespace-nowrap">
                         {formatCurrency(item.price * item.quantity)}
@@ -138,7 +157,7 @@ export default function CartPage() {
                       {/* Remove Button */}
                       <button
                         onClick={() => removeFromCart(item.id)}
-                        className="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest text-red-500 hover:text-red-700 transition-colors flex items-center gap-1"
+                        className="text-[12px] sm:text-[14px] font-bold uppercase tracking-widest text-red-500 hover:text-red-700 transition-colors flex items-center gap-1"
                       >
                         <Trash2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                         Remove

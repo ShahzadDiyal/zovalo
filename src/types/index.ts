@@ -21,6 +21,8 @@ export interface Product {
   featured?: boolean;
   createdAt?: any;
   updatedAt?: any;
+    enableColorSelection?: boolean;  // true = show color button, false = hide
+  selectedColor?: string;
 }
 
 export interface SeaterPrice {
@@ -180,4 +182,17 @@ export interface CityPage {
 // For API response
 export interface CityPageWithCount extends CityPage {
   totalOrders?: number;
+}
+
+
+export interface Color {
+  id: string;
+  name: string;
+  hex: string;
+  fabric: string; // e.g., "Plush Velvet", "Crushed Velvet", etc.
+  image?: string; // Optional image URL for fabric swatch
+  isActive: boolean;
+  sortOrder: number;
+  createdAt?: any;
+  updatedAt?: any;
 }

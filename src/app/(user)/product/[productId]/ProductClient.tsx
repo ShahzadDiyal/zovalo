@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { WhatsAppProductButton } from "../../../../components/ui/WhatsAppProductButton";
+import { ColorSelection } from "../../../../components/products/ColorSelection";
 
 import Link from "next/link";
 import {
@@ -15,9 +16,7 @@ import {
   ShieldCheck,
   ShoppingCart,
   ShoppingBag,
-  Palette,
   Sofa,
-  Tag,
   X,
   ZoomIn,
   Mail,
@@ -26,7 +25,6 @@ import {
   ChevronLeft,
   ChevronRight,
   List,
-  HelpCircle,
   ChevronDown,
   ChevronUp,
   Sparkles,
@@ -34,7 +32,6 @@ import {
 import { useCart } from "../../../../context/CartContext";
 import { Product } from "../../../../types";
 import { formatCurrency } from "../../../../lib/utils";
-// import { LoadingSpinner } from "@/components/ui/Loading";
 import { useRouter } from "next/navigation";
 import { RelatedProducts } from "../../../../components/products/RelatedProducts";
 
@@ -59,7 +56,10 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
   );
   const [openFaqs, setOpenFaqs] = useState<number[]>([]);
 
-  const [selectedColor, setSelectedColor] = useState<string>("");
+  // Single variable for the combined color name
+  const [selectedColorName, setSelectedColorName] = useState<string>("");
+  const [selectedColorHex, setSelectedColorHex] = useState<string>("");
+
   const [selectedSeater, setSelectedSeater] = useState<string>("");
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [currentCompareAtPrice, setCurrentCompareAtPrice] = useState<number>(0);
@@ -89,12 +89,11 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
     return url;
   };
 
-  // Initialize selections when product loads
   useEffect(() => {
     if (product) {
       setQuantity(1);
       if (product.colors && product.colors.length > 0) {
-        setSelectedColor(product.colors[0]);
+        setSelectedColorName(product.colors[0]);
       }
       if (product.seaterCount && product.seaterCount.length > 0) {
         setSelectedSeater(product.seaterCount[0]);
@@ -105,6 +104,18 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
       }
     }
   }, [product]);
+
+  // Updated: Handle color selection with combined name
+  const handleColorSelection = (
+    colorName: string,
+    fabricName: string,
+    colorHex: string,
+    combinedName: string,
+  ) => {
+    setSelectedColorName(combinedName);
+    setSelectedColorHex(colorHex);
+    console.log("🎨 Color selected:", { combinedName, colorHex });
+  };
 
   const updatePriceForSeater = (seater: string, productData: Product) => {
     if (productData.seaterPrices && productData.seaterPrices.length > 0) {
@@ -150,10 +161,11 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
       return;
     }
 
-    if (product.colors && product.colors.length > 0 && !selectedColor) {
+    if (product.enableColorSelection && !selectedColorName) {
       alert("Please select a color");
       return;
     }
+
     if (
       product.seaterCount &&
       product.seaterCount.length > 0 &&
@@ -172,7 +184,8 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
       },
       quantity,
       {
-        color: selectedColor,
+        color: selectedColorName, // Now contains "Fabric - Color" format
+        colorHex: selectedColorHex,
         seater: selectedSeater,
       },
     );
@@ -195,10 +208,11 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
       return;
     }
 
-    if (product.colors && product.colors.length > 0 && !selectedColor) {
+    if (product.enableColorSelection && !selectedColorName) {
       alert("Please select a color");
       return;
     }
+
     if (
       product.seaterCount &&
       product.seaterCount.length > 0 &&
@@ -217,7 +231,8 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
       },
       quantity,
       {
-        color: selectedColor,
+        color: selectedColorName, // Now contains "Fabric - Color" format
+        colorHex: selectedColorHex,
         seater: selectedSeater,
       },
     );
@@ -355,7 +370,6 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen">
-      {/* Luxury Banner Hero Header */}
       <section className="relative bg-neutral-900 text-white py-12 sm:py-16 md:py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px]" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -378,9 +392,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
         </div>
       </section>
 
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-12 relative z-10 pb-16 sm:pb-24">
-        {/* Row 1: Image + Product Details */}
         <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 md:gap-12">
           {/* Image Gallery */}
           <div className="lg:w-1/2 space-y-3 sm:space-y-4">
@@ -414,7 +426,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                     onClick={() => setSelectedImage(idx)}
                     className={`w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-white border-2 transition-all rounded-xl overflow-hidden ${
                       selectedImage === idx
-                        ? "border-amber-500 ring-2 ring-amber-500/20"
+                        ? "border-amber-500 ring-1 ring-amber-500/20"
                         : "border-neutral-200/80 hover:border-amber-300"
                     }`}
                   >
@@ -446,7 +458,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                 <WhatsAppProductButton
                   product={product}
                   selectedSeater={selectedSeater}
-                  selectedColor={selectedColor}
+                  selectedColor={selectedColorName}
                   currentPrice={currentPrice}
                 />
               </div>
@@ -533,34 +545,21 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
               </div>
             )}
 
-            {/* Color Selection */}
-            {product.colors && product.colors.length > 0 && (
-              <div className="space-y-2">
-                <label className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-neutral-700 block">
-                  Select Color <span className="text-red-500">*</span>
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {product.colors.map((color) => (
-                    <button
-                      key={color}
-                      onClick={() => setSelectedColor(color)}
-                      className={`px-2 md:px-4 py-1 md:py-2 text-sm rounded-full transition-all flex items-center gap-2 ${
-                        selectedColor === color
-                          ? "bg-amber-50 text-neutral-900 font-bold ring-2 ring-amber-500 border border-amber-300"
-                          : "bg-white text-neutral-700 hover:bg-amber-50 border border-neutral-200/80"
-                      }`}
-                    >
-                      <div
-                        className="w-4 h-4 rounded-full border border-gray-300"
-                        style={{ backgroundColor: color.toLowerCase() }}
-                      />
-                      {color}
-                      {selectedColor === color && (
-                        <Check className="w-3 h-3 text-amber-600" />
-                      )}
-                    </button>
-                  ))}
-                </div>
+            {/* Updated: Color Selection with combined name */}
+            {product.enableColorSelection && (
+              <div className="border-t border-neutral-200/80 pt-4 mt-4 z-[9999]">
+                <ColorSelection
+                  productId={product.id}
+                  onColorSelect={handleColorSelection}
+                />
+                {selectedColorName && (
+                  <p className="text-xs text-neutral-500 mt-2">
+                    Selected:{" "}
+                    <span className="font-bold text-neutral-900">
+                      {selectedColorName}
+                    </span>
+                  </p>
+                )}
               </div>
             )}
 
@@ -577,7 +576,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                       onClick={() => handleSeaterChange(seater)}
                       className={`px-2 md:px-4 py-1 md:py-2 text-sm rounded-full transition-all flex items-center gap-2 ${
                         selectedSeater === seater
-                          ? "bg-amber-50 text-neutral-900 font-bold ring-2 ring-amber-500 border border-amber-300"
+                          ? "bg-amber-50 text-neutral-900 font-bold ring-1 ring-amber-500 border border-amber-300"
                           : "bg-white text-neutral-700 hover:bg-amber-50 border border-neutral-200/80"
                       }`}
                     >
@@ -639,7 +638,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                       disabled={
                         addingToCart ||
                         (hasOptions &&
-                          (!selectedColor ||
+                          (!selectedColorName ||
                             (product.seaterCount &&
                               product.seaterCount.length > 0 &&
                               !selectedSeater)))
@@ -654,7 +653,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                       disabled={
                         orderingNow ||
                         (hasOptions &&
-                          (!selectedColor ||
+                          (!selectedColorName ||
                             (product.seaterCount &&
                               product.seaterCount.length > 0 &&
                               !selectedSeater)))
@@ -720,9 +719,8 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
           </div>
         </div>
 
-        {/* Row 2: Tabs - Description & FAQs */}
+        {/* Tabs - Description & FAQs */}
         <div className="mt-12 sm:mt-16 md:mt-20 border-t border-neutral-200/80 pt-8 sm:pt-10 md:pt-12">
-          {/* Tab Headers */}
           <div className="flex border-b border-neutral-200/80 mb-6 sm:mb-8">
             <button
               onClick={() => setActiveTab("description")}
@@ -748,9 +746,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
             )}
           </div>
 
-          {/* Tab Content */}
           <div className="py-2 sm:py-4">
-            {/* Description Tab */}
             {activeTab === "description" && (
               <div className="prose prose-sm sm:prose-base max-w-none">
                 <div className="text-neutral-600 text-sm sm:text-base leading-relaxed space-y-3 sm:space-y-4">
@@ -761,7 +757,6 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
               </div>
             )}
 
-            {/* FAQs Tab */}
             {activeTab === "faqs" &&
               product.faqs &&
               product.faqs.length > 0 && (

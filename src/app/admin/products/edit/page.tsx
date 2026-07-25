@@ -74,6 +74,8 @@ export default function AdminProductForm() {
     featuresStyle: "bullet",
     faqs: [],
     featured: false,
+enableColorSelection: false
+    
   });
 
   useEffect(() => {
@@ -791,7 +793,7 @@ export default function AdminProductForm() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block flex items-center gap-2">
                   <Palette className="w-3.5 h-3.5" /> Available Colors
                 </label>
@@ -850,8 +852,32 @@ export default function AdminProductForm() {
                 {(formData.colors || []).length === 0 && (
                   <p className="text-[10px] text-gray-400">No colors added. Add above.</p>
                 )}
-              </div>
-
+              </div> */}
+<div className="flex items-center justify-between p-3 sm:p-4 bg-white/5 border border-white/10 rounded">
+  <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-gray-400">
+    Enable Color Selection
+  </span>
+  <button
+    type="button"
+    onClick={() =>
+      setFormData((prev) => ({
+        ...prev,
+        enableColorSelection: !prev.enableColorSelection,
+      }))
+    }
+    className={`w-10 sm:w-11 md:w-12 h-5 sm:h-5.5 md:h-6 rounded-full p-1 transition-colors duration-300 ${
+      formData.enableColorSelection ? "bg-gold" : "bg-gray-600"
+    }`}
+  >
+    <div
+      className={`w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 bg-white rounded-full transition-transform duration-300 ${
+        formData.enableColorSelection
+          ? "translate-x-5 sm:translate-x-5.5 md:translate-x-6"
+          : "translate-x-0"
+      }`}
+    />
+  </button>
+</div>
               <div className="space-y-2">
                 <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-walnut block flex items-center gap-2">
                   <Tag className="w-3.5 h-3.5" /> Product Tags

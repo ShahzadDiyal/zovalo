@@ -271,7 +271,7 @@ function ShopContent() {
       <section className="relative overflow-hidden bg-neutral-900 text-white py-12 sm:py-16 md:py-20 mb-8 sm:mb-12">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -285,7 +285,8 @@ function ShopContent() {
               : selectedCategory}
           </h1>
           <p className="text-neutral-400 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Discover our curated selection of artisanal furniture, meticulously engineered for timeless aesthetic and unparalleled comfort.
+            Discover our curated selection of artisanal furniture, meticulously
+            engineered for timeless aesthetic and unparalleled comfort.
           </p>
         </div>
       </section>
@@ -293,7 +294,7 @@ function ShopContent() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* Filters Sidebar (Desktop) */}
-          <aside className="hidden lg:block w-72 space-y-6 flex-shrink-0 sticky top-24 bg-white p-6 rounded-2xl border border-neutral-200/80 shadow-sm">
+          <aside className="hidden lg:block w-72 space-y-6 flex-shrink-0 sticky top-24 bg-white p-6 rounded-2xl border border-neutral-200/80">
             <div className="flex items-center justify-between pb-4 border-b border-neutral-200/80">
               <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-900 flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-amber-600" />
@@ -446,7 +447,9 @@ function ShopContent() {
               <div className="space-y-3 pt-2 border-t border-neutral-200/60">
                 <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700">
                   <span>Price Range</span>
-                  <span className="text-amber-600 font-semibold">Max: £{priceRange[1]}</span>
+                  <span className="text-amber-600 font-semibold">
+                    Max: £{priceRange[1]}
+                  </span>
                 </div>
                 <input
                   type="range"
@@ -478,7 +481,7 @@ function ShopContent() {
           {/* Main Content */}
           <div className="flex-1 min-w-0 space-y-6 w-full">
             {/* Controls Bar */}
-            <div className="flex flex-col sm:flex-row justify-between items-center bg-white border border-neutral-200/80 rounded-2xl p-3 sm:p-4 gap-4 shadow-sm">
+            <div className="flex flex-col sm:flex-row justify-between items-center bg-white border border-neutral-200/80 rounded-2xl p-3 sm:p-4 gap-4">
               <div className="flex items-center justify-between w-full sm:w-auto gap-4">
                 <button
                   onClick={() => setShowMobileFilters(true)}
@@ -491,7 +494,11 @@ function ShopContent() {
                   )}
                 </button>
                 <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest">
-                  Showing <span className="text-neutral-900 font-extrabold">{filteredProducts.length}</span> {filteredProducts.length === 1 ? "Product" : "Products"}
+                  Showing{" "}
+                  <span className="text-neutral-900 font-extrabold">
+                    {filteredProducts.length}
+                  </span>{" "}
+                  {filteredProducts.length === 1 ? "Product" : "Products"}
                 </p>
               </div>
 
@@ -523,7 +530,10 @@ function ShopContent() {
                 {selectedCategory !== "All" && (
                   <span className="px-2.5 py-1 bg-amber-50 text-[11px] text-neutral-900 font-medium rounded-md border border-amber-200/50 flex items-center gap-1.5">
                     Category: {selectedCategory}
-                    <button onClick={() => setSelectedCategory("All")} className="hover:text-amber-600">
+                    <button
+                      onClick={() => setSelectedCategory("All")}
+                      className="hover:text-amber-600"
+                    >
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -534,7 +544,10 @@ function ShopContent() {
                     className="px-2.5 py-1 bg-amber-50 text-[11px] text-neutral-900 font-medium rounded-md border border-amber-200/50 flex items-center gap-1.5"
                   >
                     Color: {color}
-                    <button onClick={() => toggleColor(color)} className="hover:text-amber-600">
+                    <button
+                      onClick={() => toggleColor(color)}
+                      className="hover:text-amber-600"
+                    >
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -545,7 +558,10 @@ function ShopContent() {
                     className="px-2.5 py-1 bg-amber-50 text-[11px] text-neutral-900 font-medium rounded-md border border-amber-200/50 flex items-center gap-1.5"
                   >
                     {seater}
-                    <button onClick={() => toggleSeater(seater)} className="hover:text-amber-600">
+                    <button
+                      onClick={() => toggleSeater(seater)}
+                      className="hover:text-amber-600"
+                    >
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -556,7 +572,10 @@ function ShopContent() {
                     className="px-2.5 py-1 bg-amber-50 text-[11px] text-neutral-900 font-medium rounded-md border border-amber-200/50 flex items-center gap-1.5"
                   >
                     #{tag}
-                    <button onClick={() => toggleTag(tag)} className="hover:text-amber-600">
+                    <button
+                      onClick={() => toggleTag(tag)}
+                      className="hover:text-amber-600"
+                    >
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -564,7 +583,10 @@ function ShopContent() {
                 {searchQuery && (
                   <span className="px-2.5 py-1 bg-amber-50 text-[11px] text-neutral-900 font-medium rounded-md border border-amber-200/50 flex items-center gap-1.5">
                     Search: "{searchQuery}"
-                    <button onClick={() => setSearchQuery("")} className="hover:text-amber-600">
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="hover:text-amber-600"
+                    >
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -716,7 +738,9 @@ function ShopContent() {
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700">
                   <span>Price Range</span>
-                  <span className="text-amber-600 font-semibold">Max: £{priceRange[1]}</span>
+                  <span className="text-amber-600 font-semibold">
+                    Max: £{priceRange[1]}
+                  </span>
                 </div>
                 <input
                   type="range"

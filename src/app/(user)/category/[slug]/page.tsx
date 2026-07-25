@@ -274,7 +274,7 @@ export default function CategoryPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* Filters Sidebar (Desktop) */}
-          <aside className="hidden lg:block w-72 space-y-6 flex-shrink-0 sticky top-24 bg-white p-6 rounded-2xl border border-neutral-200/80 shadow-sm">
+          <aside className="hidden lg:block w-72 space-y-6 flex-shrink-0 sticky top-24 bg-white p-6 rounded-2xl border border-neutral-200/80">
             <div className="flex items-center justify-between pb-4 border-b border-neutral-200/80">
               <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-900 flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-amber-600" />
@@ -461,7 +461,7 @@ export default function CategoryPage() {
           {/* Main Content */}
           <div className="flex-1 min-w-0 space-y-6 w-full">
             {/* Controls Bar */}
-            <div className="flex flex-col sm:flex-row justify-between items-center bg-white border border-neutral-200/80 rounded-2xl p-3 sm:p-4 gap-4 shadow-sm">
+            <div className="flex flex-col sm:flex-row justify-between items-center bg-white border border-neutral-200/80 rounded-2xl p-3 sm:p-4 gap-4">
               <div className="flex items-center justify-between w-full sm:w-auto gap-4">
                 <button
                   onClick={() => setShowMobileFilters(true)}

@@ -417,7 +417,9 @@ export default function CheckoutPage() {
     );
   }
 
-const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LfwWVQtAAAAACmScZEoGpi1Sx5IXEVY-84SAbMT';
+  const RECAPTCHA_SITE_KEY =
+    process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ||
+    "6LfwWVQtAAAAACmScZEoGpi1Sx5IXEVY-84SAbMT";
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen">
@@ -812,12 +814,39 @@ const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LfwWV
                         <h4 className="text-sm font-medium text-neutral-900 line-clamp-1">
                           {item.title}
                         </h4>
-                        <p className="text-xs text-neutral-500">
-                          QTY: {item.quantity}
-                        </p>
-                        <p className="text-sm font-bold text-neutral-900">
+                        {(item.selectedOptions?.color ||
+                          item.selectedOptions?.seater) && (
+                          <div className="flex flex-wrap items-center gap-1 mt-0.5">
+                            {item.selectedOptions?.color && (
+                              <span className="inline-flex items-center gap-1 text-[12px] text-neutral-500 bg-neutral-100 px-1.5 py-0.5 rounded-full">
+                                <span
+                                  className="w-4 h-4 rounded-full border border-gray-300"
+                                  style={{
+                                    backgroundColor:
+                                      item.selectedOptions.color.toLowerCase(),
+                                  }}
+                                />
+                                {item.selectedOptions.color}
+                              </span>
+                            )}
+                            {item.selectedOptions?.seater && (
+                              <span className="text-[12px] text-neutral-500 bg-neutral-100 px-1.5 py-0.5 rounded-full">
+                                {item.selectedOptions.seater}
+                              </span>
+                            )}
+                            <p className="text-[12px] text-neutral-500">
+                              QTY:{" "}
+                              <span className="font-bold">
+                                {" "}
+                                {item.quantity}
+                              </span>
+                            </p>
+                          </div>
+                        )}
+
+                        {/* <p className="text-sm font-bold text-neutral-900">
                           {formatCurrency(item.price * item.quantity)}
-                        </p>
+                        </p> */}
                       </div>
                     </div>
                   </div>
@@ -832,7 +861,9 @@ const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LfwWV
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-neutral-500">Delivery</span>
-                  <span className="text-emerald-600 font-bold">FREE</span>
+                  <span className="text-emerald-600 font-bold">
+                    FREE (Cash On Delivery)
+                  </span>
                 </div>
                 <div className="border-t border-neutral-200/80 pt-2 flex justify-between font-bold text-lg">
                   <span className="text-neutral-900">Total</span>
@@ -912,9 +943,31 @@ const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LfwWV
                     <span>
                       {item.title} x{item.quantity}
                     </span>
-                    <span className="text-neutral-900">
+                    {(item.selectedOptions?.color ||
+                      item.selectedOptions?.seater) && (
+                      <div className="flex flex-wrap items-center gap-1 mt-0.5">
+                        {item.selectedOptions?.color && (
+                          <span className="inline-flex items-center gap-1 text-[12px] text-neutral-500 bg-neutral-100 px-1.5 py-0.5 rounded-full">
+                            <span
+                              className="w-3 h-3 rounded-full border border-gray-300"
+                              style={{
+                                backgroundColor:
+                                  item.selectedOptions.color.toLowerCase(),
+                              }}
+                            />
+                            {item.selectedOptions.color}
+                          </span>
+                        )}
+                        {item.selectedOptions?.seater && (
+                          <span className="text-[12px] text-neutral-500 bg-neutral-100 px-1.5 py-0.5 rounded-full">
+                            {item.selectedOptions.seater}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    {/* <span className="text-neutral-900">
                       {formatCurrency(item.price * item.quantity)}
-                    </span>
+                    </span> */}
                   </div>
                 ))}
                 <div className="border-t border-neutral-200/80 pt-2 mt-2 flex justify-between font-bold">

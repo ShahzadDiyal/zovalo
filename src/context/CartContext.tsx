@@ -1,3 +1,4 @@
+// src/context/CartContext.tsx
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Product } from "../types";
@@ -6,7 +7,9 @@ interface CartItem extends Product {
   quantity: number;
   selectedOptions?: {
     color?: string;
+    colorHex?: string;
     seater?: string;
+    fabric?: string;
   };
 }
 
@@ -15,7 +18,12 @@ interface CartContextType {
   addToCart: (
     product: Product,
     quantity?: number,
-    options?: { color?: string; seater?: string },
+    options?: {
+      color?: string;
+      colorHex?: string;
+      seater?: string;
+      fabric?: string;
+    },
   ) => boolean;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => boolean;
@@ -47,7 +55,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addToCart = (
     product: Product,
     quantity: number = 1,
-    options?: { color?: string; seater?: string },
+    options?: {
+      color?: string;
+      colorHex?: string;
+      seater?: string;
+      fabric?: string;
+    },
   ): boolean => {
     if (product.stock < quantity) {
       alert(`Sorry, only ${product.stock} items available in stock.`);

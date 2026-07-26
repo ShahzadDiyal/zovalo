@@ -19,32 +19,32 @@ import { BlogPost, BlogCategory } from "../types";
 
 class BlogService {
   // Get all published posts (simplified - returns array)
-  async getPublishedPosts(): Promise<BlogPost[]> {
-    try {
-      const q = query(
-        collection(db, "blogPosts"),
-        where("status", "==", "published"),
-      );
-      const snapshot = await getDocs(q);
-      const posts = snapshot.docs.map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          }) as BlogPost,
-      );
+  // async getPublishedPosts(): Promise<BlogPost[]> {
+  //   try {
+  //     const q = query(
+  //       collection(db, "blogPosts"),
+  //       where("status", "==", "published"),
+  //     );
+  //     const snapshot = await getDocs(q);
+  //     const posts = snapshot.docs.map(
+  //       (doc) =>
+  //         ({
+  //           id: doc.id,
+  //           ...doc.data(),
+  //         }) as BlogPost,
+  //     );
 
-      // Sort client-side by published date
-      return posts.sort((a, b) => {
-        const dateA = a.publishedAt?.toDate?.() || new Date(0);
-        const dateB = b.publishedAt?.toDate?.() || new Date(0);
-        return dateB.getTime() - dateA.getTime();
-      });
-    } catch (error) {
-      console.error("Error fetching published posts:", error);
-      return [];
-    }
-  }
+  //     // Sort client-side by published date
+  //     return posts.sort((a, b) => {
+  //       const dateA = a.publishedAt?.toDate?.() || new Date(0);
+  //       const dateB = b.publishedAt?.toDate?.() || new Date(0);
+  //       return dateB.getTime() - dateA.getTime();
+  //     });
+  //   } catch (error) {
+  //     console.error("Error fetching published posts:", error);
+  //     return [];
+  //   }
+  // }
 
   // Get posts with pagination
   async getPublishedPostsPaginated(
@@ -122,23 +122,100 @@ class BlogService {
     }
   }
 
-  // Get post by slug
   async getPostBySlug(slug: string): Promise<BlogPost | null> {
     try {
-      const q = query(collection(db, "blogPosts"), where("slug", "==", slug));
+      // Validate slug
+      if (!slug || slug.trim() === "") {
+        console.error("Invalid slug provided:", slug);
+        return null;
+      }
+
+      // Query for published posts with the given slug
+      const q = query(
+        collection(db, "blogPosts"),
+        where("slug", "==", slug),
+        where("status", "==", "published"),
+      );
       const snapshot = await getDocs(q);
+
       if (!snapshot.empty) {
         const doc = snapshot.docs[0];
         const data = doc.data();
-        if (data.status === "published") {
-          return { id: doc.id, ...data } as BlogPost;
-        }
-        return null;
+
+        // Ensure all required fields are present
+        return {
+          id: doc.id,
+          title: data.title || "",
+          slug: data.slug || "",
+          content: data.content || "",
+          excerpt: data.excerpt || "",
+          featuredImage: data.featuredImage || "",
+          category: data.category || "",
+          categoryName: data.categoryName || "Blog",
+          tags: data.tags || [],
+          author: data.author || { name: "Royal Furniture" },
+          status: data.status || "published",
+          views: data.views || 0,
+          seoTitle: data.seoTitle || "",
+          seoDescription: data.seoDescription || "",
+          seoKeywords: data.seoKeywords || [],
+          publishedAt: data.publishedAt || null,
+          createdAt: data.createdAt || null,
+          updatedAt: data.updatedAt || null,
+        } as BlogPost;
       }
+
       return null;
     } catch (error) {
-      console.error("Error fetching post:", error);
+      console.error("Error fetching post by slug:", error);
       return null;
+    }
+  }
+
+  // Get published posts - with fallback
+  async getPublishedPosts(): Promise<BlogPost[]> {
+    try {
+      const q = query(
+        collection(db, "blogPosts"),
+        where("status", "==", "published"),
+        orderBy("publishedAt", "desc"),
+      );
+      const snapshot = await getDocs(q);
+      const posts = snapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          }) as BlogPost,
+      );
+
+      return posts;
+    } catch (error) {
+      console.error("Error fetching published posts:", error);
+      // Fallback without orderBy if index doesn't exist
+      try {
+        const fallbackQ = query(
+          collection(db, "blogPosts"),
+          where("status", "==", "published"),
+        );
+        const fallbackSnapshot = await getDocs(fallbackQ);
+        const fallbackPosts = fallbackSnapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            }) as BlogPost,
+        );
+        // Sort client-side
+        return fallbackPosts.sort((a, b) => {
+          const dateA = a.publishedAt?.toDate?.() || new Date(0);
+          const dateB = b.publishedAt?.toDate?.() || new Date(0);
+          return dateB.getTime() - dateA.getTime();
+        });
+      } catch (fallbackError) {
+        console.error("Fallback error:", fallbackError);
+        return [];
+      }
     }
   }
 

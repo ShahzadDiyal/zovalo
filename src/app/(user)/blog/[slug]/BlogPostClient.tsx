@@ -21,12 +21,7 @@ interface BlogPostClientProps {
   relatedPosts: BlogPost[];
 }
 
-export function BlogPostClient({
-  post: initialPost,
-  relatedPosts: initialRelatedPosts,
-}: BlogPostClientProps) {
-  const [post] = useState(initialPost);
-  const [relatedPosts] = useState(initialRelatedPosts);
+export function BlogPostClient({ post, relatedPosts }: BlogPostClientProps) {
   const [isLiked, setIsLiked] = useState(false);
 
   // Increment views on client-side
@@ -38,6 +33,7 @@ export function BlogPostClient({
 
   const formatDate = (timestamp: any) => {
     if (!timestamp) return "N/A";
+    // Handle both Firestore Timestamp and regular Date objects
     const date = timestamp.toDate?.() || new Date(timestamp);
     return date.toLocaleDateString("en-GB", {
       year: "numeric",
@@ -113,6 +109,7 @@ export function BlogPostClient({
         {/* Featured Image */}
         {post.featuredImage && (
           <div className="mb-8 rounded-2xl overflow-hidden bg-neutral-100">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={post.featuredImage}
               alt={post.title}
@@ -122,9 +119,10 @@ export function BlogPostClient({
         )}
 
         {/* Content */}
-        <div className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-neutral-900 prose-p:text-neutral-600 prose-a:text-amber-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-neutral-900 prose-li:text-neutral-600 prose-blockquote:border-l-amber-500 prose-blockquote:bg-amber-50/50 prose-blockquote:p-4 prose-blockquote:rounded-r-xl prose-blockquote:border-l-4 prose-img:rounded-xl">
-          <div dangerouslySetInnerHTML={{ __html: post.content || "" }} />
-        </div>
+        <div
+          className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-neutral-900 prose-p:text-neutral-600 prose-a:text-amber-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-neutral-900 prose-li:text-neutral-600 prose-blockquote:border-l-amber-500 prose-blockquote:bg-amber-50/50 prose-blockquote:p-4 prose-blockquote:rounded-r-xl prose-blockquote:border-l-4 prose-img:rounded-xl"
+          dangerouslySetInnerHTML={{ __html: post.content || "" }}
+        />
 
         {/* Tags */}
         {post.tags && post.tags.length > 0 && (
@@ -193,6 +191,7 @@ export function BlogPostClient({
               >
                 <div className="aspect-[16/9] overflow-hidden bg-neutral-100">
                   {relatedPost.featuredImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={relatedPost.featuredImage}
                       alt={relatedPost.title}

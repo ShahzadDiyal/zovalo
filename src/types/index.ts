@@ -21,7 +21,7 @@ export interface Product {
   featured?: boolean;
   createdAt?: any;
   updatedAt?: any;
-    enableColorSelection?: boolean;  // true = show color button, false = hide
+  enableColorSelection?: boolean; // true = show color button, false = hide
   selectedColor?: string;
 }
 
@@ -175,6 +175,10 @@ export interface CityPage {
   status: "draft" | "published";
   featured: boolean;
 
+  // Add this line for images
+  image?: string; // Optional image URL for the city page
+  featuredImage?: string; // Alternative name if you prefer
+
   createdAt: any;
   updatedAt: any;
 }
@@ -183,7 +187,6 @@ export interface CityPage {
 export interface CityPageWithCount extends CityPage {
   totalOrders?: number;
 }
-
 
 export interface Color {
   id: string;

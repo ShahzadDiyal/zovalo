@@ -260,7 +260,7 @@ export function ColorSelection({
 
                 <div className="p-4 overflow-y-auto max-h-[calc(80vh-320px)] min-h-[200px] md:min-h-[280px]">
                   {getFilteredColors().length > 0 ? (
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 gap-1">
                       {getFilteredColors().map((color) => (
                         <button
                           key={color.id}
@@ -268,7 +268,7 @@ export function ColorSelection({
                           className="group flex flex-col items-center gap-1 hover:bg-cream p-2 rounded-lg transition-all"
                         >
                           {color.image ? (
-                            <div className="w-12 h-12 rounded-full border-2 border-neutral-200 group-hover:border-amber-400 transition-all shadow-sm group-hover:shadow-md overflow-hidden flex-shrink-0">
+                            <div className="w-12 h-12 rounded-[full] border-2 border-neutral-200 group-hover:border-amber-400 transition-all shadow-sm group-hover:shadow-md overflow-hidden flex-shrink-0">
                               <img
                                 src={color.image}
                                 alt={color.name}
@@ -277,16 +277,16 @@ export function ColorSelection({
                             </div>
                           ) : (
                             <div
-                              className="w-12 h-12 rounded-full border-2 border-neutral-200 group-hover:border-amber-400 transition-all shadow-sm group-hover:shadow-md flex-shrink-0"
+                              className="w-12 h-12 rounded-[12px] border-2 border-neutral-200 group-hover:border-amber-400 transition-all shadow-sm group-hover:shadow-md flex-shrink-0"
                               style={{ backgroundColor: color.hex }}
                             />
                           )}
-                          <span className="text-[10px] text-neutral-700 text-center leading-tight line-clamp-2 max-w-[60px]">
+                          <span className="text-[13px] text-neutral-700 text-center leading-tight line-clamp-2 max-w-[60px]">
                             {color.name}
                           </span>
-                          <span className="text-[8px] font-mono text-gray-400">
+                          {/* <span className="text-[12px] font-mono text-gray-400">
                             {color.hex}
-                          </span>
+                          </span> */}
                         </button>
                       ))}
                     </div>

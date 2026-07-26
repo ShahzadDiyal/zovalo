@@ -28,24 +28,26 @@ interface SEOProps {
   };
 }
 
-export function SEO({ 
-  title, 
-  description, 
-  image, 
+export function SEO({
+  title,
+  description,
+  image,
   url,
   canonical,
-  type = 'website'
+  type = "website",
 }: SEOProps) {
-  const siteTitle = title ? `${title} | Royal Furniture` : 'Royal Furniture';
+  const siteTitle = title ? `${title} | Royal Furniture` : "Royal Furniture";
   const siteUrl = url || "https://royalfurnitures.store";
   const siteImage = image || "https://royalfurnitures.store/og-image.jpg";
-  const siteDescription = description || "Premium furniture store offering quality pieces for the modern home. Cash on Delivery available across UK.";
+  const siteDescription =
+    description ||
+    "Premium furniture store offering quality pieces for the modern home. Cash on Delivery available across UK.";
 
   return (
     <Head>
       <title>{siteTitle}</title>
       <meta name="description" content={siteDescription} />
-      
+
       {/* Open Graph - Critical for sharing */}
       <meta property="og:title" content={siteTitle} />
       <meta property="og:description" content={siteDescription} />
@@ -53,15 +55,18 @@ export function SEO({
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:url" content={siteUrl} />
-      <meta property="og:type" content={type === 'product' ? 'product' : 'website'} />
+      <meta
+        property="og:type"
+        content={type === "product" ? "product" : "website"}
+      />
       <meta property="og:site_name" content="Royal Furniture" />
-      
+
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={siteTitle} />
       <meta name="twitter:description" content={siteDescription} />
       <meta name="twitter:image" content={siteImage} />
-      
+
       {/* Canonical URL */}
       {canonical && <link rel="canonical" href={canonical} />}
     </Head>

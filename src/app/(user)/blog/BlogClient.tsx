@@ -28,39 +28,41 @@ interface BlogClientProps {
 
 // Blog Card Component
 function BlogCard({ post }: { post: BlogPost }) {
- const formatDate = (timestamp: any) => {
-  if (!timestamp) return "N/A";
-  
-  let date;
-  
-  // Check if it's a Firestore Timestamp (has toDate method)
-  if (timestamp.toDate && typeof timestamp.toDate === 'function') {
-    date = timestamp.toDate();
-  } 
-  // Check if it's a Firestore timestamp object with seconds/nanoseconds
-  else if (timestamp.seconds !== undefined) {
-    date = new Date(timestamp.seconds * 1000 + (timestamp.nanoseconds || 0) / 1000000);
-  }
-  // Check if it's an ISO string or already a Date object
-  else if (typeof timestamp === 'string' || timestamp instanceof Date) {
-    date = new Date(timestamp);
-  }
-  // Fallback
-  else {
-    date = new Date(timestamp);
-  }
-  
-  // Check if date is valid
-  if (isNaN(date.getTime())) {
-    return "N/A";
-  }
-  
-  return date.toLocaleDateString("en-GB", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-};
+  const formatDate = (timestamp: any) => {
+    if (!timestamp) return "N/A";
+
+    let date;
+
+    // Check if it's a Firestore Timestamp (has toDate method)
+    if (timestamp.toDate && typeof timestamp.toDate === "function") {
+      date = timestamp.toDate();
+    }
+    // Check if it's a Firestore timestamp object with seconds/nanoseconds
+    else if (timestamp.seconds !== undefined) {
+      date = new Date(
+        timestamp.seconds * 1000 + (timestamp.nanoseconds || 0) / 1000000,
+      );
+    }
+    // Check if it's an ISO string or already a Date object
+    else if (typeof timestamp === "string" || timestamp instanceof Date) {
+      date = new Date(timestamp);
+    }
+    // Fallback
+    else {
+      date = new Date(timestamp);
+    }
+
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return "N/A";
+    }
+
+    return date.toLocaleDateString("en-GB", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
 
   return (
     <Link href={`/blog/${post.slug}`} className="group">

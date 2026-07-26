@@ -66,7 +66,9 @@ export async function generateMetadata({
           serializedCity.metaDescription || serializedCity.uniqueIntro,
         type: "website",
         url: `https://royalfurnitures.store/locations/${serializedCity.slug}`,
-        images: serializedCity.featuredImage ? [serializedCity.featuredImage] : [],
+        images: serializedCity.featuredImage
+          ? [serializedCity.featuredImage]
+          : [],
       },
       keywords: [serializedCity.name, "furniture", "sofas", "beds", "delivery"],
     };

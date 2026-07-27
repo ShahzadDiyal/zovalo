@@ -122,7 +122,7 @@ export default function AdminUsers() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-display text-near-black uppercase tracking-tight">
-            Customer Intelligence
+            Customers
           </h1>
           <p className="text-gray-400 text-xs sm:text-sm mt-1">
             Manage your boutique's growing community.

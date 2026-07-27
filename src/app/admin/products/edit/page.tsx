@@ -397,7 +397,7 @@ enableColorSelection: false
           </Link>
           <div>
             <h1 className="text-xl sm:text-2xl md:text-3xl font-display text-near-black uppercase tracking-tight">
-              {isEdit ? "Curate Artpiece" : "Introduce Masterpiece"}
+              {isEdit ? "Edit Product" : "Create New Product"}
             </h1>
             <p className="text-gray-400 text-[10px] sm:text-xs md:text-sm mt-0.5 sm:mt-1">
               Refining the physical essence of your collection.
@@ -938,7 +938,7 @@ enableColorSelection: false
               <div className="flex items-center gap-2 sm:gap-3">
                 <ImageIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
                 <h2 className="text-sm sm:text-base md:text-lg font-display text-near-black uppercase">
-                  Visual Assets
+                  Images
                 </h2>
               </div>
               <div className="text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-gray-400">
@@ -1058,7 +1058,7 @@ enableColorSelection: false
             <div className="flex items-center gap-2 sm:gap-3 border-l-4 border-gold pl-3 sm:pl-4">
               <DollarSign className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gold" />
               <h2 className="text-sm sm:text-base md:text-lg font-display uppercase">
-                Commercial Intel
+                Total Stock
               </h2>
             </div>
 
@@ -1108,7 +1108,7 @@ enableColorSelection: false
                 className="w-full bg-gold text-near-black py-3.5 sm:py-4 md:py-5 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hover:bg-white transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 disabled:opacity-50 rounded"
               >
                 <Save className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                {isSubmitting ? "Authenticating..." : isEdit ? "Archive Changes" : "Publish Entry"}
+                {isSubmitting ? "Authenticating..." : isEdit ? "Update Changes" : "Publish Entry"}
               </button>
             </div>
           </div>

@@ -211,7 +211,7 @@ export default function AdminOrderDetail() {
           >
             <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest">
-              Back to Ledger
+              Back to Orders
             </span>
           </button>
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4">
@@ -341,15 +341,15 @@ export default function AdminOrderDetail() {
                         {p.selectedOptions && (
                           <div className="mt-2 space-y-1">
                             {p.selectedOptions.color && (
-                              <p className="text-[9px] text-gray-500 flex items-center gap-1">
+                              <p className="text-[13px] text-gray-500 flex items-center gap-1">
                                 <Palette className="w-2.5 h-2.5" /> Color:{" "}
-                                {p.selectedOptions.color}
+                                <span className="font-bold">{p.selectedOptions.color}</span>
                               </p>
                             )}
                             {p.selectedOptions.seater && (
-                              <p className="text-[9px] text-gray-500 flex items-center gap-1">
+                              <p className="text-[13px] text-gray-500 flex items-center gap-1">
                                 <Sofa className="w-2.5 h-2.5" /> Seater:{" "}
-                                {p.selectedOptions.seater}
+                               <span className="font-bold">{p.selectedOptions.seater}</span> 
                               </p>
                             )}
                           </div>
@@ -443,7 +443,7 @@ export default function AdminOrderDetail() {
 
         {/* Sidebar */}
         <div className="space-y-6 sm:space-y-8 md:space-y-10">
-          {/* Customer Intelligence */}
+          {/* Customers */}
           <section className="bg-white border border-warm-beige rounded-lg overflow-hidden">
             <div className="px-4 sm:px-5 md:px-6 lg:px-8 py-3 sm:py-4 md:py-5 lg:py-6 border-b border-warm-beige bg-cream/30">
               <h2 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-near-black">

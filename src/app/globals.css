@@ -11,11 +11,7 @@
   --color-olive: #6b7b3a;
   --color-gray-666: #666666;
 
-  /* System fonts that match typical React project defaults */
-  --font-serif:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
-  --font-display: Georgia, "Times New Roman", serif;
+
 }
 
 @layer base {

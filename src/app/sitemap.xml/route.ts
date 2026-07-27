@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { productApi } from "../../services/productApi";
 import { categoryApi } from "@/src/services/categoryApi";
+import { blogPostApi } from "../../services/blogPostApi";
+import { cityPageService } from "../../services/cityPageService";
 
 interface Product {
   id: string;
@@ -14,6 +16,9 @@ interface Category {
 
 export async function GET() {
   const baseUrl = "https://royalfurnitures.store";
+
+  const blogPosts = await blogPostApi.getAll(); 
+const cities = await cityPageService.getPublishedCities();
 
   let products: Product[] = [];
   let categories: Category[] = [];
@@ -62,6 +67,22 @@ export async function GET() {
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  
+  ${blogPosts.map((post) => `
+  <url>
+    <loc>${baseUrl}/blog/${post.slug}</loc>
+    <lastmod>${post.updatedAt || new Date().toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>`).join("")}
+
+${cities.map((city) => `
+  <url>
+    <loc>${baseUrl}/locations/${city.slug}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>`).join("")}
+
   ${products
     .map(
       (product: Product) => `

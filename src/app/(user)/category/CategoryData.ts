@@ -8,22 +8,13 @@ export interface CategoryPageData {
   categories: Category[];
 }
 
-export async function fetchCategoryData(): Promise<CategoryPageData> {
-  try {
-    const [productsData, categoriesData] = await Promise.all([
-      productApi.getAll(),
-      categoryApi.getAllCategories(),
-    ]);
-
-    return {
-      products: productsData,
-      categories: categoriesData,
-    };
-  } catch (error) {
-    console.error("Error fetching category data:", error);
-    return {
-      products: [],
-      categories: [],
-    };
-  }
+export async function fetchCategoryData(slug?: string): Promise<CategoryPageData> {
+  const [productsData, categoriesData] = await Promise.all([
+    productApi.getAll(),
+    categoryApi.getAllCategories(),
+  ]);
+  const products = slug
+    ? productsData.filter((p) => p.category?.toLowerCase().replace(/ /g, "-") === slug)
+    : productsData;
+  return { products, categories: categoriesData };
 }

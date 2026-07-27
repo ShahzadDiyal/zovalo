@@ -35,13 +35,13 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "/about/",
+    canonical: "/about",
   },
   openGraph: {
-    title: "About Royal Furniture | Premium Quality Furniture UK",
+    title: "About Royal Furniture | Cash on Delivery Premium Quality Furniture UK ",
     description:
       "Learn about Royal Furniture - premium furniture crafted for the modern home. Quality pieces with Cash on Delivery across UK.",
-    url: "https://royalfurnitures.store/about/",
+    url: "https://royalfurnitures.store/about",
     type: "website",
   },
 };

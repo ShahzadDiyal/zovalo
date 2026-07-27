@@ -11,7 +11,7 @@ import {
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | Royal Furniture",
+  title: "Cash on Delivery Furniture Terms & Conditions | Royal Furniture",
   description:
     "Read the Terms & Conditions for Royal Furniture. Learn about our policies, delivery, returns, and more.",
   robots: {
@@ -19,12 +19,12 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "/terms/",
+    canonical: "/terms",
   },
   openGraph: {
     title: "Terms & Conditions | Royal Furniture",
     description: "Read the Terms & Conditions for Royal Furniture.",
-    url: "https://royalfurnitures.store/terms/",
+    url: "https://royalfurnitures.store/terms",
   },
 };
 

@@ -17,6 +17,15 @@ import {
 } from "lucide-react";
 import { messageApi } from "../../../services/messageApi";
 import SocialLinks from "@/src/components/SocialLinks";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact Us | Royal Furniture",  
+  description: "Get in touch with Royal Furniture — questions about orders, delivery, or products.",  
+  alternates: {
+    canonical: "/contact",  
+  },
+};
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({

@@ -1,33 +1,51 @@
 // src/app/(user)/product/[productId]/page.tsx
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 import { productApi } from "../../../../services/productApi";
 import { ProductClient } from "./ProductClient";
-import { SEO } from "../../../../components/SEO";
 import { Schema } from "../../../../components/SEO/Schema";
 
-// Next.js 16 requires params to be awaited
-export default async function ProductPage({
-  params,
-}: {
+interface ProductPageProps {
   params: Promise<{ productId: string }>;
-}) {
-  // Await the params promise
+}
+
+export async function generateMetadata({
+  params,
+}: ProductPageProps): Promise<Metadata> {
   const { productId } = await params;
+  const product =
+    (await productApi.getById(productId)) ||
+    (await productApi.getProductBySlug(productId));
 
-  // Fetch product data on the server
+  if (!product) return {};
+
+  const title = product.title;
+  const description =
+    product.description?.substring(0, 160) ||
+    `Buy ${product.title} at Royal Furniture. Cash on Delivery available across the UK.`;
+  const image = product.images?.[0] || "https://royalfurnitures.store/og-image.jpg";
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `/product/${product.slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website", // Next's OG type union doesn't include "product"
+      images: [{ url: image, width: 1200, height: 630 }],
+    },
+  };
+}
+
+export default async function ProductPage({ params }: ProductPageProps) {
+  const { productId } = await params;
   let productData = await productApi.getById(productId);
-  if (!productData) {
-    productData = await productApi.getProductBySlug(productId);
-  }
+  if (!productData) productData = await productApi.getProductBySlug(productId);
+  if (!productData) notFound();
 
-  if (!productData) {
-    notFound();
-  }
-
-  const productImage =
-    productData.images?.[0] || "https://royalfurnitures.store/og-image.jpg";
-
-  // Prepare breadcrumb items for schema
   const breadcrumbItems = [
     { name: "Home", url: "https://royalfurnitures.store/" },
     { name: "Shop", url: "https://royalfurnitures.store/shop" },
@@ -35,22 +53,11 @@ export default async function ProductPage({
       name: productData.category || "Products",
       url: `https://royalfurnitures.store/category/${productData.category?.toLowerCase().replace(/ /g, "-") || "products"}`,
     },
-    {
-      name: productData.title,
-      url: `https://royalfurnitures.store/product/${productData.slug}`,
-    },
+    { name: productData.title, url: `https://royalfurnitures.store/product/${productData.slug}` },
   ];
 
-  // Pass the data to the client component
   return (
     <>
-      <SEO
-        title={productData.title}
-        description={productData.description?.substring(0, 160) || ""}
-        image={productImage}
-        type="product"
-        // REMOVED: product prop - not supported by SEO component
-      />
       <Schema type="BreadcrumbList" data={{ items: breadcrumbItems }} />
       <Schema type="Product" data={{ product: productData }} />
       <ProductClient product={productData} />

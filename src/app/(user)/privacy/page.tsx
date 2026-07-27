@@ -21,13 +21,13 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "/privacy/",
+    canonical: "/privacy",
   },
   openGraph: {
     title: "Privacy Policy | Royal Furniture",
     description:
       "Read our Privacy Policy to understand how Royal Furniture protects your data.",
-    url: "https://royalfurnitures.store/privacy/",
+    url: "https://royalfurnitures.store/privacy",
   },
 };
 

@@ -10,7 +10,6 @@ interface CategoryPageProps {
   params: Promise<{ slug: string }>;
 }
 
-
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
@@ -40,13 +39,22 @@ export async function generateMetadata({
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params;
-  const { products, categories } = await fetchCategoryData(slug);
+  const { products, categories, currentCategory } =
+    await fetchCategoryData(slug);
+
+  // Serialize data for client
+  const serializedProducts = serializeFirestoreData(products);
+  const serializedCategories = serializeFirestoreData(categories);
+  const serializedCurrentCategory = currentCategory
+    ? serializeFirestoreData(currentCategory)
+    : undefined;
 
   return (
-    <Suspense fallback={/* unchanged */ null}>
+    <Suspense fallback={null}>
       <CategoryClient
-        initialProducts={products}
-        initialCategories={categories}
+        initialProducts={serializedProducts}
+        initialCategories={serializedCategories}
+        currentCategory={serializedCurrentCategory}
       />
     </Suspense>
   );

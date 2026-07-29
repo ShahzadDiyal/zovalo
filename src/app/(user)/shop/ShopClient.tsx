@@ -3,7 +3,7 @@
 
 import { ProductCard } from "../../../components/ui/ProductCard";
 import { useState, useMemo, useEffect } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import {
   Search,
   SlidersHorizontal,
@@ -11,7 +11,6 @@ import {
   PackageOpen,
   Palette,
   Sofa,
-  Tag,
   Sparkles,
   ChevronDown,
   RotateCcw,
@@ -30,6 +29,7 @@ export function ShopClient({
   initialProducts,
   initialCategories,
 }: ShopClientProps) {
+  const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
 
@@ -39,10 +39,13 @@ export function ShopClient({
       : params.slug
     : null;
 
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [products] = useState<Product[]>(initialProducts);
+  const [categories] = useState<Category[]>(initialCategories);
   const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null,
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
   const [sortBy, setSortBy] = useState("latest");
@@ -51,9 +54,11 @@ export function ShopClient({
   const [selectedSeaters, setSelectedSeaters] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
+  // Set selected category from URL slug
   useEffect(() => {
-    if (!slug && categories.length > 0) {
+    if (!slug) {
       setSelectedCategory("All");
+      setSelectedCategoryId(null); // ADD THIS
       return;
     }
 
@@ -61,16 +66,26 @@ export function ShopClient({
       const matchedCategory = categories.find((c) => c.slug === slug);
       if (matchedCategory) {
         setSelectedCategory(matchedCategory.name);
+        setSelectedCategoryId(matchedCategory.id); // ADD THIS
       } else {
         const formattedCategory = slug
           .split("-")
           .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
           .join(" ");
         setSelectedCategory(formattedCategory);
+        const categoryByName = categories.find(
+          (c) => c.name === formattedCategory,
+        );
+        if (categoryByName) {
+          setSelectedCategoryId(categoryByName.id); // ADD THIS
+        } else {
+          setSelectedCategoryId(null); // ADD THIS
+        }
       }
     }
   }, [slug, categories]);
 
+  // Handle search query from URL
   useEffect(() => {
     if (searchParams) {
       const query = searchParams.get("search");
@@ -142,8 +157,31 @@ export function ShopClient({
     );
   };
 
+  // Handle category click - navigate to the category page
+  const handleCategoryClick = (categoryName: string, categorySlug?: string) => {
+    if (categoryName === "All") {
+      router.push("/shop");
+      setSelectedCategory("All");
+      setSelectedCategoryId(null); // ADD THIS
+      return;
+    }
+
+    if (categorySlug) {
+      router.push(`/category/${categorySlug}`);
+      setSelectedCategory(categoryName);
+      const category = categories.find((c) => c.slug === categorySlug);
+      if (category) {
+        setSelectedCategoryId(category.id); // ADD THIS
+      }
+    }
+  };
+
   const clearAllFilters = () => {
+    if (selectedCategory !== "All") {
+      router.push("/shop");
+    }
     setSelectedCategory("All");
+    setSelectedCategoryId(null); // ADD THIS
     setSearchQuery("");
     setPriceRange([0, maxPrice]);
     setSortBy("latest");
@@ -155,8 +193,8 @@ export function ShopClient({
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    if (selectedCategory !== "All") {
-      result = result.filter((p) => p.category === selectedCategory);
+    if (selectedCategoryId) {
+      result = result.filter((p) => p.category === selectedCategoryId);
     }
 
     if (searchQuery) {
@@ -211,7 +249,7 @@ export function ShopClient({
     return result;
   }, [
     products,
-    selectedCategory,
+    selectedCategoryId, // THIS WAS MISSING - FIXED
     searchQuery,
     priceRange,
     sortBy,
@@ -229,7 +267,7 @@ export function ShopClient({
     selectedColors.length > 0 ||
     selectedSeaters.length > 0 ||
     selectedTags.length > 0 ||
-    selectedCategory !== "All" ||
+    selectedCategoryId !== null ||
     searchQuery !== "" ||
     priceRange[1] < maxPrice;
 
@@ -324,23 +362,33 @@ export function ShopClient({
                 </div>
               </div>
 
-              {/* Categories */}
+              {/* Categories - Now navigates to correct routes */}
               <div className="space-y-2">
                 <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700">
                   Categories
                 </label>
                 <div className="space-y-1 max-h-[220px] overflow-y-auto pr-1 custom-scrollbar">
-                  {categoryNames.map((cat) => (
+                  <button
+                    onClick={() => handleCategoryClick("All")}
+                    className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
+                      selectedCategory === "All" && !slug
+                        ? "bg-neutral-900 text-white font-medium shadow-sm"
+                        : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
+                    }`}
+                  >
+                    All Products
+                  </button>
+                  {categories.map((cat) => (
                     <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
+                      key={cat.id}
+                      onClick={() => handleCategoryClick(cat.name, cat.slug)}
                       className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
-                        selectedCategory === cat
+                        selectedCategoryId === cat.id // CHANGE THIS
                           ? "bg-neutral-900 text-white font-medium shadow-sm"
                           : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
                       }`}
                     >
-                      {cat}
+                      {cat.name}
                     </button>
                   ))}
                 </div>
@@ -492,7 +540,7 @@ export function ShopClient({
                   <span className="px-2.5 py-1 bg-amber-50 text-[11px] text-neutral-900 font-medium rounded-md border border-amber-200/50 flex items-center gap-1.5">
                     Category: {selectedCategory}
                     <button
-                      onClick={() => setSelectedCategory("All")}
+                      onClick={() => handleCategoryClick("All")}
                       className="hover:text-amber-600"
                     >
                       <X className="w-3 h-3" />
@@ -622,26 +670,39 @@ export function ShopClient({
                 </div>
               </div>
 
-              {/* Categories */}
+              {/* Categories - Mobile */}
               <div className="space-y-2">
                 <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700">
                   Categories
                 </label>
-                <div className="grid grid-cols-1 gap-1 max-h-[160px] overflow-y-auto pr-1">
-                  {categoryNames.map((cat) => (
+                <div className="space-y-1 max-h-[220px] overflow-y-auto pr-1">
+                  <button
+                    onClick={() => {
+                      handleCategoryClick("All");
+                      setShowMobileFilters(false);
+                    }}
+                    className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
+                      selectedCategory === "All" && !slug
+                        ? "bg-neutral-900 text-white font-medium shadow-sm"
+                        : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
+                    }`}
+                  >
+                    All Products
+                  </button>
+                  {categories.map((cat) => (
                     <button
-                      key={cat}
+                      key={cat.id}
                       onClick={() => {
-                        setSelectedCategory(cat);
+                        handleCategoryClick(cat.name, cat.slug);
                         setShowMobileFilters(false);
                       }}
-                      className={`text-left text-xs py-2 px-3 rounded-xl border transition-all ${
-                        selectedCategory === cat
-                          ? "bg-neutral-900 text-white border-neutral-900 font-medium"
-                          : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
+                      className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
+                        selectedCategoryId === cat.id // CHANGE THIS
+                          ? "bg-neutral-900 text-white font-medium shadow-sm"
+                          : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
                       }`}
                     >
-                      {cat}
+                      {cat.name}
                     </button>
                   ))}
                 </div>

@@ -3,7 +3,7 @@
 
 import { ProductCard } from "../../../components/ui/ProductCard";
 import { useState, useMemo, useEffect } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Search,
   SlidersHorizontal,
@@ -23,26 +23,20 @@ import { LoadingSpinner } from "../../../components/ui/Loading";
 interface CategoryClientProps {
   initialProducts: Product[];
   initialCategories: Category[];
+  currentCategory?: Category;
 }
 
 export function CategoryClient({
   initialProducts,
   initialCategories,
+  currentCategory,
 }: CategoryClientProps) {
-  const params = useParams();
+  const router = useRouter();
   const searchParams = useSearchParams();
 
-  const slug = params?.slug
-    ? Array.isArray(params.slug)
-      ? params.slug[0]
-      : params.slug
-    : null;
-
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [products] = useState<Product[]>(initialProducts);
+  const [categories] = useState<Category[]>(initialCategories);
   const [loading, setLoading] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [categoryName, setCategoryName] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
   const [sortBy, setSortBy] = useState("latest");
@@ -51,24 +45,10 @@ export function CategoryClient({
   const [selectedSeaters, setSelectedSeaters] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  // Update category when slug or categories change
-  useEffect(() => {
-    if (slug && categories.length > 0) {
-      const matchedCategory = categories.find((c) => c.slug === slug);
-      if (matchedCategory) {
-        setSelectedCategory(matchedCategory.name);
-        setCategoryName(matchedCategory.name);
-      } else {
-        const formattedName = slug
-          .split("-")
-          .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" ");
-        setSelectedCategory(formattedName);
-        setCategoryName(formattedName);
-      }
-    }
-  }, [slug, categories]);
+  // Get category name from currentCategory
+  const categoryName = currentCategory?.name || "Category";
 
+  // Handle search query from URL
   useEffect(() => {
     if (searchParams) {
       const query = searchParams.get("search");
@@ -135,15 +115,17 @@ export function CategoryClient({
     setSelectedColors([]);
     setSelectedSeaters([]);
     setSelectedTags([]);
+
+    // Update URL - remove search param
+    const url = new URL(window.location.href);
+    url.searchParams.delete("search");
+    router.push(url.pathname + url.search);
   };
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    if (selectedCategory !== "All") {
-      result = result.filter((p) => p.category === selectedCategory);
-    }
-
+    // Apply search filter
     if (searchQuery) {
       result = result.filter(
         (p) =>
@@ -152,10 +134,12 @@ export function CategoryClient({
       );
     }
 
+    // Apply price filter
     result = result.filter(
       (p) => p.price >= priceRange[0] && p.price <= priceRange[1],
     );
 
+    // Apply color filter
     if (selectedColors.length > 0) {
       result = result.filter(
         (p) =>
@@ -163,6 +147,7 @@ export function CategoryClient({
       );
     }
 
+    // Apply seater filter
     if (selectedSeaters.length > 0) {
       result = result.filter(
         (p) =>
@@ -171,12 +156,14 @@ export function CategoryClient({
       );
     }
 
+    // Apply tag filter
     if (selectedTags.length > 0) {
       result = result.filter(
         (p) => p.tags && p.tags.some((tag) => selectedTags.includes(tag)),
       );
     }
 
+    // Apply sorting
     switch (sortBy) {
       case "low-to-high":
         result.sort((a, b) => a.price - b.price);
@@ -196,7 +183,6 @@ export function CategoryClient({
     return result;
   }, [
     products,
-    selectedCategory,
     searchQuery,
     priceRange,
     sortBy,
@@ -217,6 +203,23 @@ export function CategoryClient({
     searchQuery !== "" ||
     priceRange[1] < maxPrice;
 
+  // Handle category click - navigate to category page
+  const handleCategoryClick = (categorySlug: string) => {
+    router.push(`/category/${categorySlug}`);
+  };
+
+  // Update URL when search changes
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const url = new URL(window.location.href);
+    if (searchQuery) {
+      url.searchParams.set("search", searchQuery);
+    } else {
+      url.searchParams.delete("search");
+    }
+    router.push(url.pathname + url.search);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px] sm:min-h-[600px]">
@@ -227,8 +230,6 @@ export function CategoryClient({
       </div>
     );
   }
-
-  const categoryNames = ["All", ...categories.map((c) => c.name)];
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen pb-16 pt-6 sm:pt-0">
@@ -262,7 +263,7 @@ export function CategoryClient({
 
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
-          {/* Filters Sidebar (Desktop) */}
+          {/* Filters Sidebar (Desktop) - Shows ALL categories */}
           <aside className="hidden lg:block w-72 space-y-6 flex-shrink-0 sticky top-24 bg-white p-6 rounded-2xl border border-neutral-200/80">
             <div className="flex items-center justify-between pb-4 border-b border-neutral-200/80">
               <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-900 flex items-center gap-2">
@@ -285,43 +286,61 @@ export function CategoryClient({
                 <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700">
                   Search
                 </label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search catalog..."
-                    className="w-full bg-neutral-50 border border-neutral-200/80 py-2.5 pl-9 pr-3 text-xs text-neutral-900 outline-none focus:border-amber-500 focus:bg-white transition-all rounded-xl"
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={() => setSearchQuery("")}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-900"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
+                <form onSubmit={handleSearchSubmit}>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search catalog..."
+                      className="w-full bg-neutral-50 border border-neutral-200/80 py-2.5 pl-9 pr-3 text-xs text-neutral-900 outline-none focus:border-amber-500 focus:bg-white transition-all rounded-xl"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => {
+                          setSearchQuery("");
+                          const url = new URL(window.location.href);
+                          url.searchParams.delete("search");
+                          router.push(url.pathname + url.search);
+                        }}
+                        type="button"
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-900"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                </form>
               </div>
 
-              {/* Categories */}
+              {/* Categories - Show ALL categories with active highlighting */}
               <div className="space-y-2">
                 <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700">
                   Categories
                 </label>
                 <div className="space-y-1 max-h-[220px] overflow-y-auto pr-1 custom-scrollbar">
-                  {categoryNames.map((cat) => (
+                  <button
+                    onClick={() => router.push("/shop")}
+                    className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
+                      !currentCategory
+                        ? "bg-neutral-900 text-white font-medium shadow-sm"
+                        : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
+                    }`}
+                  >
+                    All Products
+                  </button>
+                  {categories.map((cat) => (
                     <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
+                      key={cat.id}
+                      onClick={() => handleCategoryClick(cat.slug)}
                       className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
-                        selectedCategory === cat
+                        currentCategory?.id === cat.id
                           ? "bg-neutral-900 text-white font-medium shadow-sm"
                           : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
                       }`}
                     >
-                      {cat}
+                      {cat.name}
                     </button>
                   ))}
                 </div>
@@ -469,17 +488,6 @@ export function CategoryClient({
                 <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider mr-1">
                   Active:
                 </span>
-                {selectedCategory !== "All" && (
-                  <span className="px-2.5 py-1 bg-amber-50 text-[11px] text-neutral-900 font-medium rounded-md border border-amber-200/50 flex items-center gap-1.5">
-                    Category: {selectedCategory}
-                    <button
-                      onClick={() => setSelectedCategory("All")}
-                      className="hover:text-amber-600"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                )}
                 {selectedColors.map((color) => (
                   <span
                     key={color}
@@ -526,7 +534,12 @@ export function CategoryClient({
                   <span className="px-2.5 py-1 bg-amber-50 text-[11px] text-neutral-900 font-medium rounded-md border border-amber-200/50 flex items-center gap-1.5">
                     Search: "{searchQuery}"
                     <button
-                      onClick={() => setSearchQuery("")}
+                      onClick={() => {
+                        setSearchQuery("");
+                        const url = new URL(window.location.href);
+                        url.searchParams.delete("search");
+                        router.push(url.pathname + url.search);
+                      }}
                       className="hover:text-amber-600"
                     >
                       <X className="w-3 h-3" />
@@ -586,43 +599,58 @@ export function CategoryClient({
                 </button>
               </div>
 
-              {/* Search */}
+              {/* Search - Mobile */}
               <div className="space-y-2">
                 <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700">
                   Search
                 </label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search products..."
-                    className="w-full bg-neutral-50 border border-neutral-200/80 py-2.5 pl-9 pr-3 text-xs outline-none focus:border-amber-500 rounded-xl"
-                  />
-                </div>
+                <form onSubmit={handleSearchSubmit}>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search products..."
+                      className="w-full bg-neutral-50 border border-neutral-200/80 py-2.5 pl-9 pr-3 text-xs outline-none focus:border-amber-500 rounded-xl"
+                    />
+                  </div>
+                </form>
               </div>
 
-              {/* Categories */}
+              {/* Categories - Mobile */}
               <div className="space-y-2">
                 <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700">
                   Categories
                 </label>
                 <div className="grid grid-cols-1 gap-1 max-h-[160px] overflow-y-auto pr-1">
-                  {categoryNames.map((cat) => (
+                  <button
+                    onClick={() => {
+                      router.push("/shop");
+                      setShowMobileFilters(false);
+                    }}
+                    className={`text-left text-xs py-2 px-3 rounded-xl border transition-all ${
+                      !currentCategory
+                        ? "bg-neutral-900 text-white border-neutral-900 font-medium"
+                        : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
+                    }`}
+                  >
+                    All Products
+                  </button>
+                  {categories.map((cat) => (
                     <button
-                      key={cat}
+                      key={cat.id}
                       onClick={() => {
-                        setSelectedCategory(cat);
+                        handleCategoryClick(cat.slug);
                         setShowMobileFilters(false);
                       }}
                       className={`text-left text-xs py-2 px-3 rounded-xl border transition-all ${
-                        selectedCategory === cat
+                        currentCategory?.id === cat.id
                           ? "bg-neutral-900 text-white border-neutral-900 font-medium"
                           : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
                       }`}
                     >
-                      {cat}
+                      {cat.name}
                     </button>
                   ))}
                 </div>
@@ -693,35 +721,6 @@ export function CategoryClient({
                   onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
                   className="w-full accent-amber-500 h-1.5 bg-neutral-200 rounded-lg cursor-pointer"
                 />
-              </div>
-
-              {/* Sort Options - Mobile */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700">
-                  Sort By
-                </label>
-                <div className="grid grid-cols-1 gap-1.5">
-                  {[
-                    { value: "latest", label: "Latest Arrivals" },
-                    { value: "low-to-high", label: "Price: Low to High" },
-                    { value: "high-to-low", label: "Price: High to Low" },
-                  ].map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => {
-                        setSortBy(option.value);
-                        setShowMobileFilters(false);
-                      }}
-                      className={`text-left text-xs py-2.5 px-3 rounded-xl border transition-all ${
-                        sortBy === option.value
-                          ? "bg-neutral-900 text-white border-neutral-900 font-medium"
-                          : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
               </div>
             </div>
 

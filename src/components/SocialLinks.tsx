@@ -123,37 +123,8 @@ export default function SocialLinks() {
         ))}
       </div>
 
-      {/* Presence Statement */}
-      <div className="bg-gradient-to-r from-amber-50/50 via-white to-amber-50/50 p-4 rounded-lg border border-amber-200/50">
-        <p className="text-xs text-gray-600 leading-relaxed text-center">
-          <span className="font-bold text-gray-800">
-            Connect with Royal Furniture
-          </span>
-          <span className="block sm:inline">
-            {" "}
-            • Follow us for daily inspiration, exclusive offers, and design tips
-          </span>
-          <br className="sm:hidden" />
-          <span className="inline-block mt-1 text-amber-600 font-bold">
-            Join 12,000+ followers
-          </span>
-        </p>
-      </div>
-
       {/* Share Button */}
       <div className="relative">
-        <button
-          onClick={() => setShowShare(!showShare)}
-          className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-600 hover:text-amber-700 transition-colors"
-          aria-expanded={showShare}
-        >
-          <span
-            className="w-4 h-4 block"
-            dangerouslySetInnerHTML={{ __html: socialIcons.share }}
-          />
-          Share this page
-        </button>
-
         {showShare && (
           <div className="absolute left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-50 min-w-[180px] animate-fade-in">
             <p className="text-[9px] font-bold uppercase tracking-wider text-gray-400 mb-2">

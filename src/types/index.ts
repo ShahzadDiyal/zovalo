@@ -23,6 +23,7 @@ export interface Product {
   updatedAt?: any;
   enableColorSelection?: boolean; // true = show color button, false = hide
   selectedColor?: string;
+  imageAltTexts: string[];
 }
 
 export interface SeaterPrice {
@@ -59,8 +60,10 @@ export interface Category {
   slug: string;
   description?: string;
   image?: string;
+  featuredImage: string;
   parentId?: string | null;
   createdAt?: any;
+  productCount: string;
 }
 
 export interface Order {

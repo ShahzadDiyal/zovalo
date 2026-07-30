@@ -80,7 +80,6 @@ export default function AdminProducts() {
     ];
 
     const rows = productsToExport.map((product) => {
-      
       return [
         product.id,
         product.id.slice(0, 8).toUpperCase(),
@@ -93,7 +92,7 @@ export default function AdminProducts() {
         product.featured ? "Yes" : "No",
         product.images[0] || "",
         `"${product.images.join("; ")}"`,
-       
+
         product.createdAt?.toDate?.().toLocaleDateString("en-GB") || "N/A",
         product.updatedAt?.toDate?.().toLocaleDateString("en-GB") || "N/A",
       ];

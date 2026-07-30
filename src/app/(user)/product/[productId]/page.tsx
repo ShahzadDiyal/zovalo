@@ -23,7 +23,8 @@ export async function generateMetadata({
   const description =
     product.description?.substring(0, 160) ||
     `Buy ${product.title} at Royal Furniture. Cash on Delivery available across the UK.`;
-  const image = product.images?.[0] || "https://royalfurnitures.store/og-image.jpg";
+  const image =
+    product.images?.[0] || "https://royalfurnitures.store/og-image.jpg";
 
   return {
     title,
@@ -53,7 +54,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
       name: productData.category || "Products",
       url: `https://royalfurnitures.store/category/${productData.category?.toLowerCase().replace(/ /g, "-") || "products"}`,
     },
-    { name: productData.title, url: `https://royalfurnitures.store/product/${productData.slug}` },
+    {
+      name: productData.title,
+      url: `https://royalfurnitures.store/product/${productData.slug}`,
+    },
   ];
 
   return (

@@ -1,4 +1,3 @@
-// src/app/(user)/product/[productId]/ProductClient.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -56,7 +55,6 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
   );
   const [openFaqs, setOpenFaqs] = useState<number[]>([]);
 
-  // Single variable for the combined color name
   const [selectedColorName, setSelectedColorName] = useState<string>("");
   const [selectedColorHex, setSelectedColorHex] = useState<string>("");
 
@@ -105,7 +103,6 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
     }
   }, [product]);
 
-  // Updated: Handle color selection with combined name
   const handleColorSelection = (
     colorName: string,
     fabricName: string,
@@ -114,7 +111,6 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
   ) => {
     setSelectedColorName(combinedName);
     setSelectedColorHex(colorHex);
-    console.log("🎨 Color selected:", { combinedName, colorHex });
   };
 
   const updatePriceForSeater = (seater: string, productData: Product) => {
@@ -148,7 +144,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
     );
   };
 
-  const handleAddToCartOnly = () => {
+  const handleAddToCartOnly = async () => {
     if (!product) return;
 
     if (product.stock === 0) {
@@ -176,26 +172,33 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
     }
 
     setAddingToCart(true);
-    addToCart(
-      {
-        ...product,
-        price: currentPrice,
-        compareAtPrice: currentCompareAtPrice,
-      },
-      quantity,
-      {
-        color: selectedColorName, // Now contains "Fabric - Color" format
-        colorHex: selectedColorHex,
-        seater: selectedSeater,
-      },
-    );
 
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 2000);
-    setAddingToCart(false);
+    try {
+      await addToCart(
+        {
+          ...product,
+          price: currentPrice,
+          compareAtPrice: currentCompareAtPrice,
+        },
+        quantity,
+        {
+          color: selectedColorName,
+          colorHex: selectedColorHex,
+          seater: selectedSeater,
+        },
+      );
+
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 2000);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("Failed to add to cart. Please try again.");
+    } finally {
+      setAddingToCart(false);
+    }
   };
 
-  const handleOrderNow = () => {
+  const handleOrderNow = async () => {
     if (!product) return;
 
     if (product.stock === 0) {
@@ -223,23 +226,30 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
     }
 
     setOrderingNow(true);
-    addToCart(
-      {
-        ...product,
-        price: currentPrice,
-        compareAtPrice: currentCompareAtPrice,
-      },
-      quantity,
-      {
-        color: selectedColorName, // Now contains "Fabric - Color" format
-        colorHex: selectedColorHex,
-        seater: selectedSeater,
-      },
-    );
 
-    setTimeout(() => {
-      router.push("/cart");
-    }, 100);
+    try {
+      await addToCart(
+        {
+          ...product,
+          price: currentPrice,
+          compareAtPrice: currentCompareAtPrice,
+        },
+        quantity,
+        {
+          color: selectedColorName,
+          colorHex: selectedColorHex,
+          seater: selectedSeater,
+        },
+      );
+
+      setTimeout(() => {
+        router.push("/cart");
+      }, 300);
+    } catch (error) {
+      console.error("Error ordering:", error);
+      alert("Failed to process order. Please try again.");
+      setOrderingNow(false);
+    }
   };
 
   const handleQuantityChange = (type: "increase" | "decrease") => {
@@ -368,6 +378,9 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
     (product.colors && product.colors.length > 0) ||
     (product.seaterCount && product.seaterCount.length > 0);
 
+  // Get custom colors from product.colors if they exist
+  const customColors = product.colors || [];
+
   return (
     <div className="bg-[#FAF8F5] min-h-screen">
       <section className="relative bg-neutral-900 text-white py-12 sm:py-16 md:py-20 overflow-hidden">
@@ -398,7 +411,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
           <div className="lg:w-1/2 space-y-3 sm:space-y-4">
             <div
               onClick={() => setIsZoomModalOpen(true)}
-              className="group aspect-square bg-white border border-neutral-200/80 overflow-hidden rounded-2xl relative cursor-zoom-in "
+              className="group aspect-square bg-white border border-neutral-200/80 overflow-hidden rounded-2xl relative cursor-zoom-in"
             >
               {isOutOfStock && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 rounded-2xl pointer-events-none">
@@ -495,7 +508,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
 
             {/* Price */}
             <div className="flex items-center gap-3 flex-wrap pt-4">
-              <p className="text-[2xl] md:text-3xl sm:text-3xl   font-bold text-neutral-900">
+              <p className="text-[2xl] md:text-3xl sm:text-3xl font-bold text-neutral-900">
                 {formatCurrency(currentPrice)}
               </p>
               {currentCompareAtPrice &&
@@ -545,7 +558,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
               </div>
             )}
 
-            {/* Updated: Color Selection with combined name */}
+            {/* Color Selection - Shows both palette and custom colors */}
             {product.enableColorSelection && (
               <div className="border-t border-neutral-200/80 pt-4 mt-4 z-[9999]">
                 <ColorSelection
@@ -563,6 +576,46 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
               </div>
             )}
 
+            {/* Custom Colors from product.colors */}
+            {customColors.length > 0 && !product.enableColorSelection && (
+              <div className="border-t border-neutral-200/80 pt-4 mt-4">
+                <label className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-neutral-700 block mb-3">
+                  Available Colors
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {customColors.map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => {
+                        setSelectedColorName(color);
+                        setSelectedColorHex(color.toLowerCase());
+                      }}
+                      className={`px-3 py-1.5 text-xs rounded-full border transition-all flex items-center gap-1.5 ${
+                        selectedColorName === color
+                          ? "border-amber-500 bg-amber-50 text-amber-700 font-medium"
+                          : "border-neutral-200 bg-white text-neutral-700 hover:border-amber-300"
+                      }`}
+                    >
+                      <span
+                        className="w-3 h-3 rounded-full border border-gray-200 flex-shrink-0"
+                        style={{ backgroundColor: color.toLowerCase() }}
+                      />
+                      {color}
+                    </button>
+                  ))}
+                </div>
+                {selectedColorName &&
+                  customColors.includes(selectedColorName) && (
+                    <p className="text-xs text-neutral-500 mt-2">
+                      Selected:{" "}
+                      <span className="font-bold text-neutral-900">
+                        {selectedColorName}
+                      </span>
+                    </p>
+                  )}
+              </div>
+            )}
+
             {/* Seater Selection */}
             {product.seaterCount && product.seaterCount.length > 0 && (
               <div className="space-y-2">
@@ -576,7 +629,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                       onClick={() => handleSeaterChange(seater)}
                       className={`px-2 md:px-4 py-1 md:py-2 text-sm rounded-[6px] cursor-pointer transition-all flex items-center gap-2 ${
                         selectedSeater === seater
-                          ? "bg-amber-700 text-white font-bold "
+                          ? "bg-amber-700 text-white font-bold"
                           : "bg-white text-neutral-700 hover:bg-amber-50"
                       }`}
                     >
@@ -609,7 +662,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                       <button
                         onClick={() => handleQuantityChange("decrease")}
                         disabled={quantity <= 1}
-                        className="w-10 h-full flex items-center justify-center  cursor-pointer hover:bg-amber-50 transition-colors disabled:opacity-50 rounded-l-xl"
+                        className="w-10 h-full flex items-center justify-center cursor-pointer hover:bg-amber-50 transition-colors disabled:opacity-50 rounded-l-xl"
                       >
                         <Minus className="w-3 h-3" />
                       </button>
@@ -640,7 +693,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                               product.seaterCount.length > 0 &&
                               !selectedSeater)))
                       }
-                      className="flex-1 bg-white border-2  cursor-pointer border-neutral-900 text-neutral-900 py-3 text-[11px] font-bold uppercase tracking-widest hover:bg-amber-600 hover:border-amber-600 hover:text-white transition-all duration-300 flex items-center justify-center gap-2 rounded-xl"
+                      className="flex-1 bg-white border-2 cursor-pointer border-neutral-900 text-neutral-900 py-3 text-[11px] font-bold uppercase tracking-widest hover:bg-amber-600 hover:border-amber-600 hover:text-white transition-all duration-300 flex items-center justify-center gap-2 rounded-xl disabled:opacity-50"
                     >
                       <ShoppingCart className="w-4 h-4" />
                       {addingToCart ? "Adding..." : "Add to Cart"}
@@ -655,7 +708,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                               product.seaterCount.length > 0 &&
                               !selectedSeater)))
                       }
-                      className="flex-1 bg-neutral-900 text-white py-3 cursor-pointer text-[11px] font-bold uppercase tracking-widest hover:bg-amber-600 transition-all duration-300 flex items-center justify-center gap-2 rounded-xl"
+                      className="flex-1 bg-neutral-900 text-white py-3 cursor-pointer text-[11px] font-bold uppercase tracking-widest hover:bg-amber-600 transition-all duration-300 flex items-center justify-center gap-2 rounded-xl disabled:opacity-50"
                     >
                       <ShoppingBag className="w-4 h-4" />
                       {orderingNow ? "Processing..." : "Order Now"}
@@ -669,6 +722,16 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                 >
                   Contact Us for Availability
                 </button>
+              )}
+
+              {/* Success Message */}
+              {showSuccess && (
+                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center gap-2 animate-slide-in-right">
+                  <Check className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium">
+                    ✓ Added to cart successfully!
+                  </span>
+                </div>
               )}
 
               {/* Wishlist & Share */}
@@ -688,7 +751,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
               </div>
 
               {/* Delivery Info */}
-              <div className="space-y-3 p-4 bg-white border border-neutral-200/80 rounded-2xl ">
+              <div className="space-y-3 p-4 bg-white border border-neutral-200/80 rounded-2xl">
                 <div className="flex items-center gap-3">
                   <Truck className="w-4 h-4 text-amber-600" />
                   <div>
@@ -746,11 +809,11 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
           <div className="py-2 sm:py-4">
             {activeTab === "description" && (
               <div className="prose prose-sm sm:prose-base max-w-none">
-                <div className="text-neutral-600 text-sm sm:text-base leading-relaxed space-y-3 sm:space-y-4">
-                  {product.description.split("\n").map((paragraph, idx) => (
-                    <p key={idx}>{paragraph}</p>
-                  ))}
-                </div>
+                {/* Render HTML content properly */}
+                <div
+                  className="text-neutral-600 text-sm sm:text-base leading-relaxed space-y-3 sm:space-y-4"
+                  dangerouslySetInnerHTML={{ __html: product.description }}
+                />
               </div>
             )}
 
@@ -763,7 +826,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                     return (
                       <div
                         key={index}
-                        className="bg-white border border-neutral-200/80 rounded-xl overflow-hidden transition-all duration-200 "
+                        className="bg-white border border-neutral-200/80 rounded-xl overflow-hidden transition-all duration-200"
                       >
                         <button
                           onClick={() => toggleFaq(index)}

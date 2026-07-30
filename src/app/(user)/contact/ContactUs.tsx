@@ -22,10 +22,10 @@ import SocialLinks from "@/src/components/SocialLinks";
 
 // REMOVE THIS BLOCK - it's now in page.tsx
 // export const metadata: Metadata = {
-//   title: "Contact Us | Royal Furniture",  
-//   description: "Get in touch with Royal Furniture — questions about orders, delivery, or products.",  
+//   title: "Contact Us | Royal Furniture",
+//   description: "Get in touch with Royal Furniture — questions about orders, delivery, or products.",
 //   alternates: {
-//     canonical: "/contact",  
+//     canonical: "/contact",
 //   },
 // };
 
@@ -103,7 +103,9 @@ const ContactUs = () => {
       setTimeout(() => setSubmitted(false), 6000);
     } catch (err) {
       console.error("Error sending message:", err);
-      setError("Failed to send message. Please try again or reach us via WhatsApp.");
+      setError(
+        "Failed to send message. Please try again or reach us via WhatsApp.",
+      );
     } finally {
       setLoading(false);
     }
@@ -136,7 +138,9 @@ const ContactUs = () => {
             </h1>
 
             <p className="text-neutral-400 text-sm sm:text-base max-w-2xl mx-auto font-light leading-relaxed">
-              Have questions about an upcoming order, custom dimensions, or delivery dates? Our design & support consultants are just a message away.
+              Have questions about an upcoming order, custom dimensions, or
+              delivery dates? Our design & support consultants are just a
+              message away.
             </p>
           </div>
         </section>
@@ -144,10 +148,8 @@ const ContactUs = () => {
         {/* Main Content Grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-12 relative z-10 pb-16 sm:pb-24">
           <div className="grid lg:grid-cols-12 gap-8 items-start">
-            
             {/* Left Column: Direct Contact Details & WhatsApp Banner */}
             <div className="lg:col-span-5 space-y-6">
-              
               {/* WhatsApp Quick Action Card */}
               <div className="bg-gradient-to-br from-emerald-900 to-neutral-900 text-white p-6 sm:p-7 rounded-2xl shadow-xl border border-emerald-800/40 relative overflow-hidden group">
                 <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all duration-500" />
@@ -163,7 +165,8 @@ const ContactUs = () => {
                     Chat via WhatsApp
                   </h3>
                   <p className="text-neutral-300 text-xs leading-relaxed mb-5 font-light">
-                    Need instant answers on stock availability or custom fabric options? Connect directly with our team.
+                    Need instant answers on stock availability or custom fabric
+                    options? Connect directly with our team.
                   </p>
                   <a
                     href="https://wa.me/447529661726"
@@ -267,19 +270,26 @@ const ContactUs = () => {
                 <div className="bg-white border border-neutral-200/80 p-4 rounded-xl flex items-center gap-3">
                   <Truck className="w-5 h-5 text-amber-600 shrink-0" />
                   <div>
-                    <h5 className="text-[11px] font-bold text-neutral-900">Free UK Delivery</h5>
-                    <p className="text-[9px] text-neutral-500">On all major orders</p>
+                    <h5 className="text-[11px] font-bold text-neutral-900">
+                      Free UK Delivery
+                    </h5>
+                    <p className="text-[9px] text-neutral-500">
+                      On all major orders
+                    </p>
                   </div>
                 </div>
                 <div className="bg-white border border-neutral-200/80 p-4 rounded-xl flex items-center gap-3">
                   <ShieldCheck className="w-5 h-5 text-amber-600 shrink-0" />
                   <div>
-                    <h5 className="text-[11px] font-bold text-neutral-900">Pay on Delivery</h5>
-                    <p className="text-[9px] text-neutral-500">Zero risk checkout</p>
+                    <h5 className="text-[11px] font-bold text-neutral-900">
+                      Pay on Delivery
+                    </h5>
+                    <p className="text-[9px] text-neutral-500">
+                      Zero risk checkout
+                    </p>
                   </div>
                 </div>
               </div>
-
             </div>
 
             {/* Right Column: Contact Form */}
@@ -293,7 +303,8 @@ const ContactUs = () => {
                     How Can We Assist You Today?
                   </h2>
                   <p className="text-neutral-500 text-xs sm:text-sm mt-1">
-                    Fill out the form below and an advisor will respond within 2–4 business hours.
+                    Fill out the form below and an advisor will respond within
+                    2–4 business hours.
                   </p>
                 </div>
 
@@ -301,8 +312,11 @@ const ContactUs = () => {
                   <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl mb-6 flex items-start gap-3 text-xs sm:text-sm animate-fade-in">
                     <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="block font-bold">Message Sent Successfully!</strong>
-                      Thank you for contacting Royal Furniture. One of our specialists will reach out to you shortly.
+                      <strong className="block font-bold">
+                        Message Sent Successfully!
+                      </strong>
+                      Thank you for contacting Royal Furniture. One of our
+                      specialists will reach out to you shortly.
                     </div>
                   </div>
                 )}
@@ -359,10 +373,18 @@ const ContactUs = () => {
                       className="w-full bg-neutral-50 border border-neutral-200 focus:bg-white focus:border-amber-500 py-3 px-4 text-sm text-neutral-900 outline-none rounded-xl transition-all duration-200"
                     >
                       <option value="">Choose an inquiry option...</option>
-                      <option value="Order Inquiry">Order Inquiry & Tracking</option>
-                      <option value="Product Information">Product Details & Custom Dimensions</option>
-                      <option value="Delivery Question">Delivery & Cash on Delivery Details</option>
-                      <option value="Return Request">Returns & Guarantees</option>
+                      <option value="Order Inquiry">
+                        Order Inquiry & Tracking
+                      </option>
+                      <option value="Product Information">
+                        Product Details & Custom Dimensions
+                      </option>
+                      <option value="Delivery Question">
+                        Delivery & Cash on Delivery Details
+                      </option>
+                      <option value="Return Request">
+                        Returns & Guarantees
+                      </option>
                       <option value="Other">General Support</option>
                     </select>
                   </div>
@@ -403,7 +425,6 @@ const ContactUs = () => {
                 </p>
               </div>
             </div>
-
           </div>
 
           {/* Interactive Accordion FAQ Section */}
@@ -446,7 +467,6 @@ const ContactUs = () => {
               })}
             </div>
           </div>
-
         </div>
       </div>
     </>

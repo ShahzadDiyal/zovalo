@@ -31,29 +31,29 @@ function HeroSection() {
     {
       image: "/images/sofa-bad-design.jpg",
       title: "Luxury Beds & Upholstered Frames",
-      subtitle: "Premium Bedroom Furniture",
-      description:
-        "Upgrade your sleep sanctuary. Shop premium divan beds, gas-lift ottoman storage beds, and luxury velvet sleigh beds engineered for long-lasting comfort.",
-      buttonText: "Shop Beds & Mattresses",
-      buttonLink: "/shop",
+      // subtitle: "Premium Bedroom Furniture",
+      // description:
+      //   "Upgrade your sleep sanctuary. Shop premium divan beds, gas-lift ottoman storage beds, and luxury velvet sleigh beds engineered for long-lasting comfort.",
+      // buttonText: "Shop Beds & Mattresses",
+      // buttonLink: "/shop",
     },
     {
       image: "/images/dining-tables.jpg",
       title: "Modern Dining Tables & Sets",
-      subtitle: "Designed for Entertaining",
-      description:
-        "Find the perfect centerpiece. Browse luxury marble dining tables, space-saving extending tables, and solid oak sets tailored for any home layout.",
-      buttonText: "Shop Dining Tables",
-      buttonLink: "/shop",
+      // subtitle: "Designed for Entertaining",
+      // description:
+      //   "Find the perfect centerpiece. Browse luxury marble dining tables, space-saving extending tables, and solid oak sets tailored for any home layout.",
+      // buttonText: "Shop Dining Tables",
+      // buttonLink: "/shop",
     },
     {
       image: "/images/sofa-bad-interior-desing.jpg",
       title: "Luxury Sofas & Smart Sofa Beds",
-      subtitle: "Contemporary Living Spaces",
-      description:
-        "Discover deep lounging comfort. Explore classic Chesterfield couches, spacious family U-shape sectionals, and modern click-clack guest sofa beds.",
-      buttonText: "Shop The Sofa Collection",
-      buttonLink: "/shop",
+      // subtitle: "Contemporary Living Spaces",
+      // description:
+      //   "Discover deep lounging comfort. Explore classic Chesterfield couches, spacious family U-shape sectionals, and modern click-clack guest sofa beds.",
+      // buttonText: "Shop The Sofa Collection",
+      // buttonLink: "/shop",
     },
   ];
 
@@ -95,15 +95,15 @@ function HeroSection() {
               decoding="async"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-r from-neutral-900 via-neutral-900/70 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/60 via-transparent to-neutral-900/20" />
+            {/* <div className="absolute inset-0 bg-gradient-to-r from-neutral-900 via-neutral-900/70 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/60 via-transparent to-neutral-900/20" /> */}
 
             <div className="relative z-10 h-full flex items-center px-6 sm:px-12 lg:px-20 xl:px-32">
               <div className="space-y-4 sm:space-y-6 md:space-y-4 max-w-xl md:max-w-2xl border-l-2 border-amber-500 pl-6 sm:pl-8 md:pl-10">
-                <span className="text-[9px] sm:text-[11px] font-bold text-amber-400 uppercase tracking-[0.35em] block animate-fadeIn">
+                {/* <span className="text-[9px] sm:text-[11px] font-bold text-amber-400 uppercase tracking-[0.35em] block animate-fadeIn">
                   {slide.subtitle}
-                </span>
-
+                </span> */}
+                {/* 
                 {isActive ? (
                   <h1 className="text-2xl md:text-4xl lg:text-5xl text-white font-serif font-light leading-[1.15] tracking-wide">
                     {slide.title}
@@ -112,13 +112,13 @@ function HeroSection() {
                   <h2 className="text-2xl md:text-4xl lg:text-5xl text-white font-serif font-light leading-[1.15] tracking-wide">
                     {slide.title}
                   </h2>
-                )}
-
+                )} */}
+                {/* 
                 <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-md lg:max-w-xl font-light leading-relaxed">
                   {slide.description}
-                </p>
+                </p> */}
 
-                <div className="flex flex-wrap gap-3 pt-2">
+                {/* <div className="flex flex-wrap gap-3 pt-2">
                   <Link href={slide.buttonLink}>
                     <Button
                       size="lg"
@@ -127,7 +127,7 @@ function HeroSection() {
                       {slide.buttonText}
                     </Button>
                   </Link>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -300,6 +300,7 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
           <p className="text-neutral-500 font-light text-sm sm:text-base">
             Curated categories for every space in your home
           </p>
+          <Link href="/collections" className="text-amber-500 underline">View all Collections</Link>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6">

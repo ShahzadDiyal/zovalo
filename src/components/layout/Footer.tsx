@@ -195,7 +195,7 @@ export function Footer() {
 
         {/* Bottom Utility Bar */}
         <div className="border-t border-warm-beige pt-8 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-          <div className="flex flex-col md:flex-row justify-start md:justify-center gap-2 md:gap-8 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-a0">
+          <div className="hidden md:flex flex-col md:flex-row justify-start md:justify-center gap-2 md:gap-8 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-a0">
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-olive" />
               <span>Cash on Delivery Only</span>
@@ -210,7 +210,7 @@ export function Footer() {
             </div>
           </div>
 
-          <p className="text-[10px] text-gray-a0 font-bold uppercase tracking-[0.15em]">
+          <p className="text-[12px] text-black font-bold uppercase tracking-[0.15em]">
             Copyright © {new Date().getFullYear()} Royal Furniture LTD
           </p>
         </div>

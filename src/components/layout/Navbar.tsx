@@ -8,6 +8,11 @@ import {
   Search,
   LogOut,
   ChevronDown,
+  Star,
+  ShieldCheck,
+  Truck,
+  CreditCard,
+  Clock,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -31,9 +36,38 @@ export function Navbar() {
     {},
   );
 
+  // Timer state - 5 hours in seconds (5 * 60 * 60 = 18000)
+  const [timeLeft, setTimeLeft] = useState(18000);
+  const [isTimerRunning, setIsTimerRunning] = useState(true);
+
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Timer logic
+  useEffect(() => {
+    if (!isTimerRunning) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          // Reset to 5 hours when it reaches 0
+          return 18000;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isTimerRunning]);
+
+  // Format time to HH:MM:SS
+  const formatTime = (seconds: number) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${String(hrs).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  };
 
   // Fetch real categories
   useEffect(() => {
@@ -201,24 +235,68 @@ export function Navbar() {
       className="fixed top-0 w-full z-50 shadow-sm"
       aria-label="Royal Furniture Main navigation"
     >
-      {/* Header 01: Announcement Bar */}
-      <div className="bg-amber-800 text-cream text-[10px] sm:text-[11px] py-2 text-center tracking-[0.15em] font-medium uppercase px-4 flex justify-center items-center gap-4 flex-wrap">
-        <p>
-          Free Delivery Across UK | Cash On Delivery Available{" "}
-          <span className=" italic underline font-bold">
-            {" "}
-            (No Upfront Required){" "}
-          </span>
-          | Premium Furniture Collection
-        </p>
-        {isAdmin && (
-          <Link
-            href="/admin"
-            className="hidden md:block bg-gold text-near-black px-2 py-0.5 rounded text-[9px] font-bold hover:bg-white transition-colors ml-4"
-          >
-            GO TO ADMIN PANEL
-          </Link>
-        )}
+      {/* Header 01: Trust & Timer Bar */}
+      <div className="bg-amber-800 text-cream py-1.5 px-4 flex items-center justify-between">
+        {/* Left: Rating - Hidden on mobile and tablet */}
+        <div className="hidden lg:flex items-center gap-2 min-w-[180px]">
+          <div className="flex items-center gap-0.5">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+            ))}
+          </div>
+          <span className="text-amber-100 font-bold text-[12px]">4.9/5</span>
+          <span className="text-yellow-200 text-[12px] font-bold">(2,847)</span>
+        </div>
+
+        {/* Center: Cash on Delivery + Timer */}
+        <div className="flex-1 flex items-center justify-center gap-3 sm:gap-4 md:gap-6">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <CreditCard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300" />
+            <span className="text-[9px] sm:text-[10px] md:text-[14px] font-bold uppercase tracking-wider">
+              Cash on Delivery
+            </span>
+          </div>
+
+          <div className="w-px h-5 bg-amber-700/50" />
+
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300 animate-pulse" />
+            <span className="text-[9px] sm:text-[10px] md:text-[13px] font-bold tracking-wider bg-gradient-to-r from-amber-200 via-white to-amber-200 bg-clip-text text-transparent">
+              {formatTime(timeLeft)} Remaining
+            </span>
+            <span className="text-[7px] sm:text-[8px] text-amber-300/70 font-light hidden xs:inline">
+              remaining
+            </span>
+          </div>
+        </div>
+
+        {/* Right: Trust Badges - Hidden on mobile and tablet */}
+        <div className="hidden lg:flex items-center gap-3 min-w-[180px] justify-end">
+          <div className="flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
+            <span className="text-[12px] text-amber-100 font-medium">
+              Secure
+            </span>
+          </div>
+          <div className="w-px h-4 bg-amber-700/50" />
+          <div className="flex items-center gap-1.5">
+            <Truck className="w-3.5 h-3.5 text-amber-300" />
+            <span className="text-[12px] text-amber-100 font-medium">
+              Free Delivery
+            </span>
+          </div>
+          {isAdmin && (
+            <>
+              <div className="w-px h-4 bg-amber-700/50" />
+              <Link
+                href="/admin"
+                className="bg-amber-700/40 text-amber-200 px-2 py-0.5 rounded text-[10px] font-bold hover:bg-amber-600/50 transition-colors border border-amber-600/30"
+              >
+                ADMIN
+              </Link>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Header 02: Main Header */}
@@ -229,7 +307,7 @@ export function Navbar() {
             <img
               src="/logo.png"
               alt="Royal Furniture Logo"
-              className="w-15 h-15 sm:w-20 sm:h-20 object-contain"
+              className="w-15 h-15 sm:w-20 sm:h-16 object-contain"
               fetchPriority="high"
             />
             <h1 className="text-xl sm:text-2xl font-bold tracking-tighter text-near-black">

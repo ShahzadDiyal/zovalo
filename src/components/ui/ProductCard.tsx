@@ -99,6 +99,28 @@ export function ProductCard({ product }: ProductCardProps) {
             Hurry! Only {product.stock} left in stock
           </div>
         )}
+
+        {/* Action Buttons - Overlay on Image (Desktop) */}
+        {product.stock > 0 && (
+          <div className="absolute inset-0 opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col md:flex-row items-end justify-center gap-3 p-4 pointer-events-none md:pointer-events-auto">
+            <button
+              onClick={handleAddToCart}
+              disabled={isAddingToCart}
+              className="w-full max-w-[200px] bg-cream border border-warm-beige cursor-pointer text-near-black py-2.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hover:bg-gold hover:text-near-black hover:border-gold transition-all duration-300 flex items-center justify-center gap-1.5 rounded"
+            >
+              <ShoppingCart className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              {isAddingToCart ? "Adding..." : "Add to Cart"}
+            </button>
+            <button
+              onClick={handleOrderNow}
+              disabled={isOrderNow}
+              className="w-full max-w-[200px] bg-near-black text-white py-2.5 text-[10px] cursor-pointer sm:text-[11px] font-bold uppercase tracking-widest hover:bg-gold hover:text-near-black transition-all duration-300 flex items-center justify-center gap-1.5 rounded"
+            >
+              <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              {isOrderNow ? "Processing..." : "Order Now"}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Product Info */}
@@ -113,20 +135,20 @@ export function ProductCard({ product }: ProductCardProps) {
           {formatCurrency(product.price)}
         </p>
 
-        {/* Action Buttons */}
+        {/* Action Buttons - Always visible on mobile (below md) */}
         {product.stock === 0 ? (
           <button
             onClick={handleContactUs}
-            className="w-full bg-gray-200 text-gray-600 py-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest rounded transition-colors"
+            className="w-full bg-gray-200 text-gray-600 py-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest rounded transition-colors md:hidden"
           >
             Contact Us
           </button>
         ) : (
-          <div className="flex flex-col mdL:flex-row gap-2">
+          <div className="flex flex-col md:hidden gap-2">
             <button
               onClick={handleAddToCart}
               disabled={isAddingToCart}
-              className="flex-1 bg-cream border border-warm-beige cursor-pointer text-near-black py-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hover:bg-gold hover:text-near-black hover:border-gold transition-all duration-300 flex items-center justify-center gap-1.5 rounded"
+              className="w-full bg-cream border border-warm-beige cursor-pointer text-near-black py-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hover:bg-gold hover:text-near-black hover:border-gold transition-all duration-300 flex items-center justify-center gap-1.5 rounded"
             >
               <ShoppingCart className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               {isAddingToCart ? "Adding..." : "Add to Cart"}
@@ -134,7 +156,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <button
               onClick={handleOrderNow}
               disabled={isOrderNow}
-              className="flex-1 bg-near-black text-white py-2 text-[10px] cursor-pointer sm:text-[11px] font-bold uppercase tracking-widest hover:bg-gold hover:text-near-black transition-all duration-300 flex items-center justify-center gap-1.5 rounded"
+              className="w-full bg-near-black text-white py-2 text-[10px] cursor-pointer sm:text-[11px] font-bold uppercase tracking-widest hover:bg-gold hover:text-near-black transition-all duration-300 flex items-center justify-center gap-1.5 rounded"
             >
               <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               {isOrderNow ? "Processing..." : "Order Now"}

@@ -18,7 +18,7 @@ export default function UserLayout({
   return (
     <>
       {!isAuthPage && <Navbar />}
-      <main className={`flex-grow ${!isAuthPage ? "pt-20 md:pt-38" : ""}`}>
+      <main className={`flex-grow ${!isAuthPage ? "pt-20 md:pt-36" : ""}`}>
         {children}
       </main>
       {!isAuthPage && <Footer />}

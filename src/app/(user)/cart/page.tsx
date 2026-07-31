@@ -34,7 +34,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="bg-[#FAF8F5] min-h-screen py-6 sm:py-0">
+    <div className="bg-[#FAF8F5] min-h-screen py-4 sm:py-0">
       {/* Hero Header Section */}
       <section className="relative overflow-hidden bg-neutral-900 text-white py-12 sm:py-16 md:py-20 mb-8 sm:mb-12">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />

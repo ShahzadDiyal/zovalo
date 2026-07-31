@@ -13,6 +13,10 @@ import {
   Sparkles,
   ChevronLeft,
   ChevronRight,
+  ThumbsUp,
+  Clock,
+  Star,
+  Gem,
 } from "lucide-react";
 import { SEO } from "../../../components/SEO";
 import { Product, Category } from "../../../types";
@@ -29,7 +33,7 @@ interface HomeClientProps {
 function HeroSection() {
   const heroSlides = [
     {
-      image: "/images/sofa-bad-design.jpg",
+      image: "/images/sofa-bad-design-hero_.jpg",
       title: "Luxury Beds & Upholstered Frames",
       // subtitle: "Premium Bedroom Furniture",
       // description:
@@ -47,7 +51,7 @@ function HeroSection() {
       // buttonLink: "/shop",
     },
     {
-      image: "/images/sofa-bad-interior-desing.jpg",
+      image: "/images/sofa-bad-design-hero.jpg",
       title: "Luxury Sofas & Smart Sofa Beds",
       // subtitle: "Contemporary Living Spaces",
       // description:
@@ -334,52 +338,210 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
 }
 
 function WhyChooseUsSection() {
+  const features = [
+    {
+      icon: Gem,
+      title: "Premium Quality",
+      description: "Hand-selected materials for lasting elegance.",
+      color: "from-amber-400 to-orange-500",
+      bgColor: "bg-amber-50",
+      borderColor: "border-amber-200",
+      iconColor: "text-amber-600"
+    },
+    {
+      icon: CreditCard,
+      title: "Cash On Delivery",
+      description: "Secure payment upon your satisfaction.",
+      color: "from-emerald-400 to-teal-500",
+      bgColor: "bg-emerald-50",
+      borderColor: "border-emerald-200",
+      iconColor: "text-emerald-600"
+    },
+    {
+      icon: Truck,
+      title: "Fast Delivery",
+      description: "UK-wide logistics to your doorstep.",
+      color: "from-blue-400 to-indigo-500",
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200",
+      iconColor: "text-blue-600"
+    },
+    {
+      icon: ShieldCheck,
+      title: "Secure Checkout",
+      description: "Your data protected by industry standards.",
+      color: "from-purple-400 to-pink-500",
+      bgColor: "bg-purple-50",
+      borderColor: "border-purple-200",
+      iconColor: "text-purple-600"
+    }
+  ];
+
+  // Customer profile images (using UI Avatars API for consistent styling)
+  const customers = [
+    {
+      name: "Sarah J.",
+      image: "/images/reviewimg01.png",
+      initial: "SJ"
+    },
+    {
+      name: "Michael R.",
+      image: "/images/reviewimg02.png",
+      initial: "MR"
+    },
+    {
+      name: "Emma W.",
+      image: "/images/reviewimg03.png",
+      initial: "EW"
+    },
+    {
+      name: "James C.",
+      image: "/images/reviewimg04.png",
+      initial: "JC"
+    },
+    {
+      name: "Olivia P.",
+      image: "/images/reviewimg05.png",
+      initial: "OP"
+    }
+  ];
+
+  // Alternative: Use randomuser.me for real diverse faces
+  // const customerImages = [
+  //   "https://randomuser.me/api/portraits/women/44.jpg",
+  //   "https://randomuser.me/api/portraits/men/32.jpg",
+  //   "https://randomuser.me/api/portraits/women/68.jpg",
+  //   "https://randomuser.me/api/portraits/men/75.jpg",
+  //   "https://randomuser.me/api/portraits/women/90.jpg"
+  // ];
+
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-12 text-center">
-        <div className="space-y-3 sm:space-y-4 bg-white p-6 rounded-2xl border border-neutral-200/80 shadow-sm hover:shadow-md transition-shadow">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-amber-50 border border-amber-200/50 flex items-center justify-center mx-auto rounded-xl">
-            <Award className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-amber-600" />
+    <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-b from-white to-amber-50/30">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center mb-12 sm:mb-16 md:mb-20">
+          <div className="inline-flex items-center gap-2 bg-amber-100/80 px-4 py-1.5 rounded-full mb-4">
+            <Star className="w-4 h-4 text-amber-600 fill-amber-600" />
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-amber-800">
+              Why Choose Us
+            </span>
           </div>
-          <h4 className="text-[10px] sm:text-[11px] md:text-[12px] font-bold uppercase tracking-widest text-neutral-900">
-            Premium Quality
-          </h4>
-          <p className="text-[11px] sm:text-[12px] md:text-[13px] text-neutral-500 font-light leading-relaxed px-2">
-            Hand-selected materials for lasting elegance.
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-3">
+            Experience the <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Difference</span>
+          </h2>
+          <p className="text-sm sm:text-base text-neutral-500 max-w-2xl mx-auto font-light">
+            We're committed to providing you with the best shopping experience possible
           </p>
         </div>
-        <div className="space-y-3 sm:space-y-4 bg-white p-6 rounded-2xl border border-neutral-200/80 shadow-sm hover:shadow-md transition-shadow">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-amber-50 border border-amber-200/50 flex items-center justify-center mx-auto rounded-xl">
-            <CreditCard className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-amber-600" />
-          </div>
-          <h4 className="text-[10px] sm:text-[11px] md:text-[12px] font-bold uppercase tracking-widest text-neutral-900">
-            Cash On Delivery
-          </h4>
-          <p className="text-[11px] sm:text-[12px] md:text-[13px] text-neutral-500 font-light leading-relaxed px-2">
-            Secure payment upon your satisfaction.
-          </p>
+
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+            return (
+              <div
+                key={index}
+                className="group relative bg-white rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-xl transition-all duration-500 hover:border-transparent overflow-hidden"
+              >
+                {/* Animated Gradient Background */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+                
+                {/* Decorative Circle */}
+                <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full ${feature.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                
+                {/* Icon Container */}
+                <div className={`relative w-14 h-14 sm:w-16 sm:h-16 ${feature.bgColor} rounded-2xl flex items-center justify-center mb-4 sm:mb-5 group-hover:scale-110 transition-transform duration-300`}>
+                  <Icon className={`w-7 h-7 sm:w-8 sm:h-8 ${feature.iconColor} transition-transform duration-300`} />
+                </div>
+
+                {/* Content */}
+                <div className="relative">
+                  <h3 className="text-xs sm:text-sm font-bold text-neutral-900 uppercase tracking-wider mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-neutral-500 font-light leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
+
+                {/* Hover Underline Effect */}
+                <div className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${feature.color} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`} />
+              </div>
+            );
+          })}
         </div>
-        <div className="space-y-3 sm:space-y-4 bg-white p-6 rounded-2xl border border-neutral-200/80 shadow-sm hover:shadow-md transition-shadow">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-amber-50 border border-amber-200/50 flex items-center justify-center mx-auto rounded-xl">
-            <Truck className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-amber-600" />
+
+        {/* Trust Badges */}
+        <div className="mt-12 sm:mt-16 pt-8 sm:pt-12 border-t border-neutral-200/50">
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+            {/* Customer Avatars */}
+            <div className="flex items-center gap-3">
+              <div className="flex -space-x-2">
+                {customers.slice(0, 4).map((customer, idx) => (
+                  <div
+                    key={idx}
+                    className="relative group/tooltip"
+                  >
+                    <img
+                      src={customer.image}
+                      alt={customer.name}
+                      className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-white shadow-md hover:scale-110 transition-transform duration-200 cursor-pointer"
+                      loading="lazy"
+                    />
+                    {/* Tooltip on hover */}
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-neutral-800 text-white text-[10px] rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+                      {customer.name}
+                    </div>
+                  </div>
+                ))}
+                {/* Extra customers count */}
+                {customers.length > 4 && (
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-amber-100 border-2 border-white flex items-center justify-center text-[9px] font-bold text-amber-700">
+                    +{customers.length - 4}
+                  </div>
+                )}
+              </div>
+              <span className="text-xs text-neutral-500 font-medium">
+                <span className="text-neutral-900 font-bold">2,000+</span> happy customers
+              </span>
+            </div>
+            
+            {/* Rating */}
+            <div className="flex items-center gap-2">
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 text-amber-400 fill-amber-400" />
+                ))}
+              </div>
+              <span className="text-xs text-neutral-500 font-medium">
+                4.9/5 Average Rating
+              </span>
+            </div>
+
+            {/* Support */}
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-emerald-500" />
+              <span className="text-xs text-neutral-500 font-medium">
+                24/7 Customer Support
+              </span>
+            </div>
+
+            {/* Satisfaction */}
+            <div className="flex items-center gap-2">
+              <ThumbsUp className="w-4 h-4 text-blue-500" />
+              <span className="text-xs text-neutral-500 font-medium">
+                98% Satisfaction Rate
+              </span>
+            </div>
           </div>
-          <h4 className="text-[10px] sm:text-[11px] md:text-[12px] font-bold uppercase tracking-widest text-neutral-900">
-            Fast Delivery
-          </h4>
-          <p className="text-[11px] sm:text-[12px] md:text-[13px] text-neutral-500 font-light leading-relaxed px-2">
-            UK-wide logistics to your doorstep.
-          </p>
-        </div>
-        <div className="space-y-3 sm:space-y-4 bg-white p-6 rounded-2xl border border-neutral-200/80 shadow-sm hover:shadow-md transition-shadow">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-amber-50 border border-amber-200/50 flex items-center justify-center mx-auto rounded-xl">
-            <ShieldCheck className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-amber-600" />
+
+          {/* Testimonial Quote */}
+          <div className="mt-6 text-center">
+            <p className="text-sm text-neutral-500 font-light italic">
+              "Best shopping experience! The quality exceeded my expectations." 
+              <span className="block text-xs text-neutral-400 mt-1">— Sarah Johnson, London</span>
+            </p>
           </div>
-          <h4 className="text-[10px] sm:text-[11px] md:text-[12px] font-bold uppercase tracking-widest text-neutral-900">
-            Secure Checkout
-          </h4>
-          <p className="text-[11px] sm:text-[12px] md:text-[13px] text-neutral-500 font-light leading-relaxed px-2">
-            Your data protected by industry standards.
-          </p>
         </div>
       </div>
     </section>

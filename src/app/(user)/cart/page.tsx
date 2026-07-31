@@ -39,7 +39,7 @@ export default function CartPage() {
       <section className="relative overflow-hidden bg-neutral-900 text-white py-12 sm:py-16 md:py-20 mb-8 sm:mb-12">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -106,24 +106,28 @@ export default function CartPage() {
                           </h3>
                         </Link>
 
-                        {(item.selectedOptions?.color || item.selectedOptions?.seater) && (
-  <div className="flex flex-wrap items-center gap-2 mt-1">
-    {item.selectedOptions?.color && (
-      <span className="inline-flex items-center gap-1 text-[12px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-full">
-        <span 
-          className="w-2.5 h-2.5 rounded-full border border-gray-300"
-          style={{ backgroundColor: item.selectedOptions.color.toLowerCase() }}
-        />
-        {item.selectedOptions.color}
-      </span>
-    )}
-    {item.selectedOptions?.seater && (
-      <span className="inline-flex items-center gap-1 text-[12px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-full">
-        {item.selectedOptions.seater}
-      </span>
-    )}
-  </div>
-)}
+                        {(item.selectedOptions?.color ||
+                          item.selectedOptions?.seater) && (
+                          <div className="flex flex-wrap items-center gap-2 mt-1">
+                            {item.selectedOptions?.color && (
+                              <span className="inline-flex items-center gap-1 text-[12px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-full">
+                                <span
+                                  className="w-2.5 h-2.5 rounded-full border border-gray-300"
+                                  style={{
+                                    backgroundColor:
+                                      item.selectedOptions.color.toLowerCase(),
+                                  }}
+                                />
+                                {item.selectedOptions.color}
+                              </span>
+                            )}
+                            {item.selectedOptions?.seater && (
+                              <span className="inline-flex items-center gap-1 text-[12px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-full">
+                                {item.selectedOptions.seater}
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </div>
                       <p className="text-sm sm:text-base md:text-lg font-light text-neutral-900 md:text-center sm:text-right whitespace-nowrap">
                         {formatCurrency(item.price * item.quantity)}

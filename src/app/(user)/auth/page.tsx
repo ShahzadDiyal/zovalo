@@ -16,7 +16,14 @@ import {
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../../lib/firebase";
-import { LogIn, Mail, Lock, AlertCircle, ArrowRight, ShoppingBag } from "lucide-react";
+import {
+  LogIn,
+  Mail,
+  Lock,
+  AlertCircle,
+  ArrowRight,
+  ShoppingBag,
+} from "lucide-react";
 import { SEO } from "../../../components/SEO";
 
 // Move the main login logic to a separate component that uses useSearchParams
@@ -29,16 +36,19 @@ function LoginForm() {
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   // Check if user came from checkout
   const from = searchParams.get("from") || "/";
-  const isFromCheckout = from === "/checkout" || 
+  const isFromCheckout =
+    from === "/checkout" ||
     sessionStorage.getItem("redirectAfterLogin") === "/checkout";
 
   // Show message if coming from checkout
   useEffect(() => {
     if (isFromCheckout) {
-      setRedirectMessage("Please log in to complete your order. You'll be redirected to checkout after logging in.");
+      setRedirectMessage(
+        "Please log in to complete your order. You'll be redirected to checkout after logging in.",
+      );
     }
   }, [isFromCheckout]);
 
@@ -65,7 +75,7 @@ function LoginForm() {
 
       // Check if we have a redirect path stored
       const redirectPath = sessionStorage.getItem("redirectAfterLogin");
-      
+
       // Clear the stored redirect
       sessionStorage.removeItem("redirectAfterLogin");
 
@@ -126,9 +136,7 @@ function LoginForm() {
                 <p className="text-sm font-bold text-amber-800">
                   Complete Your Order
                 </p>
-                <p className="text-sm text-amber-700">
-                  {redirectMessage}
-                </p>
+                <p className="text-sm text-amber-700">{redirectMessage}</p>
               </div>
             </div>
           </div>
@@ -211,7 +219,7 @@ function LoginForm() {
               Register Now
             </Link>
           </p>
-          
+
           {/* Back to Checkout link (only show if from checkout) */}
           {isFromCheckout && (
             <Link
@@ -222,7 +230,7 @@ function LoginForm() {
               Back to Checkout
             </Link>
           )}
-          
+
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-a0 hover:text-near-black transition-colors group"

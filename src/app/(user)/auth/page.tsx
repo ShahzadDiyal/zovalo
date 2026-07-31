@@ -1,5 +1,6 @@
+// src/app/(auth)/login/page.tsx
 "use client";
-import React, { useState, Suspense } from "react";
+import React, { useState, Suspense, useEffect } from "react";
 import {
   useRouter,
   useParams,
@@ -11,10 +12,11 @@ import {
   signInWithEmailAndPassword,
   setPersistence,
   browserLocalPersistence,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../../lib/firebase";
-import { LogIn, Mail, Lock, AlertCircle, ArrowRight } from "lucide-react";
+import { LogIn, Mail, Lock, AlertCircle, ArrowRight, ShoppingBag } from "lucide-react";
 import { SEO } from "../../../components/SEO";
 
 // Move the main login logic to a separate component that uses useSearchParams
@@ -23,10 +25,22 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [redirectMessage, setRedirectMessage] = useState<string | null>(null);
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  
+  // Check if user came from checkout
   const from = searchParams.get("from") || "/";
+  const isFromCheckout = from === "/checkout" || 
+    sessionStorage.getItem("redirectAfterLogin") === "/checkout";
+
+  // Show message if coming from checkout
+  useEffect(() => {
+    if (isFromCheckout) {
+      setRedirectMessage("Please log in to complete your order. You'll be redirected to checkout after logging in.");
+    }
+  }, [isFromCheckout]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,10 +63,22 @@ function LoginForm() {
         email === "admin@zovallo.com" ||
         email.toLowerCase().startsWith("admin");
 
-      // Redirect based on role
-      if (isAdmin && from === "/") {
+      // Check if we have a redirect path stored
+      const redirectPath = sessionStorage.getItem("redirectAfterLogin");
+      
+      // Clear the stored redirect
+      sessionStorage.removeItem("redirectAfterLogin");
+
+      // Redirect based on role and stored path
+      if (isAdmin && !redirectPath) {
+        router.push("/admin");
+      } else if (redirectPath) {
+        // Redirect to the stored path (checkout or other)
+        router.push(redirectPath);
+      } else if (isAdmin && from === "/") {
         router.push("/admin");
       } else {
+        // Normal redirect
         router.replace(from);
       }
     } catch (err: any) {
@@ -76,7 +102,7 @@ function LoginForm() {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-cream/20">
       <SEO
         title="Sign In"
-        description="Access your Royal Furnitureaccount to manage your orders and curated furniture collection."
+        description="Access your Royal Furniture account to manage your orders and curated furniture collection."
       />
       <div className="max-w-md w-full space-y-8 bg-white border border-warm-beige p-6 sm:p-8 md:p-12 shadow-sm rounded-sm">
         <div className="text-center space-y-2">
@@ -90,6 +116,23 @@ function LoginForm() {
             Access your curated furniture collection
           </p>
         </div>
+
+        {/* Redirect Message from Checkout */}
+        {redirectMessage && (
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+            <div className="flex items-start gap-3">
+              <ShoppingBag className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold text-amber-800">
+                  Complete Your Order
+                </p>
+                <p className="text-sm text-amber-700">
+                  {redirectMessage}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {error && (
           <div
@@ -168,6 +211,18 @@ function LoginForm() {
               Register Now
             </Link>
           </p>
+          
+          {/* Back to Checkout link (only show if from checkout) */}
+          {isFromCheckout && (
+            <Link
+              href="/checkout"
+              className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-amber-600 hover:text-amber-700 transition-colors group"
+            >
+              <ArrowRight className="w-3 h-3 -rotate-180 group-hover:-translate-x-1 transition-transform" />
+              Back to Checkout
+            </Link>
+          )}
+          
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-a0 hover:text-near-black transition-colors group"

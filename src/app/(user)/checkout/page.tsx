@@ -110,7 +110,7 @@ export default function CheckoutPage() {
     );
     setOrderCount(savedOrderCount);
 
-    if (savedOrderCount >= 2) {
+    if (savedOrderCount >= 0) {
       setRequireCaptcha(true);
     }
   }, []);
@@ -214,17 +214,20 @@ export default function CheckoutPage() {
   const handleProceedToConfirmation = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Check if user is logged in
+    if (!user) {
+      // Save current path to session storage before redirecting
+      sessionStorage.setItem("redirectAfterLogin", "/checkout");
+      router.push("/login");
+      return;
+    }
+
     if (requireCaptcha && !captchaVerified) {
       setValidationError("Please complete the verification to continue");
       setShowWarning(true);
       return;
     }
 
-    if (!user) {
-      setValidationError("Please login to continue");
-      setShowWarning(true);
-      return;
-    }
     if (cart.length === 0) {
       setValidationError("Your cart is empty");
       setShowWarning(true);
@@ -486,8 +489,32 @@ export default function CheckoutPage() {
               </div>
             )}
 
+            {/* Login Required Message */}
+            {!user && (
+              <div className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-bold text-amber-800">
+                      Login Required
+                    </p>
+                    <p className="text-sm text-amber-700">
+                      Please log in to complete your order. You'll be redirected
+                      back to checkout after logging in.
+                    </p>
+                    <Link
+                      href="/auth"
+                      className="inline-block mt-2 bg-amber-600 text-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest hover:bg-amber-700 transition rounded-lg"
+                    >
+                      Login Now
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* reCAPTCHA Info Banner */}
-            {requireCaptcha && !captchaVerified && (
+            {requireCaptcha && !captchaVerified && user && (
               <div className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
                 <div className="flex items-center gap-3">
                   <ShieldCheck className="w-5 h-5 text-amber-600" />
@@ -716,7 +743,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* reCAPTCHA */}
-              {requireCaptcha && (
+              {requireCaptcha && user && (
                 <div className="flex justify-center my-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
                   <div className="text-center">
                     <p className="text-xs text-amber-800 mb-3 font-medium">
@@ -779,20 +806,22 @@ export default function CheckoutPage() {
               <button
                 type="submit"
                 disabled={loading || (requireCaptcha && !captchaVerified)}
-                className="w-full bg-neutral-900 text-white py-3.5 text-sm font-bold uppercase tracking-widest hover:bg-amber-600 transition-all rounded-xl disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                className="w-full bg-neutral-900 cursor-pointer text-white py-3.5 text-sm font-bold uppercase tracking-widest hover:bg-amber-600 transition-all rounded-xl disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
               >
-                {loading
-                  ? "Processing..."
-                  : requireCaptcha && !captchaVerified
-                    ? "Complete Verification First"
-                    : "Confirm Order (Pay After Delivery)"}
+                {!user
+                  ? "Login to Continue"
+                  : loading
+                    ? "Processing..."
+                    : requireCaptcha && !captchaVerified
+                      ? "Complete Verification First"
+                      : "Confirm Order (Pay After Delivery)"}
               </button>
             </form>
           </div>
 
           {/* Order Summary Sidebar */}
           <aside className="lg:w-[420px]">
-            <div className="bg-white border border-neutral-200/80 p-6 rounded-2xl sticky top-24 shadow-sm">
+            <div className="bg-white p-6 rounded-2xl sticky top-24 ">
               <h2 className="text-xl font-serif text-neutral-900 mb-4">
                 Review Order
               </h2>
@@ -811,7 +840,7 @@ export default function CheckoutPage() {
                         />
                       </div>
                       <div className="flex-1">
-                        <h4 className="text-sm font-medium text-neutral-900 line-clamp-1">
+                        <h4 className="text-sm font-medium text-neutral-900">
                           {item.title}
                         </h4>
                         {(item.selectedOptions?.color ||
@@ -843,10 +872,6 @@ export default function CheckoutPage() {
                             </p>
                           </div>
                         )}
-
-                        {/* <p className="text-sm font-bold text-neutral-900">
-                          {formatCurrency(item.price * item.quantity)}
-                        </p> */}
                       </div>
                     </div>
                   </div>
@@ -965,9 +990,6 @@ export default function CheckoutPage() {
                         )}
                       </div>
                     )}
-                    {/* <span className="text-neutral-900">
-                      {formatCurrency(item.price * item.quantity)}
-                    </span> */}
                   </div>
                 ))}
                 <div className="border-t border-neutral-200/80 pt-2 mt-2 flex justify-between font-bold">

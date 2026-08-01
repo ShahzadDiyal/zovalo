@@ -27,10 +27,16 @@ export async function generateMetadata({
 
   if (!product) return {};
 
-  const title = product.title;
-  const description =
-    product.description?.substring(0, 160) ||
+  const rawTitle = product.title || "";
+  const title =
+    rawTitle.length > 60 ? `${rawTitle.slice(0, 57).trimEnd()}...` : rawTitle;
+  const rawDescription =
+    product.description?.replace(/<[^>]*>/g, "") ||
     `Buy ${product.title} at Royal Furniture. Cash on Delivery available across the UK.`;
+  const description =
+    rawDescription.length > 155
+      ? `${rawDescription.slice(0, 152).trimEnd()}...`
+      : rawDescription;
   const image =
     product.images?.[0] || "https://royalfurnitures.store/og-image.jpg";
 

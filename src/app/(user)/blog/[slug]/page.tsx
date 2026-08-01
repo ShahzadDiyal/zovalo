@@ -2,6 +2,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import { BlogPostClient } from "./BlogPostClient";
+import { Schema } from "../../../../components/SEO/Schema";
 import { blogService } from "../../../../services/blogService";
 import { BlogPost } from "../../../../types";
 import { serializeFirestoreData } from "../../../../lib/serialize";
@@ -38,18 +39,31 @@ export async function generateMetadata({
 
     const serializedPost = serializeFirestoreData(post);
 
+    const rawTitle = serializedPost.seoTitle || serializedPost.title || "";
+    const title =
+      rawTitle.length > 60 ? `${rawTitle.slice(0, 57).trimEnd()}...` : rawTitle;
+
+    const rawDescription =
+      serializedPost.seoDescription ||
+      serializedPost.excerpt ||
+      (serializedPost.content
+        ? serializedPost.content.replace(/<[^>]*>/g, "").slice(0, 300)
+        : "");
+    const description =
+      rawDescription.length > 155
+        ? `${rawDescription.slice(0, 152).trimEnd()}...`
+        : rawDescription;
+
     return {
-      title: serializedPost.seoTitle || serializedPost.title,
-      description:
-        serializedPost.seoDescription ||
-        serializedPost.excerpt ||
-        serializedPost.content?.substring(0, 160),
+      title,
+      description,
+      alternates: {
+        canonical: `/blog/${serializedPost.slug}`,
+      },
       openGraph: {
-        title: serializedPost.seoTitle || serializedPost.title,
-        description:
-          serializedPost.seoDescription ||
-          serializedPost.excerpt ||
-          serializedPost.content?.substring(0, 160),
+        title,
+        description,
+        url: `https://royalfurnitures.store/blog/${serializedPost.slug}`,
         images: serializedPost.featuredImage
           ? [serializedPost.featuredImage]
           : [],
@@ -108,10 +122,13 @@ export default async function BlogPostPage({
     const serializedRelatedPosts = serializeFirestoreData(relatedPosts);
 
     return (
-      <BlogPostClient
-        post={serializedPost}
-        relatedPosts={serializedRelatedPosts}
-      />
+      <>
+        <Schema type="Article" data={{ post }} />
+        <BlogPostClient
+          post={serializedPost}
+          relatedPosts={serializedRelatedPosts}
+        />
+      </>
     );
   } catch (error) {
     console.error("Error in blog post page:", error);

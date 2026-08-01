@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { ProductCard } from "../../../components/ui/ProductCard";
 import { Button } from "../../../components/ui/Button";
 import Link from "next/link";
@@ -19,7 +20,6 @@ import {
   Gem,
   ArrowRight,
 } from "lucide-react";
-import { SEO } from "../../../components/SEO";
 import { Product, Category } from "../../../types";
 import { HomeBlogSection } from "../../../components/blog/HomeBlogSection";
 
@@ -83,14 +83,15 @@ function HeroSection() {
               isActive ? "opacity-100 z-10 visible" : "opacity-0 z-0 invisible"
             }`}
           >
-            <img
+            <Image
               src={slide.image}
               alt={`${slide.title} - Luxury Home Furniture`}
-              fetchPriority="high"
-              className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[10000ms] ease-out ${
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              className={`object-cover transition-transform duration-[10000ms] ease-out ${
                 isActive ? "scale-105" : "scale-100"
               }`}
-              decoding="async"
             />
 
             <div className="relative z-10 h-full flex items-center px-6 sm:px-12 lg:px-20 xl:px-32">
@@ -266,11 +267,12 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
               className="group relative overflow-hidden rounded-xl bg-neutral-800 aspect-square hover:shadow-lg transition-shadow duration-300"
             >
               {/* Image */}
-              <img
+              <Image
                 src={getCategoryImage(category)}
                 alt={category.name}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                loading="lazy"
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                className="object-cover group-hover:scale-110 transition-transform duration-500"
               />
 
               {/* Overlay */}
@@ -608,11 +610,6 @@ export function HomeClient({
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24 pb-12 sm:pb-16 md:pb-20 lg:pb-24">
-      <SEO
-        title="Home"
-        description="Discover our masterfully crafted autumnal collection, blending traditional joinery with modern silhouettes for the contemporary home."
-      />
-
       {/* Hero Section - Always visible instantly */}
       <HeroSection />
 

@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { SEO } from "../../../components/SEO";
 import {
   Mail,
   Phone,
@@ -113,11 +112,6 @@ const ContactUs = () => {
 
   return (
     <>
-      <SEO
-        title="Contact Us | Royal Furniture UK"
-        description="Have questions about our luxury beds, sofas, wardrobes, or delivery? Reach out to Royal Furniture support via form, email, or instant WhatsApp message."
-      />
-
       <div className="bg-[#FAF8F5] min-h-screen">
         {/* Luxury Banner Hero Header */}
         <section className="relative bg-neutral-900 text-white py-16 sm:py-20 md:py-24 overflow-hidden">

@@ -64,9 +64,33 @@ const getSitemapData = unstable_cache(
   { revalidate: 120 },
 );
 
+// Drop records with no usable slug and collapse duplicate slugs so the
+// sitemap never lists a non-canonical/duplicate URL.
+function dedupeBySlug<T extends { slug?: string }>(items: T[]): T[] {
+  const seen = new Set<string>();
+  const result: T[] = [];
+  for (const item of items) {
+    const slug = item.slug?.trim();
+    if (!slug || seen.has(slug)) continue;
+    seen.add(slug);
+    result.push(item);
+  }
+  return result;
+}
+
 export async function GET() {
   const baseUrl = "https://royalfurnitures.store";
-  const { blogPosts, cities, products, categories } = await getSitemapData();
+  const {
+    blogPosts: rawBlogPosts,
+    cities: rawCities,
+    products: rawProducts,
+    categories: rawCategories,
+  } = await getSitemapData();
+
+  const blogPosts = dedupeBySlug(rawBlogPosts);
+  const cities = dedupeBySlug(rawCities);
+  const products = dedupeBySlug(rawProducts);
+  const categories = dedupeBySlug(rawCategories);
 
   // Build sitemap XML
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -81,6 +105,11 @@ export async function GET() {
     <loc>${baseUrl}/shop</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/collections</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>${baseUrl}/about</loc>

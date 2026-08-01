@@ -138,6 +138,14 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/collections"
+                  className="hover:text-gold transition-colors"
+                >
+                  Collections
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/contact"
                   className="hover:text-gold transition-colors"
                 >

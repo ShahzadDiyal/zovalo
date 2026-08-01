@@ -15,7 +15,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { BlogPost, BlogCategory } from "../../../types";
-import { SEO } from "../../../components/SEO";
 
 interface BlogClientProps {
   initialPosts: BlogPost[];
@@ -263,15 +262,6 @@ export function BlogClient({
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen">
-      <SEO
-        title={displayCategoryName ? `${displayCategoryName} - Blog` : "Blog"}
-        description={
-          displayCategoryName
-            ? `Explore our ${displayCategoryName} articles and insights from Royal Furniture experts.`
-            : "Discover expert tips, design inspiration, and furniture care guides from Royal Furniture."
-        }
-      />
-
       {/* Hero Header */}
       <section className="relative overflow-hidden bg-neutral-900 text-white py-12 sm:py-16 md:py-20">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />

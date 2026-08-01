@@ -16,7 +16,6 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { EmptyState } from "../../../components/ui/EmptyState";
-import { SEO } from "../../../components/SEO";
 import { Product, Category } from "../../../types";
 import { LoadingSpinner } from "../../../components/ui/Loading";
 
@@ -286,13 +285,6 @@ export function ShopClient({
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen pb-16 pt-6 sm:pt-0">
-      <SEO
-        title={
-          selectedCategory === "All" ? "Shop All" : `Shop ${selectedCategory}`
-        }
-        description={`Explore our curated selection of ${selectedCategory.toLowerCase()} pieces. Premium furniture designed for comfort and crafted to last.`}
-      />
-
       {/* Hero Header Section */}
       <section className="relative overflow-hidden bg-neutral-900 text-white py-12 sm:py-16 md:py-20 mb-8 sm:mb-12">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { WhatsAppProductButton } from "../../../../components/ui/WhatsAppProductButton";
 import { ColorSelection } from "../../../../components/products/ColorSelection";
@@ -423,11 +424,13 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
               <div className="absolute top-3 right-3 z-10 bg-black/40 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <ZoomIn className="w-5 h-5" />
               </div>
-              <img
+              <Image
                 src={getHighResUrl(product.images[selectedImage])}
                 alt={product.title}
-                loading="eager"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
 
@@ -437,16 +440,18 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(idx)}
-                    className={`w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-white border-2 transition-all rounded-xl overflow-hidden ${
+                    className={`relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-white border-2 transition-all rounded-xl overflow-hidden ${
                       selectedImage === idx
                         ? "border-amber-500 ring-1 ring-amber-500/20"
                         : "border-neutral-200/80 hover:border-amber-300"
                     }`}
                   >
-                    <img
+                    <Image
                       src={img}
                       alt={`${product.title} view ${idx + 1}`}
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="80px"
+                      className="object-cover"
                     />
                   </button>
                 ))}

@@ -1,5 +1,6 @@
 // src/app/(user)/blog/page.tsx
 import { Suspense } from "react";
+import { Metadata } from "next";
 import { fetchBlogData } from "./BlogData";
 import { BlogClient } from "./BlogClient";
 
@@ -7,6 +8,41 @@ interface BlogPageProps {
   searchParams: {
     category?: string;
     search?: string;
+  };
+}
+
+export async function generateMetadata({
+  searchParams,
+}: BlogPageProps): Promise<Metadata> {
+  const categorySlug = searchParams?.category || null;
+
+  let title = "Furniture Blog | Royal Furniture";
+  let description =
+    "Discover expert tips, design inspiration, and furniture care guides from Royal Furniture.";
+
+  if (categorySlug) {
+    const { categories } = await fetchBlogData(categorySlug, null);
+    const category = categories.find((c) => c.slug === categorySlug);
+    if (category) {
+      title = `${category.name} Articles | Royal Furniture Blog`;
+      description = `Explore our ${category.name.toLowerCase()} articles and insights from Royal Furniture experts.`;
+    }
+  }
+
+  return {
+    title,
+    description,
+    // Category-filtered views canonicalize back to /blog since they're
+    // query-string variants of the same listing, not distinct pages.
+    alternates: {
+      canonical: "/blog",
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: "https://royalfurnitures.store/blog",
+    },
   };
 }
 

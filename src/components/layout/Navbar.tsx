@@ -303,9 +303,9 @@ export function Navbar() {
               className="w-15 h-15 sm:w-20 sm:h-16 object-contain"
               fetchPriority="high"
             />
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tighter text-near-black">
+            <p className="text-xl sm:text-2xl font-bold tracking-tighter text-near-black">
               Royal Furniture<span className="text-gold">.</span>
-            </h1>
+            </p>
           </Link>
         </div>
 

@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { cityPageService } from "../../../services/cityPageService";
 import { CityPage } from "../../../types";
-import { SEO } from "../../../components/SEO";
 import { UKMap } from "../../../components/locations/UKMap";
 import { LocationsClient } from "./LocationsClient";
 
@@ -39,12 +38,15 @@ export async function generateMetadata() {
     title: "Furniture Delivery Locations | Royal Furniture",
     description:
       "Discover Royal Furniture delivery locations across the UK. Find premium furniture and sofas delivered to your city with Cash on Delivery.",
+    alternates: {
+      canonical: "/locations",
+    },
     openGraph: {
       title: "Furniture Delivery Locations | Royal Furniture",
       description:
         "Discover Royal Furniture delivery locations across the UK. Find premium furniture and sofas delivered to your city with Cash on Delivery.",
       type: "website",
-      url: "https://royalfurniture.co.uk/locations",
+      url: "https://royalfurnitures.store/locations",
     },
   };
 }
@@ -57,11 +59,6 @@ export default async function LocationsPage() {
 
     return (
       <div className="bg-[#FAF8F5] min-h-screen">
-        <SEO
-          title="Furniture Delivery Locations | Royal Furniture"
-          description="Discover Royal Furniture delivery locations across the UK. Find premium furniture and sofas delivered to your city with Cash on Delivery."
-        />
-
         {/* Hero Header */}
         <section className="relative overflow-hidden bg-neutral-900 text-white py-16 sm:py-20 md:py-24">
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />

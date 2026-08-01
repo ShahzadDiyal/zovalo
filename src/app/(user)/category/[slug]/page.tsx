@@ -18,9 +18,13 @@ export async function generateMetadata({
 
   const name = category?.name || slug.replace(/-/g, " ");
   const title = `${name} | Shop Online`;
-  const description =
+  const rawDescription =
     category?.description ||
     `Shop our ${name} collection at Royal Furniture. Quality craftsmanship, Cash on Delivery available across the UK, with fast next-day delivery.`;
+  const description =
+    rawDescription.length > 155
+      ? `${rawDescription.slice(0, 152).trimEnd()}...`
+      : rawDescription;
 
   return {
     title,

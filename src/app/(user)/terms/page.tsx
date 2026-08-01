@@ -1,5 +1,4 @@
 import React from "react";
-import { SEO } from "../../../components/SEO";
 import {
   Shield,
   FileText,
@@ -11,7 +10,7 @@ import {
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Cash on Delivery Furniture Terms & Conditions | Royal Furniture",
+  title: "Terms & Conditions | Royal Furniture",
   description:
     "Read the Terms & Conditions for Royal Furniture. Learn about our policies, delivery, returns, and more.",
   robots: {
@@ -31,10 +30,6 @@ export const metadata: Metadata = {
 const TermsConditions = () => {
   return (
     <>
-      <SEO
-        title="Terms & Conditions | Royal Furniture"
-        description="Read our terms and conditions for purchasing premium furniture. Learn about our policies on orders, payments, and customer obligations at royalfurniture."
-      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-12 md:mb-16">

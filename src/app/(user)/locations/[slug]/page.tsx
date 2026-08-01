@@ -20,7 +20,6 @@ import {
 import { cityPageService } from "../../../../services/cityPageService";
 import { productApi } from "../../../../services/productApi";
 import { CityPage, Product } from "../../../../types";
-import { SEO } from "../../../../components/SEO";
 import { ProductCard } from "../../../../components/ui/ProductCard";
 import { CityMap } from "../../../../components/locations/CityMap";
 import { CityDetailClient } from "./CityDetailClient";
@@ -65,19 +64,29 @@ export async function generateMetadata({
 
     const serializedCity = serializeFirestoreData(cityPage);
 
+    const title =
+      serializedCity.metaTitle || `${serializedCity.name} - Furniture Delivery`;
+    const rawDescription =
+      serializedCity.metaDescription || serializedCity.uniqueIntro || "";
+    // Meta descriptions should stay under ~155 chars; long-form intro copy
+    // was being used verbatim, which is what was tripping the "too long" check.
+    const description =
+      rawDescription.length > 155
+        ? `${rawDescription.slice(0, 152).trimEnd()}...`
+        : rawDescription;
+    const canonicalUrl = `https://royalfurnitures.store/locations/${serializedCity.slug}`;
+
     return {
-      title:
-        serializedCity.metaTitle ||
-        `${serializedCity.name} - Furniture Delivery`,
-      description: serializedCity.metaDescription || serializedCity.uniqueIntro,
+      title,
+      description,
+      alternates: {
+        canonical: `/locations/${serializedCity.slug}`,
+      },
       openGraph: {
-        title:
-          serializedCity.metaTitle ||
-          `${serializedCity.name} - Furniture Delivery`,
-        description:
-          serializedCity.metaDescription || serializedCity.uniqueIntro,
+        title,
+        description,
         type: "website",
-        url: `https://royalfurnitures.store/locations/${serializedCity.slug}`,
+        url: canonicalUrl,
         images: serializedCity.featuredImage
           ? [serializedCity.featuredImage]
           : [],
@@ -125,25 +134,6 @@ export default async function CityDetailPage({
 
     return (
       <div className="bg-[#FAF8F5] min-h-screen">
-        <SEO
-          title={
-            serializedCity.metaTitle ||
-            `${serializedCity.name} - Furniture Delivery`
-          }
-          description={
-            serializedCity.metaDescription || serializedCity.uniqueIntro
-          }
-          url={`https://royalfurnitures.store/locations/${serializedCity.slug}`}
-          type="website"
-          keywords={[
-            serializedCity.name,
-            "furniture",
-            "sofas",
-            "beds",
-            "delivery",
-          ]}
-        />
-
         {/* Hero Header - Simplified */}
         <section className="relative overflow-hidden bg-gradient-to-br from-neutral-900 to-neutral-800 text-white py-12 sm:py-16 md:py-20">
           <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />

@@ -189,7 +189,7 @@ export function Schema({ type, data }: SchemaProps) {
           },
           offers: {
             "@type": "Offer",
-            price: product.price || 0,
+            price: String(product.price ?? 0),
             priceCurrency: "GBP",
             availability:
               product.stock > 0
@@ -250,10 +250,10 @@ export function Schema({ type, data }: SchemaProps) {
             ],
           },
           aggregateRating:
-            product.reviewCount && product.reviewCount > 0
+            product.reviewCount && product.reviewCount > 0 && product.rating
               ? {
                   "@type": "AggregateRating",
-                  ratingValue: product.rating || undefined,
+                  ratingValue: product.rating,
                   reviewCount: product.reviewCount,
                 }
               : undefined,
@@ -316,7 +316,7 @@ export function Schema({ type, data }: SchemaProps) {
             post.seoDescription ||
             post.content?.substring(0, 160) ||
             "",
-          image: post.featuredImage || "",
+          image: post.featuredImage || undefined,
           datePublished:
             post.publishedAt?.toDate?.()?.toISOString() ||
             new Date().toISOString(),

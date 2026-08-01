@@ -1,6 +1,5 @@
-"use client";
 import React from "react";
-import { SEO } from "../../../components/SEO";
+import { Metadata } from "next";
 import {
   Truck,
   MapPin,
@@ -10,13 +9,18 @@ import {
   CheckCircle,
 } from "lucide-react";
 
+export const metadata: Metadata = {
+  title: "Shipping Policy | Free UK Delivery",
+  description:
+    "Fast and reliable furniture delivery across UK, Europe, and Canada. Free UK delivery on all orders. Cash on Delivery available (No Upfront Fees Required). Track your order in real-time.",
+  alternates: {
+    canonical: "/shipping",
+  },
+};
+
 const ShippingPolicy = () => {
   return (
     <>
-      <SEO
-        title="Shipping Policy | Free UK Delivery | Royal Furniture"
-        description="Fast and reliable furniture delivery across UK, Europe, and Canada. Free UK delivery on all orders. Cash on Delivery available (No Upfront Fees Required). Track your order in real-time."
-      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-12 md:mb-16">

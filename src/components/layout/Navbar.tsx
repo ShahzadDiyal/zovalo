@@ -27,7 +27,6 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
-  const [mounted, setMounted] = useState(false);
   const { totalItems, subtotal } = useCart();
   const { user, profile, isAdmin, logout } = useAuth();
   const router = useRouter();
@@ -39,10 +38,6 @@ export function Navbar() {
   // Timer state - 5 hours in seconds (5 * 60 * 60 = 18000)
   const [timeLeft, setTimeLeft] = useState(18000);
   const [isTimerRunning, setIsTimerRunning] = useState(true);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Timer logic
   useEffect(() => {
@@ -119,8 +114,6 @@ export function Navbar() {
       setIsOpen(false);
     }
   };
-
-  if (!mounted) return null;
 
   // Recursive component for category tree
   const CategoryTreeItem = ({

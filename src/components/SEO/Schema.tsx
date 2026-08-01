@@ -1,6 +1,4 @@
 // src/components/SEO/Schema.tsx
-"use client";
-
 interface SchemaProps {
   type:
     | "Organization"
@@ -112,7 +110,7 @@ export function Schema({ type, data }: SchemaProps) {
             target: {
               "@type": "EntryPoint",
               urlTemplate:
-                "https://royalfurnitures.store/shop?search?q={search_term_string}",
+                "https://royalfurnitures.store/shop?search={search_term_string}",
             },
             "query-input": "required name=search_term_string",
           },
@@ -128,7 +126,7 @@ export function Schema({ type, data }: SchemaProps) {
             target: {
               "@type": "EntryPoint",
               urlTemplate:
-                "https://royalfurnitures.store/shop?search?q={search_term_string}",
+                "https://royalfurnitures.store/shop?search={search_term_string}",
             },
             "query-input": "required name=search_term_string",
           },
@@ -177,12 +175,13 @@ export function Schema({ type, data }: SchemaProps) {
       case "Product":
         if (!data?.product) return null;
         const product = data.product;
+        const productImages = (product.images || []).filter(Boolean);
         return {
           "@context": "https://schema.org",
           "@type": "Product",
           name: product.title,
           description: product.description?.substring(0, 200) || "",
-          image: product.images?.[0] || "",
+          image: productImages.length ? productImages : undefined,
           sku: product.id,
           brand: {
             "@type": "Brand",
@@ -197,6 +196,15 @@ export function Schema({ type, data }: SchemaProps) {
                 ? "https://schema.org/InStock"
                 : "https://schema.org/OutOfStock",
             url: `https://royalfurnitures.store/product/${product.slug}`,
+            hasMerchantReturnPolicy: {
+              "@type": "MerchantReturnPolicy",
+              applicableCountry: "GB",
+              returnPolicyCategory:
+                "https://schema.org/MerchantReturnFiniteReturnWindow",
+              merchantReturnDays: 14,
+              returnMethod: "https://schema.org/ReturnByMail",
+              returnFees: "https://schema.org/ReturnFeesCustomerResponsibility",
+            },
             shippingDetails: {
               "@type": "OfferShippingDetails",
               shippingRate: {
@@ -241,11 +249,14 @@ export function Schema({ type, data }: SchemaProps) {
               },
             ],
           },
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: product.rating || 4.9,
-            reviewCount: product.reviewCount || 49,
-          },
+          aggregateRating:
+            product.reviewCount && product.reviewCount > 0
+              ? {
+                  "@type": "AggregateRating",
+                  ratingValue: product.rating || undefined,
+                  reviewCount: product.reviewCount,
+                }
+              : undefined,
         };
 
       case "BreadcrumbList":
@@ -349,19 +360,6 @@ export function Schema({ type, data }: SchemaProps) {
             "@type": "Thing",
             name: data.category.name,
           },
-        };
-
-      case "BreadcrumbList":
-        if (!data?.items || data.items.length === 0) return null;
-        return {
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          itemListElement: data.items.map((item: any, index: number) => ({
-            "@type": "ListItem",
-            position: index + 1,
-            name: item.name,
-            item: item.url,
-          })),
         };
 
       default:

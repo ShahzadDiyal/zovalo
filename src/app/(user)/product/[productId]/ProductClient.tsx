@@ -486,7 +486,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                 {product.category}
               </span>
               {product.featured && (
-                <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-white-600 border border-amber-600 px-2 sm:px-3 py-1 rounded-full bg-amber-50/50">
+                <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-amber-700 border border-amber-600 px-2 sm:px-3 py-1 rounded-full bg-amber-50/50">
                   Featured
                 </span>
               )}
@@ -508,7 +508,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
 
             {/* Price */}
             <div className="flex items-center gap-3 flex-wrap pt-4">
-              <p className="text-[2xl] md:text-3xl sm:text-3xl font-bold text-neutral-900">
+              <p className="text-2xl md:text-3xl sm:text-3xl font-bold text-neutral-900">
                 {formatCurrency(currentPrice)}
               </p>
               {currentCompareAtPrice &&
@@ -995,7 +995,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                   <input
                     type="text"
                     readOnly
-                    value={window.location.href}
+                    value={typeof window !== "undefined" ? window.location.href : ""}
                     className="flex-1 bg-neutral-50 border border-neutral-200/80 py-1.5 px-2 text-xs rounded-xl"
                   />
                   <button

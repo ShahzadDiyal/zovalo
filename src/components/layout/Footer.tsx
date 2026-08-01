@@ -9,11 +9,6 @@ import SocialLinks from "../SocialLinks";
 export function Footer() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -28,8 +23,6 @@ export function Footer() {
     };
     fetchCategories();
   }, []);
-
-  if (!mounted) return null;
 
   return (
     <footer className="bg-white border-t border-warm-beige pt-20 pb-8 mt-auto">

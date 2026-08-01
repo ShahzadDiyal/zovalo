@@ -1,6 +1,5 @@
-"use client";
 import React from "react";
-import { SEO } from "../../../components/SEO";
+import { Metadata } from "next";
 import {
   RotateCcw,
   Calendar,
@@ -10,13 +9,18 @@ import {
   CheckCircle,
 } from "lucide-react";
 
+export const metadata: Metadata = {
+  title: "Return Policy | 14-Day Returns",
+  description:
+    "Hassle-free returns within 14 days. Free returns for defective items. Cash on Delivery orders can be returned easily. Customer satisfaction guaranteed.",
+  alternates: {
+    canonical: "/returns",
+  },
+};
+
 const ReturnPolicy = () => {
   return (
     <>
-      <SEO
-        title="Return Policy | 14-Day Free Returns | Royal Furniture"
-        description="Hassle-free returns within 14 days. Free returns for defective items. Cash on Delivery orders can be returned easily. Customer satisfaction guaranteed."
-      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-12 md:mb-16">

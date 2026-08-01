@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { ShoppingBag, ShoppingCart } from "lucide-react";
 import { formatCurrency } from "../../lib/utils";
@@ -12,14 +12,9 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const [mounted, setMounted] = useState(false);
   const { addToCart } = useCart();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isOrderNow, setIsOrderNow] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -63,11 +58,6 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   };
 
-  // Don't render until mounted (client-side only)
-  if (!mounted) {
-    return null;
-  }
-
   return (
     <Link
       href={`/product/${product.slug}`}
@@ -79,7 +69,6 @@ export function ProductCard({ product }: ProductCardProps) {
           src={product.images[0]}
           alt={product.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          fetchPriority="high"
         />
 
         {/* Stock Badge */}

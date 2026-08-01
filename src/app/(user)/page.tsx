@@ -5,7 +5,7 @@ import { HomeClient } from "./home/HomeClient";
 import { HomeBlogSection } from "@/src/components/blog/HomeBlogSection";
 
 export default async function HomePage() {
-  const { products, categories, featuredProducts, recentProducts } =
+  const { categories, featuredProducts, recentProducts } =
     await fetchHomeData();
 
   return (
@@ -17,7 +17,6 @@ export default async function HomePage() {
       }
     >
       <HomeClient
-        initialProducts={products}
         initialCategories={categories}
         initialFeaturedProducts={featuredProducts}
         initialRecentProducts={recentProducts}

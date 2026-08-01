@@ -8,11 +8,17 @@ class ProductApiService extends BaseApiService<Product> {
     super("products");
   }
 
-  async getFeaturedProducts(): Promise<Product[]> {
+  async getFeaturedProducts(limitCount: number = 4): Promise<Product[]> {
     const constraints = [
       where("featured", "==", true),
       orderBy("createdAt", "desc"),
+      limit(limitCount),
     ];
+    return this.getWithConstraints(constraints);
+  }
+
+  async getRecentProducts(limitCount: number = 4): Promise<Product[]> {
+    const constraints = [orderBy("createdAt", "desc"), limit(limitCount)];
     return this.getWithConstraints(constraints);
   }
 

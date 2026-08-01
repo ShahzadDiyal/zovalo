@@ -1,6 +1,7 @@
 // src/app/(user)/product/[productId]/page.tsx
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { productApi } from "../../../../services/productApi";
 import { ProductClient } from "./ProductClient";
 import { Schema } from "../../../../components/SEO/Schema";
@@ -9,13 +10,20 @@ interface ProductPageProps {
   params: Promise<{ productId: string }>;
 }
 
+const getProductForPage = (productId: string) =>
+  unstable_cache(
+    async () =>
+      (await productApi.getById(productId)) ||
+      (await productApi.getProductBySlug(productId)),
+    ["product-page", productId],
+    { revalidate: 120 },
+  )();
+
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { productId } = await params;
-  const product =
-    (await productApi.getById(productId)) ||
-    (await productApi.getProductBySlug(productId));
+  const product = await getProductForPage(productId);
 
   if (!product) return {};
 
@@ -43,8 +51,7 @@ export async function generateMetadata({
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { productId } = await params;
-  let productData = await productApi.getById(productId);
-  if (!productData) productData = await productApi.getProductBySlug(productId);
+  const productData = await getProductForPage(productId);
   if (!productData) notFound();
 
   const breadcrumbItems = [

@@ -23,7 +23,6 @@ import { Product, Category } from "../../../types";
 import { HomeBlogSection } from "../../../components/blog/HomeBlogSection";
 
 interface HomeClientProps {
-  initialProducts: Product[];
   initialCategories: Category[];
   initialFeaturedProducts: Product[];
   initialRecentProducts: Product[];
@@ -304,7 +303,9 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
           <p className="text-neutral-500 font-light text-sm sm:text-base">
             Curated categories for every space in your home
           </p>
-          <Link href="/collections" className="text-amber-500 underline">View all Collections</Link>
+          <Link href="/collections" className="text-amber-500 underline">
+            View all Collections
+          </Link>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
@@ -346,7 +347,7 @@ function WhyChooseUsSection() {
       color: "from-amber-400 to-orange-500",
       bgColor: "bg-amber-50",
       borderColor: "border-amber-200",
-      iconColor: "text-amber-600"
+      iconColor: "text-amber-600",
     },
     {
       icon: CreditCard,
@@ -355,7 +356,7 @@ function WhyChooseUsSection() {
       color: "from-emerald-400 to-teal-500",
       bgColor: "bg-emerald-50",
       borderColor: "border-emerald-200",
-      iconColor: "text-emerald-600"
+      iconColor: "text-emerald-600",
     },
     {
       icon: Truck,
@@ -364,7 +365,7 @@ function WhyChooseUsSection() {
       color: "from-blue-400 to-indigo-500",
       bgColor: "bg-blue-50",
       borderColor: "border-blue-200",
-      iconColor: "text-blue-600"
+      iconColor: "text-blue-600",
     },
     {
       icon: ShieldCheck,
@@ -373,8 +374,8 @@ function WhyChooseUsSection() {
       color: "from-purple-400 to-pink-500",
       bgColor: "bg-purple-50",
       borderColor: "border-purple-200",
-      iconColor: "text-purple-600"
-    }
+      iconColor: "text-purple-600",
+    },
   ];
 
   // Customer profile images (using UI Avatars API for consistent styling)
@@ -382,28 +383,28 @@ function WhyChooseUsSection() {
     {
       name: "Sarah J.",
       image: "/images/reviewimg01.png",
-      initial: "SJ"
+      initial: "SJ",
     },
     {
       name: "Michael R.",
       image: "/images/reviewimg02.png",
-      initial: "MR"
+      initial: "MR",
     },
     {
       name: "Emma W.",
       image: "/images/reviewimg03.png",
-      initial: "EW"
+      initial: "EW",
     },
     {
       name: "James C.",
       image: "/images/reviewimg04.png",
-      initial: "JC"
+      initial: "JC",
     },
     {
       name: "Olivia P.",
       image: "/images/reviewimg05.png",
-      initial: "OP"
-    }
+      initial: "OP",
+    },
   ];
 
   // Alternative: Use randomuser.me for real diverse faces
@@ -427,10 +428,14 @@ function WhyChooseUsSection() {
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-3">
-            Experience the <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Difference</span>
+            Experience the{" "}
+            <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+              Difference
+            </span>
           </h2>
           <p className="text-sm sm:text-base text-neutral-500 max-w-2xl mx-auto font-light">
-            We're committed to providing you with the best shopping experience possible
+            We're committed to providing you with the best shopping experience
+            possible
           </p>
         </div>
 
@@ -444,14 +449,22 @@ function WhyChooseUsSection() {
                 className="group relative bg-white rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-xl transition-all duration-500 hover:border-transparent overflow-hidden"
               >
                 {/* Animated Gradient Background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
-                
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
+                />
+
                 {/* Decorative Circle */}
-                <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full ${feature.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                
+                <div
+                  className={`absolute -top-10 -right-10 w-32 h-32 rounded-full ${feature.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                />
+
                 {/* Icon Container */}
-                <div className={`relative w-14 h-14 sm:w-16 sm:h-16 ${feature.bgColor} rounded-2xl flex items-center justify-center mb-4 sm:mb-5 group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon className={`w-7 h-7 sm:w-8 sm:h-8 ${feature.iconColor} transition-transform duration-300`} />
+                <div
+                  className={`relative w-14 h-14 sm:w-16 sm:h-16 ${feature.bgColor} rounded-2xl flex items-center justify-center mb-4 sm:mb-5 group-hover:scale-110 transition-transform duration-300`}
+                >
+                  <Icon
+                    className={`w-7 h-7 sm:w-8 sm:h-8 ${feature.iconColor} transition-transform duration-300`}
+                  />
                 </div>
 
                 {/* Content */}
@@ -465,7 +478,9 @@ function WhyChooseUsSection() {
                 </div>
 
                 {/* Hover Underline Effect */}
-                <div className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${feature.color} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`} />
+                <div
+                  className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${feature.color} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`}
+                />
               </div>
             );
           })}
@@ -478,10 +493,7 @@ function WhyChooseUsSection() {
             <div className="flex items-center gap-3">
               <div className="flex -space-x-2">
                 {customers.slice(0, 4).map((customer, idx) => (
-                  <div
-                    key={idx}
-                    className="relative group/tooltip"
-                  >
+                  <div key={idx} className="relative group/tooltip">
                     <img
                       src={customer.image}
                       alt={customer.name}
@@ -502,15 +514,19 @@ function WhyChooseUsSection() {
                 )}
               </div>
               <span className="text-xs text-neutral-500 font-medium">
-                <span className="text-neutral-900 font-bold">2,000+</span> happy customers
+                <span className="text-neutral-900 font-bold">2,000+</span> happy
+                customers
               </span>
             </div>
-            
+
             {/* Rating */}
             <div className="flex items-center gap-2">
               <div className="flex gap-0.5">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 text-amber-400 fill-amber-400" />
+                  <Star
+                    key={i}
+                    className="w-3 h-3 sm:w-4 sm:h-4 text-amber-400 fill-amber-400"
+                  />
                 ))}
               </div>
               <span className="text-xs text-neutral-500 font-medium">
@@ -538,8 +554,10 @@ function WhyChooseUsSection() {
           {/* Testimonial Quote */}
           <div className="mt-6 text-center">
             <p className="text-sm text-neutral-500 font-light italic">
-              "Best shopping experience! The quality exceeded my expectations." 
-              <span className="block text-xs text-neutral-400 mt-1">— Sarah Johnson, London</span>
+              "Best shopping experience! The quality exceeded my expectations."
+              <span className="block text-xs text-neutral-400 mt-1">
+                — Sarah Johnson, London
+              </span>
             </p>
           </div>
         </div>
@@ -613,7 +631,6 @@ function NewsletterSection() {
 }
 
 export function HomeClient({
-  initialProducts,
   initialCategories,
   initialFeaturedProducts,
   initialRecentProducts,

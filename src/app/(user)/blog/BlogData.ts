@@ -1,4 +1,5 @@
 // src/app/(user)/blog/BlogData.ts
+import { unstable_cache } from "next/cache";
 import { blogService } from "../../../services/blogService";
 import { BlogPost, BlogCategory } from "../../../types";
 
@@ -8,15 +9,24 @@ export interface BlogPageData {
   totalPosts: number;
 }
 
+const getPublishedBlogData = unstable_cache(
+  async () => {
+    const [categoriesData, allPostsData] = await Promise.all([
+      blogService.getAllCategories(),
+      blogService.getPublishedPosts(),
+    ]);
+    return { categoriesData, allPostsData };
+  },
+  ["blog-published-data"],
+  { revalidate: 120 },
+);
+
 export async function fetchBlogData(
   categorySlug?: string | null,
   searchQuery?: string | null,
 ): Promise<BlogPageData> {
   try {
-    const [categoriesData, allPostsData] = await Promise.all([
-      blogService.getAllCategories(),
-      blogService.getPublishedPosts(),
-    ]);
+    const { categoriesData, allPostsData } = await getPublishedBlogData();
 
     let filteredPosts = [...allPostsData];
     let categoryName = "";

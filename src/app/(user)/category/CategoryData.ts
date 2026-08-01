@@ -1,4 +1,5 @@
 // src/app/(user)/category/CategoryData.ts
+import { unstable_cache } from "next/cache";
 import { productApi } from "../../../services/productApi";
 import { categoryApi } from "../../../services/categoryApi";
 import { Product, Category } from "../../../types";
@@ -9,7 +10,7 @@ export interface CategoryPageData {
   currentCategory?: Category;
 }
 
-export async function fetchCategoryData(
+async function fetchCategoryDataUncached(
   slug?: string,
 ): Promise<CategoryPageData> {
   const [productsData, categoriesData] = await Promise.all([
@@ -34,4 +35,15 @@ export async function fetchCategoryData(
     : [];
 
   return { products, categories: categoriesData, currentCategory };
+}
+
+export async function fetchCategoryData(
+  slug?: string,
+): Promise<CategoryPageData> {
+  const cached = unstable_cache(
+    () => fetchCategoryDataUncached(slug),
+    ["category-data", slug || "all"],
+    { revalidate: 120 },
+  );
+  return cached();
 }

@@ -2,6 +2,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 import {
   MapPin,
   Truck,
@@ -20,6 +21,13 @@ import { ProductCard } from "../../../../components/ui/ProductCard";
 import { CityMap } from "../../../../components/locations/CityMap";
 import { CityDetailClient } from "./CityDetailClient";
 import { serializeFirestoreData } from "../../../../lib/serialize";
+
+const getCityForPage = (slug: string) =>
+  unstable_cache(
+    () => cityPageService.getCityBySlug(slug),
+    ["location-page", slug],
+    { revalidate: 120 },
+  )();
 
 // Generate static params for all city pages
 export async function generateStaticParams() {
@@ -42,7 +50,7 @@ export async function generateMetadata({
 }) {
   try {
     const { slug } = await params;
-    const cityPage = await cityPageService.getCityBySlug(slug);
+    const cityPage = await getCityForPage(slug);
 
     if (!cityPage) {
       return {
@@ -89,24 +97,21 @@ export default async function CityDetailPage({
   try {
     const { slug } = await params;
 
-    // Fetch city page on the server
-    const cityPage = await cityPageService.getCityBySlug(slug);
+    // Fetch city page on the server (cached — shared with generateMetadata)
+    const cityPage = await getCityForPage(slug);
 
     if (!cityPage) {
       notFound();
     }
 
-    // Fetch products on the server
+    // Fetch products on the server — limited query instead of the full collection
     let products: Product[] = [];
     try {
-      const allProducts = await productApi.getAll();
-      const featuredProducts = allProducts
-        .filter((p) => p.featured)
-        .slice(0, 4);
+      const featuredProducts = await productApi.getFeaturedProducts(4);
       products =
         featuredProducts.length > 0
           ? featuredProducts
-          : allProducts.slice(0, 4);
+          : await productApi.getRecentProducts(4);
     } catch (error) {
       console.error("Error fetching products:", error);
       products = [];

@@ -19,6 +19,13 @@ import {
   Trash2,
   Eye,
   EyeOff,
+  CheckCircle,
+  Package,
+  Shield,
+  Truck,
+  CreditCard,
+  Leaf,
+  Award,
 } from "lucide-react";
 import { cityPageApi } from "../../../../../services/cityPageApi";
 import { CityPage } from "../../../../../types";
@@ -40,6 +47,12 @@ export default function EditCityPage() {
   const [trustSignalInput, setTrustSignalInput] = useState("");
   const [faqQuestionInput, setFaqQuestionInput] = useState("");
   const [faqAnswerInput, setFaqAnswerInput] = useState("");
+
+  // Text input states for preview
+  const [whyChooseUsText, setWhyChooseUsText] = useState("");
+  const [popularProductsText, setPopularProductsText] = useState("");
+  const [trustSignalsText, setTrustSignalsText] = useState("");
+  const [faqsText, setFaqsText] = useState("");
 
   const [formData, setFormData] = useState<Partial<CityPage>>({
     name: "",
@@ -71,6 +84,24 @@ export default function EditCityPage() {
       const data = await cityPageApi.getById(cityId);
       if (data) {
         setFormData(data);
+        // Initialize textareas with existing data
+        if (Array.isArray(data.whyChooseUs)) {
+          setWhyChooseUsText(data.whyChooseUs.join("\n"));
+        }
+        if (Array.isArray(data.popularProducts)) {
+          setPopularProductsText(data.popularProducts.join("\n"));
+        }
+        if (Array.isArray(data.localTrustSignals)) {
+          setTrustSignalsText(data.localTrustSignals.join("\n"));
+        }
+        if (Array.isArray(data.faqs)) {
+          const faqsFormatted = data.faqs
+            .map(
+              (faq: any) => `Question: ${faq.question}\nAnswer: ${faq.answer}`,
+            )
+            .join("\n\n");
+          setFaqsText(faqsFormatted);
+        }
       } else {
         setError("City page not found");
       }
@@ -102,6 +133,78 @@ export default function EditCityPage() {
       .replace(/\s+/g, "-")
       .replace(/[^a-z0-9-]/g, "");
     setFormData((prev) => ({ ...prev, slug }));
+  };
+
+  // Handle Why Choose Us text change with live preview
+  const handleWhyChooseUsChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const value = e.target.value;
+    setWhyChooseUsText(value);
+    const lines = value.split("\n").filter((line) => line.trim());
+    setFormData((prev) => ({ ...prev, whyChooseUs: lines }));
+  };
+
+  // Handle Popular Products text change with live preview
+  const handlePopularProductsChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const value = e.target.value;
+    setPopularProductsText(value);
+    const lines = value.split("\n").filter((line) => line.trim());
+    setFormData((prev) => ({ ...prev, popularProducts: lines }));
+  };
+
+  // Handle Trust Signals text change with auto-preview
+  const handleTrustSignalsChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const value = e.target.value;
+    setTrustSignalsText(value);
+    const lines = value.split("\n").filter((line) => line.trim());
+    setFormData((prev) => ({ ...prev, localTrustSignals: lines }));
+  };
+
+  // Handle FAQs text change with auto-parse
+  const handleFaqsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setFaqsText(value);
+
+    // Auto-parse FAQ entries
+    const faqEntries: { question: string; answer: string }[] = [];
+    const lines = value.split("\n").filter((line) => line.trim());
+
+    let currentQuestion = "";
+    let currentAnswer = "";
+    let isAnswer = false;
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed.startsWith("Question:") || trimmed.startsWith("Q:")) {
+        // Save previous FAQ if exists
+        if (currentQuestion && currentAnswer) {
+          faqEntries.push({ question: currentQuestion, answer: currentAnswer });
+        }
+        currentQuestion = trimmed.replace(/^(Question:|Q:)\s*/, "").trim();
+        currentAnswer = "";
+        isAnswer = false;
+      } else if (trimmed.startsWith("Answer:") || trimmed.startsWith("A:")) {
+        currentAnswer = trimmed.replace(/^(Answer:|A:)\s*/, "").trim();
+        isAnswer = true;
+      } else if (isAnswer) {
+        currentAnswer += " " + trimmed;
+      } else if (currentQuestion && !isAnswer) {
+        // If no Answer: prefix, treat as answer
+        currentAnswer += (currentAnswer ? " " : "") + trimmed;
+      }
+    }
+
+    // Save last FAQ
+    if (currentQuestion && currentAnswer) {
+      faqEntries.push({ question: currentQuestion, answer: currentAnswer });
+    }
+
+    setFormData((prev) => ({ ...prev, faqs: faqEntries }));
   };
 
   // Nearby Areas
@@ -522,7 +625,6 @@ export default function EditCityPage() {
                     onChange={(e) => {
                       const value = e.target.value;
                       setNearbyAreaInput(value);
-                      // Check if comma is entered - automatically create tags
                       if (value.includes(",")) {
                         const items = value
                           .split(",")
@@ -580,73 +682,48 @@ export default function EditCityPage() {
                 </p>
               </div>
 
-              {/* FAQs */}
+              {/* FAQs - with auto-preview */}
               <div className="bg-white border border-warm-beige p-6 rounded-lg">
                 <div className="flex items-center gap-2 mb-4 border-l-4 border-amber-500 pl-3">
                   <TrendingUp className="w-4 h-4 text-amber-500" />
                   <h2 className="text-sm font-display text-near-black uppercase">
-                    FAQs
+                    Local Structured FAQs
                   </h2>
                 </div>
+                <p className="text-[8px] text-gray-400 mb-2">
+                  Format: Question: [your question] Answer: [your answer]
+                </p>
+                <textarea
+                  rows={8}
+                  value={faqsText}
+                  onChange={handleFaqsChange}
+                  className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded resize-none"
+                  placeholder="Question: Where can I find affordable sofas and furniture near me in Leeds?&#10;Answer: We offer an extensive online selection...&#10;&#10;Question: Can I inspect my sofa before paying in Leeds?&#10;Answer: Yes! We offer 100% Cash on Delivery..."
+                />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-                  <div>
-                    <label className="text-[8px] font-bold uppercase tracking-widest text-gray-400 block mb-1">
-                      Question
-                    </label>
-                    <input
-                      type="text"
-                      value={faqQuestionInput}
-                      onChange={(e) => setFaqQuestionInput(e.target.value)}
-                      placeholder="e.g., Do you deliver to my area?"
-                      className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="flex-1">
-                      <label className="text-[8px] font-bold uppercase tracking-widest text-gray-400 block mb-1">
-                        Answer
-                      </label>
-                      <input
-                        type="text"
-                        value={faqAnswerInput}
-                        onChange={(e) => setFaqAnswerInput(e.target.value)}
-                        placeholder="e.g., Yes, we deliver across Greater London"
-                        className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                      />
+                {/* Live Preview */}
+                {formData.faqs && formData.faqs.length > 0 && (
+                  <div className="mt-4 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                    <p className="text-[8px] font-bold uppercase tracking-widest text-purple-600 mb-2">
+                      Preview ({formData.faqs.length} FAQs)
+                    </p>
+                    <div className="space-y-3">
+                      {formData.faqs.map((faq: any, index: number) => (
+                        <div
+                          key={index}
+                          className="border-b border-purple-100 pb-2 last:border-0 last:pb-0"
+                        >
+                          <p className="text-sm font-medium text-neutral-900">
+                            Q: {faq.question}
+                          </p>
+                          <p className="text-sm text-neutral-600 mt-0.5">
+                            A: {faq.answer}
+                          </p>
+                        </div>
+                      ))}
                     </div>
-                    <button
-                      type="button"
-                      onClick={handleAddFaq}
-                      className="self-end bg-gold text-near-black px-3 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-near-black hover:text-white transition rounded"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                    </button>
                   </div>
-                </div>
-
-                <div className="space-y-2">
-                  {(formData.faqs || []).map((faq, index) => (
-                    <div
-                      key={index}
-                      className="bg-cream p-3 rounded flex justify-between items-start gap-2"
-                    >
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-near-black">
-                          Q: {faq.question}
-                        </p>
-                        <p className="text-sm text-gray-600">A: {faq.answer}</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveFaq(index)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                )}
               </div>
             </div>
 
@@ -700,107 +777,157 @@ export default function EditCityPage() {
                 </div>
               </div>
 
-              {/* Trust Signals */}
+              {/* Local Trust Signals with Auto-Preview */}
               <div className="bg-white border border-warm-beige p-6 rounded-lg">
                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-walnut mb-4">
                   Local Trust Signals
                 </h3>
-                <div className="flex gap-2 mb-3">
-                  <input
-                    type="text"
-                    value={trustSignalInput}
-                    onChange={(e) => setTrustSignalInput(e.target.value)}
-                    onKeyDown={(e) =>
-                      e.key === "Enter" &&
-                      (e.preventDefault(), handleAddTrustSignal())
-                    }
-                    placeholder="e.g., Pay Cash on Delivery"
-                    className="flex-1 bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddTrustSignal}
-                    className="bg-gold text-near-black px-3 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-near-black hover:text-white transition rounded"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                <div className="space-y-1">
-                  {(formData.localTrustSignals || []).map((signal) => (
-                    <div
-                      key={signal}
-                      className="flex items-center justify-between bg-cream px-3 py-1.5 rounded"
-                    >
-                      <span className="text-xs text-gray-600">{signal}</span>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveTrustSignal(signal)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-[8px] text-gray-400 mt-1">
-                  Include delivery promises, payment options, etc.
+                <p className="text-[8px] text-gray-400 mb-2">
+                  Enter one per line. These will be displayed as trust badges.
                 </p>
+                <textarea
+                  rows={6}
+                  value={trustSignalsText}
+                  onChange={handleTrustSignalsChange}
+                  className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded resize-none"
+                  placeholder="100% Cash on Delivery (COD) across all Leeds postcodes..."
+                />
+
+                {/* Live Preview */}
+                {formData.localTrustSignals &&
+                  formData.localTrustSignals.length > 0 && (
+                    <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <p className="text-[8px] font-bold uppercase tracking-widest text-green-600 mb-2">
+                        Preview ({formData.localTrustSignals.length} trust
+                        signals)
+                      </p>
+                      <ul className="space-y-2">
+                        {formData.localTrustSignals.map(
+                          (signal: string, index: number) => {
+                            let Icon = Shield;
+                            let iconColor = "text-green-500";
+                            if (
+                              signal.toLowerCase().includes("cash") ||
+                              signal.toLowerCase().includes("cod") ||
+                              signal.toLowerCase().includes("pay")
+                            ) {
+                              Icon = CreditCard;
+                              iconColor = "text-emerald-500";
+                            } else if (
+                              signal.toLowerCase().includes("delivery") ||
+                              signal.toLowerCase().includes("deliver")
+                            ) {
+                              Icon = Truck;
+                              iconColor = "text-blue-500";
+                            } else if (
+                              signal.toLowerCase().includes("eco") ||
+                              signal.toLowerCase().includes("sustain") ||
+                              signal.toLowerCase().includes("fsc") ||
+                              signal.toLowerCase().includes("timber")
+                            ) {
+                              Icon = Leaf;
+                              iconColor = "text-green-600";
+                            } else if (
+                              signal.toLowerCase().includes("fire") ||
+                              signal.toLowerCase().includes("safety") ||
+                              signal.toLowerCase().includes("certified")
+                            ) {
+                              Icon = Award;
+                              iconColor = "text-amber-500";
+                            }
+                            return (
+                              <li
+                                key={index}
+                                className="flex items-start gap-2 text-sm text-neutral-700"
+                              >
+                                <Icon
+                                  className={`w-4 h-4 ${iconColor} flex-shrink-0 mt-0.5`}
+                                />
+                                <span>{signal}</span>
+                              </li>
+                            );
+                          },
+                        )}
+                      </ul>
+                    </div>
+                  )}
               </div>
 
-              {/* Why Choose Us */}
+              {/* Why Choose Us with Preview */}
               <div className="bg-white border border-warm-beige p-6 rounded-lg">
                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-walnut mb-4">
                   Why Choose Us (Bullet Points)
                 </h3>
                 <textarea
-                  name="whyChooseUs"
                   rows={5}
-                  value={
-                    Array.isArray(formData.whyChooseUs)
-                      ? formData.whyChooseUs.join("\n")
-                      : formData.whyChooseUs || ""
-                  }
-                  onChange={(e) => {
-                    const value = e.target.value
-                      .split("\n")
-                      .filter((line) => line.trim());
-                    setFormData((prev) => ({ ...prev, whyChooseUs: value }));
-                  }}
+                  value={whyChooseUsText}
+                  onChange={handleWhyChooseUsChange}
                   className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded resize-none"
                   placeholder="Premium Quality&#10;Free UK Delivery&#10;Cash on Delivery&#10;14-Day Returns"
                 />
                 <p className="text-[8px] text-gray-400 mt-1">One per line</p>
+
+                {/* Live Preview */}
+                {formData.whyChooseUs && formData.whyChooseUs.length > 0 && (
+                  <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <p className="text-[8px] font-bold uppercase tracking-widest text-amber-600 mb-2">
+                      Preview ({formData.whyChooseUs.length} items)
+                    </p>
+                    <ul className="space-y-1.5">
+                      {formData.whyChooseUs.map(
+                        (item: string, index: number) => (
+                          <li
+                            key={index}
+                            className="flex items-start gap-2 text-sm text-neutral-700"
+                          >
+                            <CheckCircle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+                            <span>{item}</span>
+                          </li>
+                        ),
+                      )}
+                    </ul>
+                  </div>
+                )}
               </div>
 
-              {/* Popular Products */}
+              {/* Popular Products with Preview */}
               <div className="bg-white border border-warm-beige p-6 rounded-lg">
                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-walnut mb-4">
                   Popular Products
                 </h3>
                 <textarea
-                  name="popularProducts"
                   rows={3}
-                  value={
-                    Array.isArray(formData.popularProducts)
-                      ? formData.popularProducts.join("\n")
-                      : formData.popularProducts || ""
-                  }
-                  onChange={(e) => {
-                    const value = e.target.value
-                      .split("\n")
-                      .filter((line) => line.trim());
-                    setFormData((prev) => ({
-                      ...prev,
-                      popularProducts: value,
-                    }));
-                  }}
+                  value={popularProductsText}
+                  onChange={handlePopularProductsChange}
                   className="w-full bg-cream border border-warm-beige py-2 px-3 text-sm focus:border-gold outline-none rounded resize-none"
                   placeholder="Sofa Sets&#10;Dining Tables&#10;Beds"
                 />
                 <p className="text-[8px] text-gray-400 mt-1">
                   One per line - Product names or IDs
                 </p>
+
+                {/* Live Preview */}
+                {formData.popularProducts &&
+                  formData.popularProducts.length > 0 && (
+                    <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <p className="text-[8px] font-bold uppercase tracking-widest text-blue-600 mb-2">
+                        Preview ({formData.popularProducts.length} items)
+                      </p>
+                      <ul className="space-y-1.5">
+                        {formData.popularProducts.map(
+                          (item: string, index: number) => (
+                            <li
+                              key={index}
+                              className="flex items-start gap-2 text-sm text-neutral-700"
+                            >
+                              <Package className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                              <span>{item}</span>
+                            </li>
+                          ),
+                        )}
+                      </ul>
+                    </div>
+                  )}
               </div>
 
               {/* SEO Preview */}

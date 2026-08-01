@@ -638,10 +638,8 @@ export default function CheckoutPage() {
                 {/* Alternative Phone Number */}
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
-                    Alternative Phone Number{" "}
-                    <span className="text-neutral-400 text-[8px]">
-                      (Optional)
-                    </span>
+                    Whatsapp Number{" "}<span className="text-red-500">*</span>
+                    
                   </label>
                   <div className="flex gap-2">
                     <div className="relative w-28">
@@ -662,6 +660,7 @@ export default function CheckoutPage() {
                       <input
                         name="alternativePhone"
                         type="tel"
+                        required
                         value={formData.alternativePhone}
                         onChange={handleChange}
                         placeholder={selectedCountryCode.example}

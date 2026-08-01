@@ -12,6 +12,10 @@ import {
   ArrowRight,
   MessageCircle,
   ShoppingBag,
+  Star,
+  Award,
+  Clock,
+  ThumbsUp,
 } from "lucide-react";
 import { cityPageService } from "../../../../services/cityPageService";
 import { productApi } from "../../../../services/productApi";
@@ -88,6 +92,7 @@ export async function generateMetadata({
     };
   }
 }
+
 // Server Component
 export default async function CityDetailPage({
   params,
@@ -97,14 +102,12 @@ export default async function CityDetailPage({
   try {
     const { slug } = await params;
 
-    // Fetch city page on the server (cached — shared with generateMetadata)
     const cityPage = await getCityForPage(slug);
 
     if (!cityPage) {
       notFound();
     }
 
-    // Fetch products on the server — limited query instead of the full collection
     let products: Product[] = [];
     try {
       const featuredProducts = await productApi.getFeaturedProducts(4);
@@ -117,7 +120,6 @@ export default async function CityDetailPage({
       products = [];
     }
 
-    // Serialize ALL data before passing to client component
     const serializedCity = serializeFirestoreData(cityPage);
     const serializedProducts = serializeFirestoreData(products);
 
@@ -142,92 +144,124 @@ export default async function CityDetailPage({
           ]}
         />
 
-        {/* Hero Header */}
-        <section className="relative overflow-hidden bg-neutral-900 text-white py-16 sm:py-20 md:py-24">
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
-          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        {/* Hero Header - Simplified */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-neutral-900 to-neutral-800 text-white py-12 sm:py-16 md:py-20">
+          <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
-            <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-3">
+            <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1 rounded-full">
               <MapPin className="w-3.5 h-3.5 text-amber-400" />
-              <span className="text-xs font-bold uppercase tracking-widest text-amber-300">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-amber-300">
                 {serializedCity.name}
               </span>
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-white tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight">
               {serializedCity.h1Heading ||
                 `Premium Furniture & Sofas in ${serializedCity.name}`}
             </h1>
-            <p className="text-neutral-400 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            <p className="text-neutral-400 font-light text-sm sm:text-base max-w-6xl mx-auto leading-relaxed">
               {serializedCity.uniqueIntro}
             </p>
           </div>
         </section>
 
-        {/* Map Section */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-12 relative z-10">
-          <div className="bg-white rounded-2xl shadow-sm border border-neutral-200/80 overflow-hidden">
-            <div className="p-4 sm:p-6 border-b border-neutral-200/80">
-              <h2 className="text-xl sm:text-2xl font-serif text-neutral-900 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-amber-500" />
-                Where is {serializedCity.name}?
-              </h2>
-              <p className="text-sm text-neutral-500 mt-1">
-                We deliver premium furniture to {serializedCity.name} and
-                surrounding areas
-              </p>
+        {/* Map Section - Smaller and Less Distracting */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10">
+          <div className="bg-white rounded-xl  overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-200/60">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-amber-500" />
+                <span className="text-sm font-medium text-neutral-700">
+                  {serializedCity.name} Location
+                </span>
+              </div>
+              <span className="text-[10px] text-neutral-400">
+                We deliver here
+              </span>
             </div>
-            <CityMap cityName={serializedCity.name} />
+            <div className="h-[180px] sm:h-[200px] md:h-[220px]">
+              <CityMap cityName={serializedCity.name} />
+            </div>
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          {/* Trust Signals */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+          {/* Trust Signals - Clean Card Design */}
           {serializedCity.localTrustSignals &&
             serializedCity.localTrustSignals.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                {serializedCity.localTrustSignals.map(
-                  (signal: string, index: number) => (
-                    <div
-                      key={index}
-                      className="bg-white border border-neutral-200/80 rounded-2xl p-4 text-center shadow-sm"
-                    >
-                      {signal.toLowerCase().includes("delivery") && (
-                        <Truck className="w-6 h-6 text-amber-500 mx-auto mb-2" />
-                      )}
-                      {signal.toLowerCase().includes("cash") && (
-                        <CreditCard className="w-6 h-6 text-amber-500 mx-auto mb-2" />
-                      )}
-                      {signal.toLowerCase().includes("inspect") && (
-                        <ShieldCheck className="w-6 h-6 text-amber-500 mx-auto mb-2" />
-                      )}
-                      {!signal.toLowerCase().includes("delivery") &&
-                        !signal.toLowerCase().includes("cash") &&
-                        !signal.toLowerCase().includes("inspect") && (
-                          <CheckCircle className="w-6 h-6 text-amber-500 mx-auto mb-2" />
-                        )}
-                      <p className="text-sm font-medium text-neutral-900">
-                        {signal}
-                      </p>
-                    </div>
-                  ),
-                )}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
+                {serializedCity.localTrustSignals
+                  .slice(0, 5)
+                  .map((signal: string, index: number) => {
+                    // Determine icon based on content
+                    let Icon = ShieldCheck;
+                    let iconColor = "text-amber-500";
+                    if (
+                      signal.toLowerCase().includes("delivery") ||
+                      signal.toLowerCase().includes("deliver")
+                    ) {
+                      Icon = Truck;
+                      iconColor = "text-blue-500";
+                    } else if (
+                      signal.toLowerCase().includes("cash") ||
+                      signal.toLowerCase().includes("cod") ||
+                      signal.toLowerCase().includes("pay")
+                    ) {
+                      Icon = CreditCard;
+                      iconColor = "text-emerald-500";
+                    } else if (
+                      signal.toLowerCase().includes("fire") ||
+                      signal.toLowerCase().includes("safety") ||
+                      signal.toLowerCase().includes("certified")
+                    ) {
+                      Icon = Award;
+                      iconColor = "text-amber-600";
+                    } else if (
+                      signal.toLowerCase().includes("eco") ||
+                      signal.toLowerCase().includes("sustain") ||
+                      signal.toLowerCase().includes("fsc")
+                    ) {
+                      Icon = ShieldCheck;
+                      iconColor = "text-green-500";
+                    } else if (
+                      signal.toLowerCase().includes("inspect") ||
+                      signal.toLowerCase().includes("check")
+                    ) {
+                      Icon = CheckCircle;
+                      iconColor = "text-purple-500";
+                    }
+                    return (
+                      <div
+                        key={index}
+                        className="bg-white  rounded-xl p-3 text-center hover:shadow-md transition-shadow"
+                      >
+                        <Icon
+                          className={`w-5 h-5 ${iconColor} mx-auto mb-1.5`}
+                        />
+                        <p className="text-[10px] sm:text-xs font-medium text-neutral-700 leading-tight">
+                          {signal}
+                        </p>
+                      </div>
+                    );
+                  })}
               </div>
             )}
 
           {/* Nearby Areas */}
           {serializedCity.nearbyAreas &&
             serializedCity.nearbyAreas.length > 0 && (
-              <div className="bg-white border border-neutral-200/80 rounded-2xl p-6 mb-8 shadow-sm">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-amber-600 mb-3 flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
+              <div className="bg-white border border-neutral-200/60 rounded-xl p-4 mb-6">
+                <h2 className="text-xs font-bold uppercase tracking-widest text-amber-600 mb-2 flex items-center gap-2">
+                  <MapPin className="w-3.5 h-3.5" />
                   We Also Serve These Nearby Areas
                 </h2>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {serializedCity.nearbyAreas.map((area: string) => (
                     <span
                       key={area}
-                      className="px-3 py-1 bg-amber-50 text-amber-700 text-sm rounded-full border border-amber-200/50"
+                      className="px-2.5 py-0.5 bg-amber-50 text-amber-700 text-[10px] sm:text-xs rounded-full border border-amber-200/50"
                     >
                       {area}
                     </span>
@@ -236,11 +270,11 @@ export default async function CityDetailPage({
               </div>
             )}
 
-          {/* Delivery Info */}
+          {/* Delivery Info - Compact */}
           {serializedCity.deliveryInfo && (
-            <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-6 mb-8 text-center">
-              <Truck className="w-8 h-8 text-amber-500 mx-auto mb-2" />
-              <p className="text-sm text-neutral-700 font-medium">
+            <div className="bg-amber-50/60 border border-amber-200/60 rounded-xl p-3 mb-6 text-center">
+              <Truck className="w-4 h-4 text-amber-500 mx-auto mb-1" />
+              <p className="text-xs sm:text-sm text-neutral-700 font-medium">
                 {serializedCity.deliveryInfo}
               </p>
             </div>
@@ -249,38 +283,38 @@ export default async function CityDetailPage({
           {/* Popular Products */}
           {serializedProducts.length > 0 && (
             <div className="mb-8">
-              <h2 className="text-2xl sm:text-3xl font-serif text-neutral-900 mb-6">
-                Popular Furniture in {serializedCity.name}
-              </h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl sm:text-2xl font-serif text-neutral-900">
+                  Popular Furniture in {serializedCity.name}
+                </h2>
+                <Link
+                  href="/shop"
+                  className="text-[10px] font-bold uppercase tracking-widest text-amber-600 hover:text-neutral-900 transition-colors flex items-center gap-1"
+                >
+                  View All <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {serializedProducts.slice(0, 4).map((product: Product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
-              <div className="text-center mt-6">
-                <Link
-                  href="/shop"
-                  className="inline-flex items-center gap-2 text-sm font-medium text-amber-600 hover:text-neutral-900 transition-colors"
-                >
-                  View All Products <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
             </div>
           )}
 
-          {/* Why Choose Us */}
+          {/* Why Choose Us - Clean */}
           {serializedCity.whyChooseUs &&
             serializedCity.whyChooseUs.length > 0 && (
-              <div className="bg-white border border-neutral-200/80 rounded-2xl p-6 mb-8 shadow-sm">
-                <h2 className="text-xl sm:text-2xl font-serif text-neutral-900 mb-4">
+              <div className="bg-white border border-neutral-200/60 rounded-xl p-5 mb-6">
+                <h2 className="text-lg sm:text-xl font-serif text-neutral-900 mb-3">
                   Why Choose Royal Furniture in {serializedCity.name}
                 </h2>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {serializedCity.whyChooseUs.map(
                     (item: string, index: number) => (
                       <li
                         key={index}
-                        className="flex items-start gap-2 text-sm text-neutral-600"
+                        className="flex items-start gap-2 text-xs sm:text-sm text-neutral-600"
                       >
                         <CheckCircle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
                         <span>{item}</span>
@@ -291,13 +325,13 @@ export default async function CityDetailPage({
               </div>
             )}
 
-          {/* FAQs */}
+          {/* FAQs - Clean Accordion Style */}
           {serializedCity.faqs && serializedCity.faqs.length > 0 && (
-            <div className="bg-white border border-neutral-200/80 rounded-2xl p-6 shadow-sm">
-              <h2 className="text-xl sm:text-2xl font-serif text-neutral-900 mb-4">
+            <div className="bg-white border border-neutral-200/60 rounded-xl p-5">
+              <h2 className="text-lg sm:text-xl font-serif text-neutral-900 mb-3">
                 Frequently Asked Questions
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {serializedCity.faqs.map(
                   (
                     faq: { question: string; answer: string },
@@ -305,12 +339,16 @@ export default async function CityDetailPage({
                   ) => (
                     <div
                       key={index}
-                      className="border-b border-neutral-100 pb-4 last:border-0 last:pb-0"
+                      className="border-b border-neutral-100 pb-3 last:border-0 last:pb-0"
                     >
-                      <h3 className="text-sm font-semibold text-neutral-900 mb-1">
+                      <h3 className="text-sm font-semibold text-neutral-900 mb-0.5 flex items-start gap-2">
+                        <span className="text-amber-500 font-bold">Q:</span>
                         {faq.question}
                       </h3>
-                      <p className="text-sm text-neutral-600">{faq.answer}</p>
+                      <p className="text-xs sm:text-sm text-neutral-600 pl-5">
+                        <span className="text-neutral-400 font-medium">A:</span>{" "}
+                        {faq.answer}
+                      </p>
                     </div>
                   ),
                 )}
@@ -318,33 +356,31 @@ export default async function CityDetailPage({
             </div>
           )}
 
-          {/* Contact / CTA Section */}
-          <div className="mt-8 bg-neutral-900 text-white rounded-2xl p-6 sm:p-8 text-center">
-            <h3 className="text-xl sm:text-2xl font-serif mb-2">
+          {/* CTA Section */}
+          <div className="mt-6 bg-gradient-to-r from-neutral-900 to-neutral-800 text-white rounded-xl p-5 sm:p-6 text-center">
+            <h3 className="text-lg sm:text-xl font-serif mb-1">
               Ready to Furnish Your Home in {serializedCity.name}?
             </h3>
-            <p className="text-neutral-400 text-sm mb-4">
-              Contact us today for personalized assistance or visit our
-              showroom.
+            <p className="text-neutral-400 text-xs sm:text-sm mb-3">
+              Contact us today for personalized assistance
             </p>
-            <div className="flex flex-wrap justify-center gap-3">
+            <div className="flex flex-wrap justify-center gap-2">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 px-6 py-2.5 bg-amber-500 text-neutral-900 text-[10px] font-bold uppercase tracking-widest hover:bg-white transition-colors rounded-xl"
+                className="inline-flex items-center gap-1.5 px-5 py-2 bg-amber-500 text-neutral-900 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest hover:bg-white transition-colors rounded-lg"
               >
-                <MessageCircle className="w-4 h-4" /> Contact Us
+                <MessageCircle className="w-3.5 h-3.5" /> Contact Us
               </Link>
               <Link
                 href="/shop"
-                className="inline-flex items-center gap-2 px-6 py-2.5 border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-colors rounded-xl"
+                className="inline-flex items-center gap-1.5 px-5 py-2 border border-white/20 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-colors rounded-lg"
               >
-                <ShoppingBag className="w-4 h-4" /> Browse Products
+                <ShoppingBag className="w-3.5 h-3.5" /> Browse Products
               </Link>
             </div>
           </div>
         </div>
 
-        {/* Client component for view tracking */}
         <CityDetailClient cityId={serializedCity.id} />
       </div>
     );

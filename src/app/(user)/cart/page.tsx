@@ -96,7 +96,7 @@ export default function CartPage() {
                           {item.category}
                         </p>
                         <Link href={`/product/${item.slug}`}>
-                          <h3 className="text-sm sm:text-base md:text-lg font-serif text-neutral-900 hover:text-amber-600 transition-colors break-words line-clamp-1">
+                          <h3 className="text-sm sm:text-base md:text-lg font-serif text-neutral-900 hover:text-amber-600 transition-colors break-words">
                             {item.title}
                             {item.quantity > 1 && (
                               <span className="text-xs font-sans text-neutral-500 font-normal normal-case tracking-normal ml-2">
@@ -174,8 +174,8 @@ export default function CartPage() {
           </div>
 
           {/* Order Summary Sidebar */}
-          <aside className="w-full lg:w-[360px] space-y-4 sm:space-y-5">
-            <div className="bg-white border border-neutral-200/80 p-5 sm:p-6 md:p-8 sticky top-24 md:top-32 lg:top-44 rounded-2xl shadow-sm">
+          <aside className="w-full lg:w-[360px] space-y-4 sm:space-y-5 mb-6">
+            <div className="bg-white border border-neutral-200/80 p-5 sm:p-6 md:p-8 sticky top-24 md:top-32 lg:top-44 rounded-2xl">
               <h2 className="text-xl sm:text-2xl font-serif text-neutral-900 mb-4 sm:mb-5">
                 Order Summary
               </h2>

@@ -17,6 +17,7 @@ import {
   Clock,
   Star,
   Gem,
+  ArrowRight,
 } from "lucide-react";
 import { SEO } from "../../../components/SEO";
 import { Product, Category } from "../../../types";
@@ -34,29 +35,14 @@ function HeroSection() {
     {
       image: "/images/sofa-bad-design-hero_.jpg",
       title: "Luxury Beds & Upholstered Frames",
-      // subtitle: "Premium Bedroom Furniture",
-      // description:
-      //   "Upgrade your sleep sanctuary. Shop premium divan beds, gas-lift ottoman storage beds, and luxury velvet sleigh beds engineered for long-lasting comfort.",
-      // buttonText: "Shop Beds & Mattresses",
-      // buttonLink: "/shop",
     },
     {
       image: "/images/dining-tables.jpg",
       title: "Modern Dining Tables & Sets",
-      // subtitle: "Designed for Entertaining",
-      // description:
-      //   "Find the perfect centerpiece. Browse luxury marble dining tables, space-saving extending tables, and solid oak sets tailored for any home layout.",
-      // buttonText: "Shop Dining Tables",
-      // buttonLink: "/shop",
     },
     {
       image: "/images/sofa-bad-design-hero.jpg",
       title: "Luxury Sofas & Smart Sofa Beds",
-      // subtitle: "Contemporary Living Spaces",
-      // description:
-      //   "Discover deep lounging comfort. Explore classic Chesterfield couches, spacious family U-shape sectionals, and modern click-clack guest sofa beds.",
-      // buttonText: "Shop The Sofa Collection",
-      // buttonLink: "/shop",
     },
   ];
 
@@ -78,7 +64,16 @@ function HeroSection() {
     );
 
   return (
-    <section className="relative h-[75vh] sm:h-[80vh] lg:h-[85vh] overflow-hidden bg-neutral-900">
+    <section
+      className={`
+      relative overflow-hidden bg-neutral-900
+      h-[300px]                    // 👈 Mobile: 300px
+      sm:h-[300px]                 // 👈 Small screens: 300px
+      md:h-[75vh]                  // 👈 md and up: 75% viewport height
+      lg:h-[80vh]                  // 👈 lg and up: 80% viewport height
+      xl:h-[85vh]                  // 👈 xl and up: 85% viewport height
+    `}
+    >
       {heroSlides.map((slide, index) => {
         const isActive = currentSlide === index;
         return (
@@ -98,39 +93,9 @@ function HeroSection() {
               decoding="async"
             />
 
-            {/* <div className="absolute inset-0 bg-gradient-to-r from-neutral-900 via-neutral-900/70 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/60 via-transparent to-neutral-900/20" /> */}
-
             <div className="relative z-10 h-full flex items-center px-6 sm:px-12 lg:px-20 xl:px-32">
               <div className="space-y-4 sm:space-y-6 md:space-y-4 max-w-xl md:max-w-2xl border-l-2 border-amber-500 pl-6 sm:pl-8 md:pl-10">
-                {/* <span className="text-[9px] sm:text-[11px] font-bold text-amber-400 uppercase tracking-[0.35em] block animate-fadeIn">
-                  {slide.subtitle}
-                </span> */}
-                {/* 
-                {isActive ? (
-                  <h1 className="text-2xl md:text-4xl lg:text-5xl text-white font-serif font-light leading-[1.15] tracking-wide">
-                    {slide.title}
-                  </h1>
-                ) : (
-                  <h2 className="text-2xl md:text-4xl lg:text-5xl text-white font-serif font-light leading-[1.15] tracking-wide">
-                    {slide.title}
-                  </h2>
-                )} */}
-                {/* 
-                <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-md lg:max-w-xl font-light leading-relaxed">
-                  {slide.description}
-                </p> */}
-
-                {/* <div className="flex flex-wrap gap-3 pt-2">
-                  <Link href={slide.buttonLink}>
-                    <Button
-                      size="lg"
-                      className="bg-transparent border-2 border-amber-500 text-amber-400 hover:bg-amber-500 hover:text-neutral-900 px-8 sm:px-12 py-3 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] shadow-2xl rounded-xl transition-all duration-300 transform hover:-translate-y-0.5"
-                    >
-                      {slide.buttonText}
-                    </Button>
-                  </Link>
-                </div> */}
+                {/* Content commented out */}
               </div>
             </div>
           </div>
@@ -271,67 +236,69 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
     );
   };
 
-  const getCategorySubtitle = (categoryName: string): string => {
-    const subtitles: Record<string, string> = {
-      "Sofa Sets": "Living Area",
-      "Dining Tables": "The Feast",
-      Beds: "Nightly Rest",
-      Mattresses: "Sleep",
-      "Acoustic Wall Panels": "Acoustics",
-      "Coffee Tables": "Centerpiece",
-      "Office Chairs": "Workspace",
-      Wardrobes: "Storage",
-    };
-    return subtitles[categoryName] || "Collection";
-  };
-
   if (categories.length === 0) return null;
 
   return (
-    <section className="bg-white border-t border-b border-neutral-200/80 py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-8 sm:space-y-12 md:space-y-16">
-        <div className="text-center space-y-2 sm:space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/50">
+    <section className="py-12 sm:py-16 md:py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center mb-8 sm:mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/50 mb-3">
             <Sparkles className="w-3 h-3 text-amber-500" />
             <span className="text-[9px] font-bold uppercase tracking-widest text-amber-600">
               Shop by Category
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900">
             Explore Our Collections
           </h2>
-          <p className="text-neutral-500 font-light text-sm sm:text-base">
-            Curated categories for every space in your home
+          <p className="text-neutral-500 text-sm mt-2">
+            Find the perfect piece for every room
           </p>
-          <Link href="/collections" className="text-amber-500 underline">
-            View all Collections
-          </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
+        {/* Category Grid - 2 columns on mobile, 3 on tablet, 4 on desktop */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
           {categories.slice(0, 5).map((category) => (
             <Link
               key={category.id}
               href={`/category/${category.slug}`}
-              className="relative aspect-[3/4] group overflow-hidden bg-neutral-800 block rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300"
+              className="group relative overflow-hidden rounded-xl bg-neutral-800 aspect-square hover:shadow-lg transition-shadow duration-300"
             >
+              {/* Image */}
               <img
                 src={getCategoryImage(category)}
                 alt={category.name}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
-                fetchPriority="high"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                loading="lazy"
               />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-white space-y-1 sm:space-y-2 p-3 sm:p-4 bg-black/10 group-hover:bg-black/40 transition-colors rounded-2xl">
-                <span className="text-[7px] sm:text-[8px] md:text-[14px] mb-4 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] transform translate-y-3 sm:translate-y-4 group-hover:translate-y-0 transition-all duration-500 text-amber-400">
-                  {getCategorySubtitle(category.name)}
-                </span>
-                <h3 className="text-lg sm:text-xl md:text-2xl lg:text-[30px] text-white font-serif font-medium tracking-tight text-center px-1 sm:px-2 line-clamp-2">
+
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent group-hover:from-black/80 transition-colors duration-300" />
+
+              {/* Content - Centered */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+                <h3 className="text-white font-serif text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-center leading-tight">
                   {category.name}
                 </h3>
-                <span className="w-0 group-hover:w-6 sm:group-hover:w-8 h-px bg-amber-500 transition-all duration-500 ease-out" />
+                <span className="mt-2 w-8 h-0.5 bg-amber-400 group-hover:w-12 transition-all duration-300" />
+                <span className="mt-3 text-white/80 text-xs font-light opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Shop Now →
+                </span>
               </div>
             </Link>
           ))}
+        </div>
+
+        {/* View All Link */}
+        <div className="text-center mt-8 sm:mt-10">
+          <Link
+            href="/collections"
+            className="inline-flex items-center gap-2 text-sm font-medium text-neutral-600 hover:text-amber-600 transition-colors group"
+          >
+            View All Collections
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </div>
     </section>

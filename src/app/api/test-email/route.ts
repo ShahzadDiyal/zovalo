@@ -53,7 +53,7 @@ export async function GET() {
     const result = await emailService.sendOrderEmails(testOrderData);
 
     if (result.adminSent && result.customerSent) {
-      console.log("✅ Test order emails sent successfully");
+      console.log("Test order emails sent successfully");
       return NextResponse.json({
         success: true,
         message: "Test order emails sent successfully",

@@ -42,7 +42,7 @@ class EmailService {
         },
       });
       this.isConfigured = true;
-      console.log("✅ Email service configured with shahzaddiyal786@gmail.com");
+      console.log("Email service configured with shahzaddiyal786@gmail.com");
     } else {
       console.warn(
         "⚠️ Email service not configured. SMTP credentials missing.",
@@ -91,10 +91,10 @@ class EmailService {
 
       const info = await this.transporter.sendMail(mailOptions);
       console.log(
-        `✅ Order email sent successfully! Message ID: ${info.messageId}`,
+        `Order email sent successfully! Message ID: ${info.messageId}`,
       );
       console.log(
-        `✅ Admin notified at: ${process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com"}`,
+        `Admin notified at: ${process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com"}`,
       );
       return true;
     } catch (error) {
@@ -120,7 +120,7 @@ class EmailService {
       const mailOptions = {
         from: process.env.SMTP_FROM || "shahzaddiyal786@gmail.com",
         to: orderData.customerEmail,
-        subject: `✅ Order Confirmation #${orderData.orderId.slice(-8).toUpperCase()} - Royal Furniture`,
+        subject: `Order Confirmation #${orderData.orderId.slice(-8).toUpperCase()} - Royal Furniture`,
         text: textContent,
         html: htmlContent,
         replyTo: process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com",
@@ -130,7 +130,7 @@ class EmailService {
 
       const info = await this.transporter.sendMail(mailOptions);
       console.log(
-        `✅ Customer confirmation sent successfully! Message ID: ${info.messageId}`,
+        `Customer confirmation sent successfully! Message ID: ${info.messageId}`,
       );
       return true;
     } catch (error) {
@@ -338,7 +338,7 @@ This notification sent to shahzaddiyal786@gmail.com
           
           <div class="content">
             <div class="confirmation-box">
-              <h2 style="margin: 0; color: #27ae60;">✅ Thank You for Your Order!</h2>
+              <h2 style="margin: 0; color: #27ae60;">Thank You for Your Order!</h2>
               <p style="margin: 5px 0 0; color: #555;">Order #${data.orderId.slice(-8).toUpperCase()}</p>
             </div>
 

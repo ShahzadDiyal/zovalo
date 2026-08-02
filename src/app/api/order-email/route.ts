@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 
     if (result.adminSent && result.customerSent) {
       console.log(
-        `✅ All emails sent successfully for order #${orderData.orderId.slice(-8).toUpperCase()}`,
+        `All emails sent successfully for order #${orderData.orderId.slice(-8).toUpperCase()}`,
       );
       return NextResponse.json({
         success: true,

@@ -85,13 +85,6 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         ) : null}
 
-        {/* Low Stock Warning Bar */}
-        {product.stock > 0 && product.stock < 5 && (
-          <div className="absolute bottom-0 left-0 right-0 bg-gold/90 text-near-black text-[8px] font-bold uppercase tracking-wider py-1 text-center">
-            Hurry! Only {product.stock} left in stock
-          </div>
-        )}
-
         {/* Action Buttons - Overlay on Image (Desktop) */}
         {product.stock > 0 && (
           <div className="absolute inset-0 opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col md:flex-row items-end justify-center gap-3 p-4 pointer-events-none md:pointer-events-auto">

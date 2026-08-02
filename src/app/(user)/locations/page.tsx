@@ -34,7 +34,7 @@ export async function generateStaticParams() {
   }
 }
 
-// ✅ FIXED: Dynamic metadata for SEO
+// FIXED: Dynamic metadata for SEO
 export async function generateMetadata() {
   const canonicalUrl = `${SITE_URL}/locations`;
 
@@ -43,14 +43,14 @@ export async function generateMetadata() {
     description:
       "Discover Royal Furniture delivery locations across the UK. Find premium furniture and sofas delivered to your city with Cash on Delivery.",
     alternates: {
-      canonical: canonicalUrl, // ✅ Full URL
+      canonical: canonicalUrl, // Full URL
     },
     openGraph: {
       title: "Furniture Delivery Locations | Royal Furniture",
       description:
         "Discover Royal Furniture delivery locations across the UK. Find premium furniture and sofas delivered to your city with Cash on Delivery.",
       type: "website",
-      url: canonicalUrl, // ✅ Fixed: correct URL
+      url: canonicalUrl, // Fixed: correct URL
       siteName: "Royal Furniture",
       locale: "en_GB",
       images: [
@@ -98,7 +98,7 @@ export default async function LocationsPage() {
                 Delivery Locations
               </span>
             </div>
-            {/* ✅ ONLY ONE H1 - Removed "Royal Furniture." */}
+            {/* ONLY ONE H1 - Removed "Royal Furniture." */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-white tracking-tight">
               We Deliver to Cities Across the UK
             </h1>

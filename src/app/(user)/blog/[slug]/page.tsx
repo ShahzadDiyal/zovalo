@@ -73,12 +73,12 @@ export async function generateMetadata({
       title,
       description,
       alternates: {
-        canonical: canonicalUrl, // ✅ Full URL
+        canonical: canonicalUrl, // Full URL
       },
       openGraph: {
         title,
         description,
-        url: canonicalUrl, // ✅ Full URL
+        url: canonicalUrl, // Full URL
         siteName: "Royal Furniture",
         type: "article",
         publishedTime: serializedPost.publishedAt || serializedPost.createdAt,

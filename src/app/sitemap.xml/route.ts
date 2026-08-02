@@ -27,7 +27,7 @@ const getSitemapData = unstable_cache(
     // Try to fetch blog posts
     try {
       blogPosts = await blogPostApi.getPublished();
-      console.log(`✅ Fetched ${blogPosts.length} blog posts for sitemap`);
+      console.log(`Fetched ${blogPosts.length} blog posts for sitemap`);
     } catch (error) {
       console.error("❌ Error fetching blog posts for sitemap:", error);
       // Continue with empty array - build won't fail
@@ -36,7 +36,7 @@ const getSitemapData = unstable_cache(
     // Try to fetch cities
     try {
       cities = await cityPageService.getPublishedCities();
-      console.log(`✅ Fetched ${cities.length} cities for sitemap`);
+      console.log(`Fetched ${cities.length} cities for sitemap`);
     } catch (error) {
       console.error("❌ Error fetching cities for sitemap:", error);
       // Continue with empty array
@@ -45,7 +45,7 @@ const getSitemapData = unstable_cache(
     // Try to fetch products
     try {
       products = await productApi.getAll();
-      console.log(`✅ Fetched ${products.length} products for sitemap`);
+      console.log(`Fetched ${products.length} products for sitemap`);
     } catch (error) {
       console.error("❌ Error fetching products for sitemap:", error);
     }
@@ -53,7 +53,7 @@ const getSitemapData = unstable_cache(
     // Try to fetch categories
     try {
       categories = await categoryApi.getAllCategories();
-      console.log(`✅ Fetched ${categories.length} categories for sitemap`);
+      console.log(`Fetched ${categories.length} categories for sitemap`);
     } catch (error) {
       console.error("❌ Error fetching categories for sitemap:", error);
     }

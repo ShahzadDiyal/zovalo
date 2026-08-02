@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default async function ShopPage() {
   const { products, categories } = await fetchShopData();
   return (
-    <Suspense fallback={/* unchanged */ null}>
+    <Suspense fallback={null}>
       <ShopClient initialProducts={products} initialCategories={categories} />
     </Suspense>
   );

@@ -27,9 +27,9 @@ import Image from "next/image";
 const SITE_URL = "https://royalfurnitures.store";
 
 export const metadata: Metadata = {
-  // ✅ FIX 1: Title shortened to under 60 characters
+  // FIX 1: Title shortened to under 60 characters
   title: "About Us | Premium Furniture Store UK",
-  // ✅ FIX 2: Description shortened to under 155 characters
+  // FIX 2: Description shortened to under 155 characters
   description:
     "Discover Royal Furniture - premium quality furniture crafted for modern homes. Learn about our story and commitment to excellence.",
   keywords:
@@ -39,13 +39,13 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: `${SITE_URL}/about`, // ✅ Full URL
+    canonical: `${SITE_URL}/about`, // Full URL
   },
   openGraph: {
-    title: "About Royal Furniture | Premium Quality Furniture UK", // ✅ Shortened
+    title: "About Royal Furniture | Premium Quality Furniture UK", // Shortened
     description:
-      "Learn about Royal Furniture - premium furniture crafted for the modern home. Quality pieces with Cash on Delivery across UK.", // ✅ Shortened
-    url: `${SITE_URL}/about`, // ✅ Fixed: Full URL
+      "Learn about Royal Furniture - premium furniture crafted for the modern home. Quality pieces with Cash on Delivery across UK.", // Shortened
+    url: `${SITE_URL}/about`, // Fixed: Full URL
     type: "website",
     siteName: "Royal Furniture",
     locale: "en_GB",
@@ -78,7 +78,7 @@ export default function AboutPage() {
             Welcome to Royal Furniture
           </span>
         </div>
-        {/* ✅ FIX 3: Only ONE H1 tag - Removed "Royal Furniture." */}
+        {/* FIX 3: Only ONE H1 tag - Removed "Royal Furniture." */}
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-display text-near-black mb-4">
           About <span className="text-gold">Royal Furniture</span>
         </h1>

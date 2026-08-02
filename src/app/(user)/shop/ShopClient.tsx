@@ -14,6 +14,8 @@ import {
   Sparkles,
   ChevronDown,
   RotateCcw,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { EmptyState } from "../../../components/ui/EmptyState";
 import { Product, Category } from "../../../types";
@@ -23,6 +25,8 @@ interface ShopClientProps {
   initialProducts: Product[];
   initialCategories: Category[];
 }
+
+const PRODUCTS_PER_PAGE = 12;
 
 export function ShopClient({
   initialProducts,
@@ -53,11 +57,15 @@ export function ShopClient({
   const [selectedSeaters, setSelectedSeaters] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+
   // Set selected category from URL slug
   useEffect(() => {
     if (!slug) {
       setSelectedCategory("All");
-      setSelectedCategoryId(null); // ADD THIS
+      setSelectedCategoryId(null);
+      setCurrentPage(1);
       return;
     }
 
@@ -65,7 +73,8 @@ export function ShopClient({
       const matchedCategory = categories.find((c) => c.slug === slug);
       if (matchedCategory) {
         setSelectedCategory(matchedCategory.name);
-        setSelectedCategoryId(matchedCategory.id); // ADD THIS
+        setSelectedCategoryId(matchedCategory.id);
+        setCurrentPage(1);
       } else {
         const formattedCategory = slug
           .split("-")
@@ -76,9 +85,10 @@ export function ShopClient({
           (c) => c.name === formattedCategory,
         );
         if (categoryByName) {
-          setSelectedCategoryId(categoryByName.id); // ADD THIS
+          setSelectedCategoryId(categoryByName.id);
+          setCurrentPage(1);
         } else {
-          setSelectedCategoryId(null); // ADD THIS
+          setSelectedCategoryId(null);
         }
       }
     }
@@ -90,6 +100,7 @@ export function ShopClient({
       const query = searchParams.get("search");
       if (query && query !== searchQuery) {
         setSearchQuery(query);
+        setCurrentPage(1);
       }
     }
   }, [searchParams]);
@@ -140,6 +151,7 @@ export function ShopClient({
     setSelectedColors((prev) =>
       prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color],
     );
+    setCurrentPage(1);
   };
 
   const toggleSeater = (seater: string) => {
@@ -148,20 +160,22 @@ export function ShopClient({
         ? prev.filter((s) => s !== seater)
         : [...prev, seater],
     );
+    setCurrentPage(1);
   };
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
     );
+    setCurrentPage(1);
   };
 
-  // Handle category click - navigate to the category page
   const handleCategoryClick = (categoryName: string, categorySlug?: string) => {
     if (categoryName === "All") {
       router.push("/shop");
       setSelectedCategory("All");
-      setSelectedCategoryId(null); // ADD THIS
+      setSelectedCategoryId(null);
+      setCurrentPage(1);
       return;
     }
 
@@ -170,8 +184,9 @@ export function ShopClient({
       setSelectedCategory(categoryName);
       const category = categories.find((c) => c.slug === categorySlug);
       if (category) {
-        setSelectedCategoryId(category.id); // ADD THIS
+        setSelectedCategoryId(category.id);
       }
+      setCurrentPage(1);
     }
   };
 
@@ -180,15 +195,17 @@ export function ShopClient({
       router.push("/shop");
     }
     setSelectedCategory("All");
-    setSelectedCategoryId(null); // ADD THIS
+    setSelectedCategoryId(null);
     setSearchQuery("");
     setPriceRange([0, maxPrice]);
     setSortBy("latest");
     setSelectedColors([]);
     setSelectedSeaters([]);
     setSelectedTags([]);
+    setCurrentPage(1);
   };
 
+  // Filter products
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
@@ -248,7 +265,7 @@ export function ShopClient({
     return result;
   }, [
     products,
-    selectedCategoryId, // THIS WAS MISSING - FIXED
+    selectedCategoryId,
     searchQuery,
     priceRange,
     sortBy,
@@ -256,6 +273,19 @@ export function ShopClient({
     selectedSeaters,
     selectedTags,
   ]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+  const endIndex = startIndex + PRODUCTS_PER_PAGE;
+  const currentProducts = filteredProducts.slice(startIndex, endIndex);
+
+  // Reset page when filtered products change
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [filteredProducts.length, totalPages, currentPage]);
 
   const maxPrice = useMemo(() => {
     if (products.length === 0) return 5000;
@@ -270,6 +300,61 @@ export function ShopClient({
     searchQuery !== "" ||
     priceRange[1] < maxPrice;
 
+  // Pagination handlers
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const totalVisible = 5;
+
+    if (totalPages <= totalVisible) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+
+      if (currentPage > 3) {
+        pages.push("...");
+      }
+
+      const startPage = Math.max(2, currentPage - 1);
+      const endPage = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+
+      if (currentPage < totalPages - 2) {
+        pages.push("...");
+      }
+
+      pages.push(totalPages);
+    }
+
+    return pages;
+  };
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
@@ -280,8 +365,6 @@ export function ShopClient({
       </div>
     );
   }
-
-  const categoryNames = ["All", ...categories.map((c) => c.name)];
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen pb-16 pt-6 sm:pt-0">
@@ -354,7 +437,7 @@ export function ShopClient({
                 </div>
               </div>
 
-              {/* Categories - Now navigates to correct routes */}
+              {/* Categories */}
               <div className="space-y-2">
                 <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700">
                   Categories
@@ -375,7 +458,7 @@ export function ShopClient({
                       key={cat.id}
                       onClick={() => handleCategoryClick(cat.name, cat.slug)}
                       className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
-                        selectedCategoryId === cat.id // CHANGE THIS
+                        selectedCategoryId === cat.id
                           ? "bg-neutral-900 text-white font-medium shadow-sm"
                           : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
                       }`}
@@ -494,13 +577,6 @@ export function ShopClient({
                     <span className="w-2 h-2 bg-amber-500 rounded-full" />
                   )}
                 </button>
-                <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest">
-                  Showing{" "}
-                  <span className="text-neutral-900 font-extrabold">
-                    {filteredProducts.length}
-                  </span>{" "}
-                  {filteredProducts.length === 1 ? "Product" : "Products"}
-                </p>
               </div>
 
               <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
@@ -602,7 +678,7 @@ export function ShopClient({
             )}
 
             {/* Products Grid */}
-            {filteredProducts.length === 0 ? (
+            {currentProducts.length === 0 ? (
               <div className="py-16 bg-white border border-dashed border-neutral-200/80 rounded-2xl text-center">
                 <EmptyState
                   icon={PackageOpen}
@@ -613,11 +689,70 @@ export function ShopClient({
                 />
               </div>
             ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-                {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+                  {currentProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+
+                {/* Pagination - Centered */}
+                {totalPages > 1 && (
+                  <div className="flex flex-col items-center gap-3 pt-4 border-t border-neutral-200/60">
+                    <div className="flex items-center gap-1">
+                      {/* Previous Button */}
+                      <button
+                        onClick={goToPrevPage}
+                        disabled={currentPage === 1}
+                        className={`p-2 rounded-xl border transition-all ${
+                          currentPage === 1
+                            ? "border-neutral-200 text-neutral-300 cursor-not-allowed"
+                            : "border-neutral-200 text-neutral-700 hover:bg-neutral-100 hover:border-amber-400"
+                        }`}
+                        aria-label="Previous page"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+
+                      {/* Page Numbers */}
+                      <div className="flex items-center gap-1">
+                        {getPageNumbers().map((page, index) => (
+                          <button
+                            key={index}
+                            onClick={() =>
+                              typeof page === "number" && goToPage(page)
+                            }
+                            className={`min-w-[32px] h-8 px-2 rounded-xl text-xs font-medium transition-all ${
+                              page === currentPage
+                                ? "bg-neutral-900 text-white"
+                                : page === "..."
+                                  ? "text-neutral-400 cursor-default"
+                                  : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
+                            }`}
+                            disabled={page === "..."}
+                          >
+                            {page}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Next Button */}
+                      <button
+                        onClick={goToNextPage}
+                        disabled={currentPage === totalPages}
+                        className={`p-2 rounded-xl border transition-all ${
+                          currentPage === totalPages
+                            ? "border-neutral-200 text-neutral-300 cursor-not-allowed"
+                            : "border-neutral-200 text-neutral-700 hover:bg-neutral-100 hover:border-amber-400"
+                        }`}
+                        aria-label="Next page"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -689,7 +824,7 @@ export function ShopClient({
                         setShowMobileFilters(false);
                       }}
                       className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
-                        selectedCategoryId === cat.id // CHANGE THIS
+                        selectedCategoryId === cat.id
                           ? "bg-neutral-900 text-white font-medium shadow-sm"
                           : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
                       }`}

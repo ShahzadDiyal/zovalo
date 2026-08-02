@@ -16,13 +16,13 @@ export const metadata: Metadata = {
   description:
     "Fast and reliable furniture delivery across UK, Europe, and Canada. Free UK delivery on all orders. Cash on Delivery available (No Upfront Fees Required). Track your order in real-time.",
   alternates: {
-    canonical: `${SITE_URL}/shipping`, // ✅ Fixed: Full URL
+    canonical: `${SITE_URL}/shipping`, // Fixed: Full URL
   },
   openGraph: {
-    title: "Shipping Policy | Free UK Delivery | Royal Furniture", // ✅ Fixed: Match page
+    title: "Shipping Policy | Free UK Delivery | Royal Furniture", // Fixed: Match page
     description:
-      "Fast and reliable furniture delivery across UK, Europe, and Canada. Free UK delivery on all orders. Cash on Delivery available (No Upfront Fees Required). Track your order in real-time.", // ✅ Fixed: Match page
-    url: `${SITE_URL}/shipping`, // ✅ Fixed: Correct URL
+      "Fast and reliable furniture delivery across UK, Europe, and Canada. Free UK delivery on all orders. Cash on Delivery available (No Upfront Fees Required). Track your order in real-time.", // Fixed: Match page
+    url: `${SITE_URL}/shipping`, // Fixed: Correct URL
     type: "website",
     siteName: "Royal Furniture",
     locale: "en_GB",
@@ -37,9 +37,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Shipping Policy | Free UK Delivery | Royal Furniture", // ✅ Fixed: Match page
+    title: "Shipping Policy | Free UK Delivery | Royal Furniture", // Fixed: Match page
     description:
-      "Fast and reliable furniture delivery across UK, Europe, and Canada. Free UK delivery on all orders. Cash on Delivery available (No Upfront Fees Required). Track your order in real-time.", // ✅ Fixed: Match page
+      "Fast and reliable furniture delivery across UK, Europe, and Canada. Free UK delivery on all orders. Cash on Delivery available (No Upfront Fees Required). Track your order in real-time.", // Fixed: Match page
     images: [`${SITE_URL}/og-image.jpg`],
   },
   robots: {
@@ -56,7 +56,7 @@ const ShippingPolicy = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-12 md:mb-16">
-          {/* ✅ Fixed: Only ONE H1 - Removed "Royal Furniture." */}
+          {/* Fixed: Only ONE H1 - Removed "Royal Furniture." */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-display text-near-black mb-4">
             Shipping Policy
           </h1>

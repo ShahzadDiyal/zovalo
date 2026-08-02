@@ -75,7 +75,7 @@ export async function generateMetadata({
         ? `${rawDescription.slice(0, 152).trimEnd()}...`
         : rawDescription;
 
-    // ✅ FIX: Use FULL URL for canonical
+    // FIX: Use FULL URL for canonical
     const canonicalUrl = `${SITE_URL}/locations/${serializedCity.slug}`;
 
     return {
@@ -171,7 +171,7 @@ export default async function CityDetailPage({
                 {serializedCity.name}
               </span>
             </div>
-            {/* ✅ FIX: Only ONE H1 tag */}
+            {/* FIX: Only ONE H1 tag */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight">
               {serializedCity.h1Heading ||
                 `Premium Furniture & Sofas in ${serializedCity.name}`}

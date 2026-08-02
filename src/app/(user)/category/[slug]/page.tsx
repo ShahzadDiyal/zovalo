@@ -20,10 +20,10 @@ export async function generateMetadata({
 
   const name = category?.name || slug.replace(/-/g, " ");
 
-  // ✅ FIX 1: Title shortened to under 60 characters
+  // FIX 1: Title shortened to under 60 characters
   const title = `${name} | Shop Online | Royal Furniture`;
 
-  // ✅ FIX 2: Description shortened to under 155 characters
+  // FIX 2: Description shortened to under 155 characters
   const rawDescription =
     category?.description ||
     `Shop our ${name} collection at Royal Furniture. Quality craftsmanship, Cash on Delivery across the UK.`;
@@ -36,12 +36,12 @@ export async function generateMetadata({
     title,
     description,
     alternates: {
-      canonical: `${SITE_URL}/category/${slug}`, // ✅ Full URL
+      canonical: `${SITE_URL}/category/${slug}`, // Full URL
     },
     openGraph: {
       title,
       description,
-      url: `${SITE_URL}/category/${slug}`, // ✅ Full URL
+      url: `${SITE_URL}/category/${slug}`, // Full URL
       type: "website",
       siteName: "Royal Furniture",
       locale: "en_GB",

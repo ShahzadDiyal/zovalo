@@ -17,7 +17,7 @@ export async function generateMetadata({
   const category = await categoryApi.getCategoryBySlug(slug);
 
   const name = category?.name || slug.replace(/-/g, " ");
-  const title = `${name} | Shop Online`;
+  const title = `${name} | Shop Online | Cash On Delivery in UK`;
   const rawDescription =
     category?.description ||
     `Shop our ${name} collection at Royal Furniture. Quality craftsmanship, Cash on Delivery available across the UK, with fast next-day delivery.`;

@@ -1000,7 +1000,9 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                   <input
                     type="text"
                     readOnly
-                    value={typeof window !== "undefined" ? window.location.href : ""}
+                    value={
+                      typeof window !== "undefined" ? window.location.href : ""
+                    }
                     className="flex-1 bg-neutral-50 border border-neutral-200/80 py-1.5 px-2 text-xs rounded-xl"
                   />
                   <button

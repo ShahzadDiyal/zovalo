@@ -37,21 +37,21 @@ function HeroSection() {
       title: "Luxury Beds & Upholstered Frames",
       subtitle: "Experience unparalleled comfort with our premium collection",
       cta: "Explore Beds",
-      link: "/category/beds"
+      link: "/category/beds",
     },
     {
       image: "/images/dining-tables.jpg",
       title: "Modern Dining Tables & Sets",
       subtitle: "Elevate your dining experience with elegant designs",
       cta: "Shop Dining",
-      link: "/category/dining-tables"
+      link: "/category/dining-tables",
     },
     {
       image: "/images/sofa-bad-design-hero.jpg",
       title: "Luxury Sofas & Smart Sofa Beds",
       subtitle: "Transform your living space with timeless elegance",
       cta: "View Sofas",
-      link: "/category/sofa-sets"
+      link: "/category/sofa-sets",
     },
   ];
 
@@ -108,19 +108,21 @@ function HeroSection() {
 
             {/* Content - Left on mobile, Centered on md and up */}
             <div className="relative z-20 h-full flex items-center px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-              <div className={`
+              <div
+                className={`
                 max-w-2xl lg:max-w-3xl xl:max-w-4xl
                 space-y-3 sm:space-y-4 md:space-y-6
                 // Left aligned on mobile (below md)
                 text-left
                 // Centered on md and up
                 md:text-center md:mx-auto
-              `}>
+              `}
+              >
                 {/* H1 - Main heading */}
                 <h1 className="text-white font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl max-w-md md:max-w-3xl font-bold leading-tight">
                   {slide.title}
                 </h1>
-                
+
                 {/* Subtitle */}
                 <p className="text-white/90 text-sm sm:text-base md:text-lg lg:text-xl font-light leading-relaxed max-w-xl md:max-w-2xl mx-auto">
                   {slide.subtitle}
@@ -176,7 +178,6 @@ function HeroSection() {
     </section>
   );
 }
-
 
 function FeaturedProductsSection({ products }: { products: Product[] }) {
   return (
@@ -257,7 +258,7 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
       return category.image;
     if (category.image && category.image.startsWith("http"))
       return category.image;
-    
+
     // Return null if no valid image
     return null;
   };

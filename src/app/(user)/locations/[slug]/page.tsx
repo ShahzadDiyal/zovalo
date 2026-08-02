@@ -25,6 +25,8 @@ import { CityMap } from "../../../../components/locations/CityMap";
 import { CityDetailClient } from "./CityDetailClient";
 import { serializeFirestoreData } from "../../../../lib/serialize";
 
+const SITE_URL = "https://royalfurnitures.store";
+
 const getCityForPage = (slug: string) =>
   unstable_cache(
     () => cityPageService.getCityBySlug(slug),
@@ -68,19 +70,19 @@ export async function generateMetadata({
       serializedCity.metaTitle || `${serializedCity.name} - Furniture Delivery`;
     const rawDescription =
       serializedCity.metaDescription || serializedCity.uniqueIntro || "";
-    // Meta descriptions should stay under ~155 chars; long-form intro copy
-    // was being used verbatim, which is what was tripping the "too long" check.
     const description =
       rawDescription.length > 155
         ? `${rawDescription.slice(0, 152).trimEnd()}...`
         : rawDescription;
-    const canonicalUrl = `https://royalfurnitures.store/locations/${serializedCity.slug}`;
+
+    // ✅ FIX: Use FULL URL for canonical
+    const canonicalUrl = `${SITE_URL}/locations/${serializedCity.slug}`;
 
     return {
       title,
       description,
       alternates: {
-        canonical: `/locations/${serializedCity.slug}`,
+        canonical: canonicalUrl,
       },
       openGraph: {
         title,
@@ -88,8 +90,30 @@ export async function generateMetadata({
         type: "website",
         url: canonicalUrl,
         images: serializedCity.featuredImage
+          ? [
+              {
+                url: serializedCity.featuredImage,
+                width: 1200,
+                height: 630,
+                alt: `${serializedCity.name} - Royal Furniture`,
+              },
+            ]
+          : [
+              {
+                url: `${SITE_URL}/sofa-bad-design.jpg`,
+                width: 1200,
+                height: 630,
+                alt: "Royal Furniture",
+              },
+            ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: title,
+        description: description,
+        images: serializedCity.featuredImage
           ? [serializedCity.featuredImage]
-          : [],
+          : [`${SITE_URL}/og-image.jpg`],
       },
       keywords: [serializedCity.name, "furniture", "sofas", "beds", "delivery"],
     };
@@ -147,6 +171,7 @@ export default async function CityDetailPage({
                 {serializedCity.name}
               </span>
             </div>
+            {/* ✅ FIX: Only ONE H1 tag */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight">
               {serializedCity.h1Heading ||
                 `Premium Furniture & Sofas in ${serializedCity.name}`}
@@ -159,7 +184,7 @@ export default async function CityDetailPage({
 
         {/* Map Section - Smaller and Less Distracting */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10">
-          <div className="bg-white rounded-xl  overflow-hidden">
+          <div className="bg-white rounded-xl overflow-hidden">
             <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-200/60">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-amber-500" />
@@ -185,7 +210,6 @@ export default async function CityDetailPage({
                 {serializedCity.localTrustSignals
                   .slice(0, 5)
                   .map((signal: string, index: number) => {
-                    // Determine icon based on content
                     let Icon = ShieldCheck;
                     let iconColor = "text-amber-500";
                     if (
@@ -225,7 +249,7 @@ export default async function CityDetailPage({
                     return (
                       <div
                         key={index}
-                        className="bg-white  rounded-xl p-3 text-center hover:shadow-md transition-shadow"
+                        className="bg-white rounded-xl p-3 text-center hover:shadow-md transition-shadow"
                       >
                         <Icon
                           className={`w-5 h-5 ${iconColor} mx-auto mb-1.5`}

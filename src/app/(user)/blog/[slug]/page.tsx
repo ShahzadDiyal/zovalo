@@ -7,6 +7,8 @@ import { blogService } from "../../../../services/blogService";
 import { BlogPost } from "../../../../types";
 import { serializeFirestoreData } from "../../../../lib/serialize";
 
+const SITE_URL = "https://royalfurnitures.store";
+
 // Generate static params for all blog posts
 export async function generateStaticParams() {
   try {
@@ -20,7 +22,7 @@ export async function generateStaticParams() {
   }
 }
 
-// Dynamic metadata for SEO - FIXED: params is a Promise
+// Dynamic metadata for SEO - FIXED
 export async function generateMetadata({
   params,
 }: {
@@ -34,15 +36,24 @@ export async function generateMetadata({
       return {
         title: "Post Not Found",
         description: "The requested blog post could not be found.",
+        robots: {
+          index: false,
+          follow: false,
+        },
       };
     }
 
     const serializedPost = serializeFirestoreData(post);
 
+    // Build the full canonical URL
+    const canonicalUrl = `${SITE_URL}/blog/${serializedPost.slug}`;
+
+    // Get title
     const rawTitle = serializedPost.seoTitle || serializedPost.title || "";
     const title =
       rawTitle.length > 60 ? `${rawTitle.slice(0, 57).trimEnd()}...` : rawTitle;
 
+    // Get description
     const rawDescription =
       serializedPost.seoDescription ||
       serializedPost.excerpt ||
@@ -54,37 +65,63 @@ export async function generateMetadata({
         ? `${rawDescription.slice(0, 152).trimEnd()}...`
         : rawDescription;
 
+    // Get featured image or use default
+    const featuredImage =
+      serializedPost.featuredImage || `${SITE_URL}/sofa-bad-design-hero.jpg`;
+
     return {
       title,
       description,
       alternates: {
-        canonical: `/blog/${serializedPost.slug}`,
+        canonical: canonicalUrl, // ✅ Full URL
       },
       openGraph: {
         title,
         description,
-        url: `https://royalfurnitures.store/blog/${serializedPost.slug}`,
-        images: serializedPost.featuredImage
-          ? [serializedPost.featuredImage]
-          : [],
+        url: canonicalUrl, // ✅ Full URL
+        siteName: "Royal Furniture",
         type: "article",
         publishedTime: serializedPost.publishedAt || serializedPost.createdAt,
         modifiedTime: serializedPost.updatedAt,
         authors: [serializedPost.author?.name || "Royal Furniture"],
-        tags: serializedPost.tags,
+        tags: serializedPost.tags || [],
+        images: [
+          {
+            url: featuredImage,
+            width: 1200,
+            height: 630,
+            alt: serializedPost.title || "Royal Furniture Blog Post",
+          },
+        ],
       },
-      keywords: serializedPost.seoKeywords || serializedPost.tags,
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [featuredImage],
+      },
+      keywords: serializedPost.seoKeywords || serializedPost.tags || [],
+      robots: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     };
   } catch (error) {
     console.error("Error generating metadata:", error);
     return {
       title: "Blog Post",
       description: "Read our latest blog post",
+      robots: {
+        index: true,
+        follow: true,
+      },
     };
   }
 }
 
-// Server Component - FIXED: params is a Promise
+// Server Component
 export default async function BlogPostPage({
   params,
 }: {

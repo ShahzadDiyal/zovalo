@@ -19,6 +19,8 @@ import { CityPage } from "../../../types";
 import { UKMap } from "../../../components/locations/UKMap";
 import { LocationsClient } from "./LocationsClient";
 
+const SITE_URL = "https://royalfurnitures.store";
+
 // Generate static params for all city pages
 export async function generateStaticParams() {
   try {
@@ -32,21 +34,46 @@ export async function generateStaticParams() {
   }
 }
 
-// Dynamic metadata for SEO
+// ✅ FIXED: Dynamic metadata for SEO
 export async function generateMetadata() {
+  const canonicalUrl = `${SITE_URL}/locations`;
+
   return {
     title: "Furniture Delivery Locations | Royal Furniture",
     description:
       "Discover Royal Furniture delivery locations across the UK. Find premium furniture and sofas delivered to your city with Cash on Delivery.",
     alternates: {
-      canonical: "/locations",
+      canonical: canonicalUrl, // ✅ Full URL
     },
     openGraph: {
       title: "Furniture Delivery Locations | Royal Furniture",
       description:
         "Discover Royal Furniture delivery locations across the UK. Find premium furniture and sofas delivered to your city with Cash on Delivery.",
       type: "website",
-      url: "https://royalfurnitures.store/locations",
+      url: canonicalUrl, // ✅ Fixed: correct URL
+      siteName: "Royal Furniture",
+      locale: "en_GB",
+      images: [
+        {
+          url: `${SITE_URL}/images/og-locations.jpg`,
+          width: 1200,
+          height: 630,
+          alt: "Royal Furniture Delivery Locations Across the UK",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Furniture Delivery Locations | Royal Furniture",
+      description:
+        "Discover Royal Furniture delivery locations across the UK. Find premium furniture and sofas delivered to your city with Cash on Delivery.",
+      images: [`${SITE_URL}/images/og-locations.jpg`],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   };
 }
@@ -71,6 +98,7 @@ export default async function LocationsPage() {
                 Delivery Locations
               </span>
             </div>
+            {/* ✅ ONLY ONE H1 - Removed "Royal Furniture." */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-white tracking-tight">
               We Deliver to Cities Across the UK
             </h1>

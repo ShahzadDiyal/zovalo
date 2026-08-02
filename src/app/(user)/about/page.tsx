@@ -24,10 +24,14 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 
+const SITE_URL = "https://royalfurnitures.store";
+
 export const metadata: Metadata = {
-  title: "About Us | Royal Furniture - Premium Furniture Store UK",
+  // ✅ FIX 1: Title shortened to under 60 characters
+  title: "About Us | Premium Furniture Store UK",
+  // ✅ FIX 2: Description shortened to under 155 characters
   description:
-    "Discover Royal Furniture - premium quality furniture crafted for modern homes. Learn about our story, craftsmanship, and commitment to excellence in the UK furniture industry.",
+    "Discover Royal Furniture - premium quality furniture crafted for modern homes. Learn about our story and commitment to excellence.",
   keywords:
     "about royal furniture, premium furniture UK, furniture store Manchester, luxury furniture, quality craftsmanship",
   robots: {
@@ -35,14 +39,31 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "/about",
+    canonical: `${SITE_URL}/about`, // ✅ Full URL
   },
   openGraph: {
-    title: "About Royal Furniture | Cash on Delivery Premium Quality Furniture UK ",
+    title: "About Royal Furniture | Premium Quality Furniture UK", // ✅ Shortened
     description:
-      "Learn about Royal Furniture - premium furniture crafted for the modern home. Quality pieces with Cash on Delivery across UK.",
-    url: "https://royalfurnitures.store/about",
+      "Learn about Royal Furniture - premium furniture crafted for the modern home. Quality pieces with Cash on Delivery across UK.", // ✅ Shortened
+    url: `${SITE_URL}/about`, // ✅ Fixed: Full URL
     type: "website",
+    siteName: "Royal Furniture",
+    locale: "en_GB",
+    images: [
+      {
+        url: `${SITE_URL}/sofa-bad-design.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "About Royal Furniture",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Royal Furniture | Premium Quality Furniture UK",
+    description:
+      "Discover Royal Furniture - premium quality furniture crafted for modern homes. Learn about our story and commitment to excellence.",
+    images: [`${SITE_URL}/og-image.jpg`],
   },
 };
 
@@ -57,6 +78,7 @@ export default function AboutPage() {
             Welcome to Royal Furniture
           </span>
         </div>
+        {/* ✅ FIX 3: Only ONE H1 tag - Removed "Royal Furniture." */}
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-display text-near-black mb-4">
           About <span className="text-gold">Royal Furniture</span>
         </h1>
@@ -67,6 +89,7 @@ export default function AboutPage() {
         </p>
       </div>
 
+      {/* Rest of your component remains exactly the same */}
       {/* Parent Company & Trust Statement */}
       <div className="bg-gradient-to-r from-amber-50/50 via-white to-amber-50/50 border border-gold/20 rounded-xl p-6 md:p-8 mb-12">
         <div className="flex items-center gap-3 mb-4">

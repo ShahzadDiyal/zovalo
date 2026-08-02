@@ -3,11 +3,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import {
-  Grid3x3,
-  Search,
-  ChevronRight,
-} from "lucide-react";
+import { Grid3x3, Search, ChevronRight } from "lucide-react";
 import { Category } from "../../../types";
 
 interface CollectionsClientProps {
@@ -15,7 +11,10 @@ interface CollectionsClientProps {
   totalProducts: number;
 }
 
-export function CollectionsClient({ categories, totalProducts }: CollectionsClientProps) {
+export function CollectionsClient({
+  categories,
+  totalProducts,
+}: CollectionsClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredCategories = useMemo(() => {
@@ -25,7 +24,7 @@ export function CollectionsClient({ categories, totalProducts }: CollectionsClie
       (category) =>
         category.name.toLowerCase().includes(query) ||
         category.description?.toLowerCase().includes(query) ||
-        category.slug?.toLowerCase().includes(query)
+        category.slug?.toLowerCase().includes(query),
     );
   }, [categories, searchQuery]);
 
@@ -48,8 +47,8 @@ export function CollectionsClient({ categories, totalProducts }: CollectionsClie
             All Collections
           </h1>
           <p className="text-neutral-400 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Explore our complete range of premium furniture collections, 
-            crafted for comfort and designed to last.
+            Explore our complete range of premium furniture collections, crafted
+            for comfort and designed to last.
           </p>
         </div>
       </section>
@@ -75,7 +74,9 @@ export function CollectionsClient({ categories, totalProducts }: CollectionsClie
         {filteredCategories.length === 0 ? (
           <div className="text-center py-16 bg-white border border-neutral-200/80 rounded-2xl">
             <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-serif text-neutral-900 mb-2">No collections found</h3>
+            <h3 className="text-xl font-serif text-neutral-900 mb-2">
+              No collections found
+            </h3>
             <p className="text-neutral-500 text-sm">
               We couldn't find any collections matching "{searchQuery}"
             </p>
@@ -90,7 +91,8 @@ export function CollectionsClient({ categories, totalProducts }: CollectionsClie
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {filteredCategories.map((category) => {
               // Use category image or fallback to placeholder
-              const categoryImage = category.image || category.featuredImage as any || '';
+              const categoryImage =
+                category.image || (category.featuredImage as any) || "";
               const hasImage = categoryImage && categoryImage.length > 0;
 
               return (
@@ -113,10 +115,10 @@ export function CollectionsClient({ categories, totalProducts }: CollectionsClie
                         <span className="text-5xl opacity-30">🪑</span>
                       </div>
                     )}
-                    
+
                     {/* Dark Overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
+
                     {/* Category name overlay on hover */}
                     <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                       <span className="text-white text-sm font-bold uppercase tracking-widest">

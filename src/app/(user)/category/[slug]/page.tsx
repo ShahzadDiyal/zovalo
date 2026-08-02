@@ -8,6 +8,13 @@ import { serializeFirestoreData } from "../../../../lib/serialize";
 
 const SITE_URL = "https://royalfurnitures.store";
 
+// ✅ CRITICAL: Force dynamic rendering - NO STATIC GENERATION
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+// ❌ REMOVE this - it's causing static generation
+// export async function generateStaticParams() { ... }
+
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
 }

@@ -60,7 +60,7 @@ export function CategoryClient({
       const query = searchParams.get("search");
       if (query && query !== searchQuery) {
         setSearchQuery(query);
-        setCurrentPage(1); // Reset page when search changes
+        setCurrentPage(1);
       }
     }
   }, [searchParams]);
@@ -99,7 +99,7 @@ export function CategoryClient({
     setSelectedColors((prev) =>
       prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color],
     );
-    setCurrentPage(1); // Reset page when filter changes
+    setCurrentPage(1);
   };
 
   const toggleSeater = (seater: string) => {
@@ -108,14 +108,14 @@ export function CategoryClient({
         ? prev.filter((s) => s !== seater)
         : [...prev, seater],
     );
-    setCurrentPage(1); // Reset page when filter changes
+    setCurrentPage(1);
   };
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
     );
-    setCurrentPage(1); // Reset page when filter changes
+    setCurrentPage(1);
   };
 
   const clearAllFilters = () => {
@@ -286,7 +286,7 @@ export function CategoryClient({
   // Handle category click - navigate to category page
   const handleCategoryClick = (categorySlug: string) => {
     router.push(`/category/${categorySlug}`);
-    setCurrentPage(1); // Reset page when category changes
+    setCurrentPage(1);
   };
 
   // Update URL when search changes
@@ -299,7 +299,13 @@ export function CategoryClient({
       url.searchParams.delete("search");
     }
     router.push(url.pathname + url.search);
-    setCurrentPage(1); // Reset page when search changes
+    setCurrentPage(1);
+  };
+
+  // Handle search change
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setCurrentPage(1);
   };
 
   if (loading) {
@@ -369,7 +375,7 @@ export function CategoryClient({
                     <input
                       type="text"
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={(e) => handleSearchChange(e.target.value)}
                       placeholder="Search catalog..."
                       className="w-full bg-neutral-50 border border-neutral-200/80 py-2.5 pl-9 pr-3 text-xs text-neutral-900 outline-none focus:border-amber-500 focus:bg-white transition-all rounded-xl"
                     />
@@ -524,44 +530,71 @@ export function CategoryClient({
           </aside>
 
           {/* Main Content */}
-          <div className="flex-1 min-w-0 space-y-6 w-full">
-            {/* Controls Bar */}
-            <div className="flex flex-col sm:flex-row justify-between items-center bg-white border border-neutral-200/80 rounded-2xl p-3 sm:p-4 gap-4">
-              <div className="flex items-center justify-between w-full sm:w-auto gap-4">
-                <button
-                  onClick={() => setShowMobileFilters(true)}
-                  className="lg:hidden flex items-center gap-2 border border-neutral-200/80 px-4 py-2 text-xs font-bold uppercase tracking-wider text-neutral-900 bg-neutral-50 hover:bg-amber-50 rounded-xl transition-colors"
-                >
-                  <SlidersHorizontal className="w-4 h-4 text-amber-600" />
-                  <span>Filters</span>
-                  {hasActiveFilters && (
-                    <span className="w-2 h-2 bg-amber-500 rounded-full" />
-                  )}
-                </button>
-              </div>
+          <div className="flex-1 min-w-0 space-y-3 w-full">
+            {/* ✅ Search Bar - Always visible above controls */}
+            <div>
+              <form onSubmit={handleSearchSubmit} className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  placeholder="Search for products by name, description, or category..."
+                  className="w-full bg-neutral-50 border border-neutral-200 py-3 pl-10 pr-12 text-sm text-neutral-900 outline-none focus:border-amber-500 focus:bg-white transition-all rounded-[6px]"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => {
+                      setSearchQuery("");
+                      setCurrentPage(1);
+                      const url = new URL(window.location.href);
+                      url.searchParams.delete("search");
+                      router.push(url.pathname + url.search);
+                    }}
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-900 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </form>
+            </div>
 
-              <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+            {/* Controls Bar */}
+            <div className="flex gap-0.5 sm:gap-1 w-full">
+              <button
+                onClick={() => setShowMobileFilters(true)}
+                className="lg:hidden flex items-center justify-center gap-2 border border-neutral-200/80 px-3 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider text-neutral-900 bg-neutral-50 hover:bg-amber-50 rounded-[6px] transition-colors whitespace-nowrap flex-1 sm:flex-none"
+              >
+                <SlidersHorizontal className="w-4 h-4 text-amber-600" />
+                <span>Filters</span>
+                {hasActiveFilters && (
+                  <span className="w-2 h-2 bg-amber-500 rounded-full" />
+                )}
+              </button>
+
+              <div className="flex items-center gap-1 sm:gap-3 flex-1 sm:flex-none">
                 <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider hidden sm:inline">
                   Sort:
                 </span>
-                <div className="relative w-full sm:w-auto">
+                <div className="relative w-full sm:w-auto min-w-[120px] sm:min-w-[160px]">
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="w-full sm:w-auto appearance-none bg-neutral-50 border border-neutral-200/80 py-2 pl-4 pr-10 text-xs font-bold uppercase tracking-wider text-neutral-900 outline-none focus:border-amber-500 cursor-pointer rounded-xl transition-all"
+                    className="w-full appearance-none bg-neutral-50 border border-neutral-200/80 py-2 pl-3 sm:pl-4 pr-8 sm:pr-10 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neutral-900 outline-none focus:border-amber-500 cursor-pointer rounded-[6px] transition-all"
                   >
-                    <option value="latest">Latest Arrivals</option>
-                    <option value="low-to-high">Price: Low to High</option>
-                    <option value="high-to-low">Price: High to Low</option>
+                    <option value="latest">Latest</option>
+                    <option value="low-to-high">Price: Low</option>
+                    <option value="high-to-low">Price: High</option>
                   </select>
-                  <ChevronDown className="w-3.5 h-3.5 text-neutral-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <ChevronDown className="w-3.5 h-3.5 text-neutral-500 absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
               </div>
             </div>
 
             {/* Active Filters Display */}
             {hasActiveFilters && (
-              <div className="flex flex-wrap items-center gap-2 p-3 bg-white border border-neutral-200/80 rounded-2xl shadow-sm">
+              <div className="flex flex-wrap items-center gap-2 p-3 bg-white border border-neutral-200/80 rounded-[12px]">
                 <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider mr-1">
                   Active:
                 </span>
@@ -706,6 +739,9 @@ export function CategoryClient({
                         <ChevronRight className="w-4 h-4" />
                       </button>
                     </div>
+                    <p className="text-[10px] text-neutral-500 uppercase tracking-wider">
+                      Page {currentPage} of {totalPages}
+                    </p>
                   </div>
                 )}
               </>
@@ -747,7 +783,7 @@ export function CategoryClient({
                     <input
                       type="text"
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={(e) => handleSearchChange(e.target.value)}
                       placeholder="Search products..."
                       className="w-full bg-neutral-50 border border-neutral-200/80 py-2.5 pl-9 pr-3 text-xs outline-none focus:border-amber-500 rounded-xl"
                     />

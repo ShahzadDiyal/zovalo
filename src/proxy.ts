@@ -2,13 +2,23 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const PRODUCTION_HOSTS = new Set([
+  "royalfurnitures.store",
+  "www.royalfurnitures.store",
+]);
+
 export function proxy(request: NextRequest) {
   const url = request.nextUrl;
-  const hostname = request.headers.get("host") || "";
-  // Some hosts terminate TLS upstream and forward this header instead of
-  // giving us a request that's actually http:// at this layer.
-  const proto = request.headers.get("x-forwarded-proto") || url.protocol.replace(":", "");
+  const hostname = (request.headers.get("host") || "").split(":")[0];
 
+  // Only ever redirect requests actually arriving at the production
+  // domain. localhost, 127.0.0.1, preview deployments, etc. are left
+  // completely alone so local dev and staging never bounce to prod.
+  if (!PRODUCTION_HOSTS.has(hostname)) {
+    return NextResponse.next();
+  }
+
+  const proto = request.headers.get("x-forwarded-proto") || url.protocol.replace(":", "");
   const needsWwwStrip = hostname === "www.royalfurnitures.store";
   const needsHttpsUpgrade = proto === "http";
 

@@ -35,14 +35,23 @@ function HeroSection() {
     {
       image: "/images/sofa-bad-design-hero_.jpg",
       title: "Luxury Beds & Upholstered Frames",
+      subtitle: "Experience unparalleled comfort with our premium collection",
+      cta: "Explore Beds",
+      link: "/category/beds"
     },
     {
       image: "/images/dining-tables.jpg",
       title: "Modern Dining Tables & Sets",
+      subtitle: "Elevate your dining experience with elegant designs",
+      cta: "Shop Dining",
+      link: "/category/dining-tables"
     },
     {
       image: "/images/sofa-bad-design-hero.jpg",
       title: "Luxury Sofas & Smart Sofa Beds",
+      subtitle: "Transform your living space with timeless elegance",
+      cta: "View Sofas",
+      link: "/category/sofa-sets"
     },
   ];
 
@@ -67,11 +76,11 @@ function HeroSection() {
     <section
       className={`
       relative overflow-hidden bg-neutral-900
-      h-[300px]                    // 👈 Mobile: 300px
-      sm:h-[300px]                 // 👈 Small screens: 300px
-      md:h-[75vh]                  // 👈 md and up: 75% viewport height
-      lg:h-[80vh]                  // 👈 lg and up: 80% viewport height
-      xl:h-[85vh]                  // 👈 xl and up: 85% viewport height
+      h-[300px]
+      sm:h-[350px]
+      md:h-[75vh]
+      lg:h-[80vh]
+      xl:h-[85vh]
     `}
     >
       {heroSlides.map((slide, index) => {
@@ -94,31 +103,63 @@ function HeroSection() {
               }`}
             />
 
-            <div className="relative z-10 h-full flex items-center px-6 sm:px-12 lg:px-20 xl:px-32">
-              <div className="space-y-4 sm:space-y-6 md:space-y-4 max-w-xl md:max-w-2xl border-l-2 border-amber-500 pl-6 sm:pl-8 md:pl-10">
-                {/* Content commented out */}
+            {/* Dark overlay for better text readability */}
+            <div className="absolute inset-0 bg-black/40 z-10" />
+
+            {/* Content - Left on mobile, Centered on md and up */}
+            <div className="relative z-20 h-full flex items-center px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+              <div className={`
+                max-w-2xl lg:max-w-3xl xl:max-w-4xl
+                space-y-3 sm:space-y-4 md:space-y-6
+                // Left aligned on mobile (below md)
+                text-left
+                // Centered on md and up
+                md:text-center md:mx-auto
+              `}>
+                {/* H1 - Main heading */}
+                <h1 className="text-white font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl max-w-md md:max-w-3xl font-bold leading-tight">
+                  {slide.title}
+                </h1>
+                
+                {/* Subtitle */}
+                <p className="text-white/90 text-sm sm:text-base md:text-lg lg:text-xl font-light leading-relaxed max-w-xl md:max-w-2xl mx-auto">
+                  {slide.subtitle}
+                </p>
+
+                {/* CTA Button */}
+                <div className="pt-1 sm:pt-2 md:pt-3">
+                  <Link
+                    href={slide.link}
+                    className="inline-flex items-center gap-2 px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-amber-500 hover:bg-amber-600 text-white font-medium text-xs sm:text-sm md:text-base rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                  >
+                    {slide.cta}
+                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         );
       })}
 
+      {/* Navigation Buttons */}
       <button
         onClick={prevSlide}
         aria-label="Previous Slide"
-        className="hidden md:block absolute left-6 top-1/2 -translate-y-1/2 z-20 bg-neutral-900/40 hover:bg-amber-500 text-white hover:text-neutral-900 p-3 rounded-xl border border-white/10 backdrop-blur-md transition-all duration-300 group"
+        className="hidden md:flex absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 bg-neutral-900/40 hover:bg-amber-500 text-white hover:text-neutral-900 p-2 sm:p-3 rounded-xl border border-white/10 backdrop-blur-md transition-all duration-300 group items-center justify-center"
       >
-        <ChevronLeft className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" />
+        <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:-translate-x-0.5" />
       </button>
       <button
         onClick={nextSlide}
         aria-label="Next Slide"
-        className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-20 bg-neutral-900/40 hover:bg-amber-500 text-white hover:text-neutral-900 p-3 rounded-xl border border-white/10 backdrop-blur-md transition-all duration-300 group"
+        className="hidden md:flex absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 bg-neutral-900/40 hover:bg-amber-500 text-white hover:text-neutral-900 p-2 sm:p-3 rounded-xl border border-white/10 backdrop-blur-md transition-all duration-300 group items-center justify-center"
       >
-        <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
+        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-0.5" />
       </button>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+      {/* Slide Indicators */}
+      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-2 sm:gap-3">
         {heroSlides.map((_, index) => (
           <button
             key={index}
@@ -126,8 +167,8 @@ function HeroSection() {
             aria-label={`Go to slide ${index + 1}`}
             className={`h-1 transition-all duration-500 ease-out ${
               currentSlide === index
-                ? "w-12 bg-amber-500"
-                : "w-5 bg-white/30 hover:bg-white/60"
+                ? "w-8 sm:w-10 md:w-12 bg-amber-500"
+                : "w-4 sm:w-5 bg-white/30 hover:bg-white/60"
             }`}
           />
         ))}
@@ -135,6 +176,7 @@ function HeroSection() {
     </section>
   );
 }
+
 
 function FeaturedProductsSection({ products }: { products: Product[] }) {
   return (
@@ -209,32 +251,15 @@ function RecentProductsSection({ products }: { products: Product[] }) {
 }
 
 function CategoriesSection({ categories }: { categories: Category[] }) {
-  const getCategoryImage = (category: Category): string => {
+  const getCategoryImage = (category: Category): string | null => {
+    // Only return image if it's valid
     if (category.image && category.image.startsWith("data:image"))
       return category.image;
     if (category.image && category.image.startsWith("http"))
       return category.image;
-    const fallbackImages: Record<string, string> = {
-      "Sofa Sets":
-        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800",
-      "Dining Tables":
-        "https://images.unsplash.com/photo-1577146333359-39f99d73010b?auto=format&fit=crop&q=80&w=800",
-      Beds: "https://images.unsplash.com/photo-1505691938895-1758d7eaa511?auto=format&fit=crop&q=80&w=800",
-      Mattresses:
-        "https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&q=80&w=800",
-      "Acoustic Wall Panels":
-        "https://images.unsplash.com/photo-1615876234586-44c13824bba3?auto=format&fit=crop&q=80&w=800",
-      "Coffee Tables":
-        "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&q=80&w=800",
-      "Office Chairs":
-        "https://images.unsplash.com/photo-1505797149-43b00fe1eeac?auto=format&fit=crop&q=80&w=800",
-      Wardrobes:
-        "https://images.unsplash.com/photo-1595428774223-ef52624120ec?auto=format&fit=crop&q=80&w=800",
-    };
-    return (
-      fallbackImages[category.name] ||
-      "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=800"
-    );
+    
+    // Return null if no valid image
+    return null;
   };
 
   if (categories.length === 0) return null;
@@ -258,38 +283,43 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
           </p>
         </div>
 
-        {/* Category Grid - 2 columns on mobile, 3 on tablet, 4 on desktop */}
+        {/* Category Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
-          {categories.slice(0, 5).map((category) => (
-            <Link
-              key={category.id}
-              href={`/category/${category.slug}`}
-              className="group relative overflow-hidden rounded-xl bg-neutral-800 aspect-square hover:shadow-lg transition-shadow duration-300"
-            >
-              {/* Image */}
-              <Image
-                src={getCategoryImage(category)}
-                alt={category.name}
-                fill
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                className="object-cover group-hover:scale-110 transition-transform duration-500"
-              />
+          {categories.slice(0, 5).map((category) => {
+            const imageSrc = getCategoryImage(category);
+            return (
+              <Link
+                key={category.id}
+                href={`/category/${category.slug}`}
+                className="group relative overflow-hidden rounded-xl bg-neutral-800 aspect-square hover:shadow-lg transition-shadow duration-300"
+              >
+                {/* Image - only render if exists */}
+                {imageSrc && (
+                  <Image
+                    src={imageSrc}
+                    alt={category.name}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                )}
 
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent group-hover:from-black/80 transition-colors duration-300" />
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent group-hover:from-black/80 transition-colors duration-300" />
 
-              {/* Content - Centered */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-                <h3 className="text-white font-serif text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-center leading-tight">
-                  {category.name}
-                </h3>
-                <span className="mt-2 w-8 h-0.5 bg-amber-400 group-hover:w-12 transition-all duration-300" />
-                <span className="mt-3 text-white/80 text-xs font-light opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  Shop Now →
-                </span>
-              </div>
-            </Link>
-          ))}
+                {/* Content - Centered */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+                  <h3 className="text-white font-serif text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-center leading-tight">
+                    {category.name}
+                  </h3>
+                  <span className="mt-2 w-8 h-0.5 bg-amber-400 group-hover:w-12 transition-all duration-300" />
+                  <span className="mt-3 text-white/80 text-xs font-light opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    Shop Now →
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
 
         {/* View All Link */}
@@ -306,7 +336,6 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
     </section>
   );
 }
-
 function WhyChooseUsSection() {
   const features = [
     {
@@ -627,6 +656,8 @@ export function HomeClient({
 
       {/* Newsletter Section - Static */}
       <NewsletterSection />
+
+      {/* <HomeBlogSection /> */}
     </div>
   );
 }

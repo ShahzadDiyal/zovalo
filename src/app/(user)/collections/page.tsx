@@ -16,6 +16,21 @@ export const metadata: Metadata = {
     description: "Explore our complete range of furniture collections including sofas, beds, wardrobes, dining sets and more.",
     url: "https://royalfurnitures.store/collections",
     type: "website",
+    images: [
+      {
+        url: "https://royalfurnitures.store/images/sofa-bad-interior-desing.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Royal Furniture Collections",
+      },
+    ],
+  },
+  // Also add twitter card for better social sharing
+  twitter: {
+    card: "summary_large_image",
+    title: "All Collections | Royal Furniture",
+    description: "Explore our complete range of furniture collections including sofas, beds, wardrobes, dining sets and more.",
+    images: ["https://royalfurnitures.store/images/sofa-bad-interior-desing.jpg"],
   },
 };
 

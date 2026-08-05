@@ -9,51 +9,56 @@ import { cityPageService } from "../../services/cityPageService";
 interface Product {
   id: string;
   slug: string;
-  updatedAt?: string;
+  updatedAt?: any;
 }
 
 interface Category {
   slug: string;
 }
 
+function formatDate(dateValue: any): string {
+  if (!dateValue) return new Date().toISOString();
+
+  if (typeof dateValue?.toDate === "function") {
+    return dateValue.toDate().toISOString();
+  }
+
+  const seconds = dateValue?._seconds ?? dateValue?.seconds;
+  if (typeof seconds === "number") {
+    return new Date(seconds * 1000).toISOString();
+  }
+
+  const parsed = new Date(dateValue);
+  return isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
+}
+
 const getSitemapData = unstable_cache(
   async () => {
-    // Fetch data with individual error handling
     let blogPosts: any[] = [];
     let cities: any[] = [];
     let products: Product[] = [];
     let categories: Category[] = [];
 
-    // Try to fetch blog posts
     try {
       blogPosts = await blogPostApi.getPublished();
-      console.log(`Fetched ${blogPosts.length} blog posts for sitemap`);
     } catch (error) {
       console.error("❌ Error fetching blog posts for sitemap:", error);
-      // Continue with empty array - build won't fail
     }
 
-    // Try to fetch cities
     try {
       cities = await cityPageService.getPublishedCities();
-      console.log(`Fetched ${cities.length} cities for sitemap`);
     } catch (error) {
       console.error("❌ Error fetching cities for sitemap:", error);
-      // Continue with empty array
     }
 
-    // Try to fetch products
     try {
       products = await productApi.getAll();
-      console.log(`Fetched ${products.length} products for sitemap`);
     } catch (error) {
       console.error("❌ Error fetching products for sitemap:", error);
     }
 
-    // Try to fetch categories
     try {
       categories = await categoryApi.getAllCategories();
-      console.log(`Fetched ${categories.length} categories for sitemap`);
     } catch (error) {
       console.error("❌ Error fetching categories for sitemap:", error);
     }
@@ -61,11 +66,9 @@ const getSitemapData = unstable_cache(
     return { blogPosts, cities, products, categories };
   },
   ["sitemap-data"],
-  { revalidate: 120 },
+  { revalidate: 120 }
 );
 
-// Drop records with no usable slug and collapse duplicate slugs so the
-// sitemap never lists a non-canonical/duplicate URL.
 function dedupeBySlug<T extends { slug?: string }>(items: T[]): T[] {
   const seen = new Set<string>();
   const result: T[] = [];
@@ -92,10 +95,8 @@ export async function GET() {
   const products = dedupeBySlug(rawProducts);
   const categories = dedupeBySlug(rawCategories);
 
-  // Build sitemap XML
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Static Pages -->
   <url>
     <loc>${baseUrl}/</loc>
     <changefreq>daily</changefreq>
@@ -152,7 +153,6 @@ export async function GET() {
     <priority>0.3</priority>
   </url>
 
-  <!-- Blog Posts (only if fetched successfully) -->
   ${
     blogPosts.length > 0
       ? blogPosts
@@ -160,16 +160,15 @@ export async function GET() {
             (post) => `
   <url>
     <loc>${baseUrl}/blog/${post.slug}</loc>
-    <lastmod>${post.updatedAt || post.publishedAt || new Date().toISOString()}</lastmod>
+    <lastmod>${formatDate(post.updatedAt || post.publishedAt)}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
-  </url>`,
+  </url>`
           )
           .join("")
       : ""
   }
 
-  <!-- Cities (only if fetched successfully) -->
   ${
     cities.length > 0
       ? cities
@@ -177,16 +176,15 @@ export async function GET() {
             (city) => `
   <url>
     <loc>${baseUrl}/locations/${city.slug}</loc>
-    <lastmod>${city.updatedAt || new Date().toISOString()}</lastmod>
+    <lastmod>${formatDate(city.updatedAt)}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-  </url>`,
+  </url>`
           )
           .join("")
       : ""
   }
 
-  <!-- Products (only if fetched successfully) -->
   ${
     products.length > 0
       ? products
@@ -194,16 +192,15 @@ export async function GET() {
             (product) => `
   <url>
     <loc>${baseUrl}/product/${product.slug}</loc>
-    <lastmod>${product.updatedAt || new Date().toISOString()}</lastmod>
+    <lastmod>${formatDate(product.updatedAt)}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
-  </url>`,
+  </url>`
           )
           .join("")
       : ""
   }
 
-  <!-- Categories (only if fetched successfully) -->
   ${
     categories.length > 0
       ? categories
@@ -213,7 +210,7 @@ export async function GET() {
     <loc>${baseUrl}/category/${category.slug}</loc>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
-  </url>`,
+  </url>`
           )
           .join("")
       : ""

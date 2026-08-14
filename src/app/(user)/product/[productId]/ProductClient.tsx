@@ -34,6 +34,7 @@ import { Product } from "../../../../types";
 import { formatCurrency } from "../../../../lib/utils";
 import { useRouter } from "next/navigation";
 import { RelatedProducts } from "../../../../components/products/RelatedProducts";
+import { ProductReviews } from "../../../../components/products/ProductReviews";
 
 interface ProductClientProps {
   product: Product;
@@ -868,6 +869,8 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
               )}
           </div>
         </div>
+
+        <ProductReviews product={product} />
 
         <RelatedProducts
           currentProduct={product}

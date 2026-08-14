@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { productApi } from "../../../../services/productApi";
+import { reviewApi } from "../../../../services/reviewApi";
 import { ProductClient } from "./ProductClient";
 import { Schema } from "../../../../components/SEO/Schema";
 
@@ -16,6 +17,20 @@ const getProductForPage = (productId: string) =>
       (await productApi.getById(productId)) ||
       (await productApi.getProductBySlug(productId)),
     ["product-page", productId],
+    { revalidate: 120 },
+  )();
+
+const getReviewsForPage = (productId: string) =>
+  unstable_cache(
+    async () => {
+      try {
+        return await reviewApi.getApprovedByProductId(productId);
+      } catch (error) {
+        console.error("Error fetching reviews for schema:", error);
+        return [];
+      }
+    },
+    ["product-reviews", productId],
     { revalidate: 120 },
   )();
 
@@ -59,6 +74,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { productId } = await params;
   const productData = await getProductForPage(productId);
   if (!productData) notFound();
+  const reviewsData = await getReviewsForPage(productData.id);
 
   const breadcrumbItems = [
     { name: "Home", url: "https://royalfurnitures.store/" },
@@ -76,7 +92,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   return (
     <>
       <Schema type="BreadcrumbList" data={{ items: breadcrumbItems }} />
-      <Schema type="Product" data={{ product: productData }} />
+      <Schema type="Product" data={{ product: productData, reviews: reviewsData }} />
       <ProductClient product={productData} />
     </>
   );

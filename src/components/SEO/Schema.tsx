@@ -176,6 +176,7 @@ export function Schema({ type, data }: SchemaProps) {
         if (!data?.product) return null;
         const product = data.product;
         const productImages = (product.images || []).filter(Boolean);
+        const productReviews = (data.reviews || []).filter(Boolean);
         return {
           "@context": "https://schema.org",
           "@type": "Product",
@@ -255,7 +256,31 @@ export function Schema({ type, data }: SchemaProps) {
                   "@type": "AggregateRating",
                   ratingValue: product.rating,
                   reviewCount: product.reviewCount,
+                  bestRating: 5,
+                  worstRating: 1,
                 }
+              : undefined,
+          // Individual reviews - helps Google's rich-result eligibility and
+          // gives AI shopping/answer agents (ChatGPT, Perplexity, Gemini, etc.)
+          // real review text to cite instead of just an aggregate number.
+          review:
+            productReviews.length > 0
+              ? productReviews.slice(0, 10).map((r: any) => ({
+                  "@type": "Review",
+                  reviewRating: {
+                    "@type": "Rating",
+                    ratingValue: r.rating,
+                    bestRating: 5,
+                    worstRating: 1,
+                  },
+                  author: {
+                    "@type": "Person",
+                    name: r.customerName,
+                  },
+                  reviewBody: r.comment,
+                  name: r.title || undefined,
+                  datePublished: r.reviewDate,
+                }))
               : undefined,
         };
 

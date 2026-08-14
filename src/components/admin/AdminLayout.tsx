@@ -22,6 +22,7 @@ import {
   Globe,
   PlusCircle,
   Palette,
+  Star,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
@@ -220,6 +221,27 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   <Palette className="w-4 h-4" />
   Colors
 </Link>
+
+            {/* Reviews */}
+            <Link
+              href="/admin/reviews"
+              className={`
+                flex items-center justify-between px-4 py-3 rounded text-sm transition-all duration-200
+                ${
+                  isActive("/admin/reviews")
+                    ? "bg-gold text-near-black font-bold"
+                    : "text-gray-400 hover:text-white hover:bg-near-black/50"
+                }
+              `}
+            >
+              <div className="flex items-center gap-3">
+                <Star className="w-5 h-5" />
+                Reviews
+              </div>
+              {isActive("/admin/reviews") && (
+                <ChevronRight className="w-4 h-4" />
+              )}
+            </Link>
 
             {/* Blog Section */}
             <div className="mt-4">

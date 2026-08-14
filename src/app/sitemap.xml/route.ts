@@ -10,6 +10,8 @@ interface Product {
   id: string;
   slug: string;
   updatedAt?: any;
+  images?: string[];
+  title?: string;
 }
 
 interface Category {
@@ -69,6 +71,15 @@ const getSitemapData = unstable_cache(
   { revalidate: 120 }
 );
 
+function escapeXml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
 function dedupeBySlug<T extends { slug?: string }>(items: T[]): T[] {
   const seen = new Set<string>();
   const result: T[] = [];
@@ -96,7 +107,7 @@ export async function GET() {
   const categories = dedupeBySlug(rawCategories);
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>${baseUrl}/</loc>
     <changefreq>daily</changefreq>
@@ -188,15 +199,27 @@ export async function GET() {
   ${
     products.length > 0
       ? products
-          .map(
-            (product) => `
+          .map((product) => {
+            // Image sitemap entries help Google pick the right thumbnail to
+            // show next to the listing in search results (up to 5 images).
+            const images = (product.images || []).filter(Boolean).slice(0, 5);
+            const imageTags = images
+              .map(
+                (img) => `
+    <image:image>
+      <image:loc>${escapeXml(img)}</image:loc>
+      ${product.title ? `<image:title>${escapeXml(product.title)}</image:title>` : ""}
+    </image:image>`
+              )
+              .join("");
+            return `
   <url>
     <loc>${baseUrl}/product/${product.slug}</loc>
     <lastmod>${formatDate(product.updatedAt)}</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>`
-          )
+    <priority>0.8</priority>${imageTags}
+  </url>`;
+          })
           .join("")
       : ""
   }

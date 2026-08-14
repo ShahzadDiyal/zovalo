@@ -24,6 +24,9 @@ export interface Product {
   enableColorSelection?: boolean; // true = show color button, false = hide
   selectedColor?: string;
   imageAltTexts: string[];
+  // Aggregate review stats (auto-calculated from approved reviews - see reviewApi.recalcProductRating)
+  rating?: number; // average rating, e.g. 4.8
+  reviewCount?: number; // count of approved reviews
 }
 
 export interface SeaterPrice {
@@ -46,12 +49,25 @@ export interface User {
   createdAt?: Date | any;
 }
 
+// Customer review captured for a specific product. Most reviews come in via
+// WhatsApp or Facebook DM/comments, so an admin transcribes them here rather
+// than the customer submitting a form directly.
 export interface Review {
   id: string;
-  userName: string;
-  rating: number;
+  productId: string; // Product.id this review belongs to
+  productTitle?: string; // denormalized for easy display in admin list
+  customerName: string;
+  rating: number; // 1-5
+  title?: string; // optional short headline, e.g. "Great quality sofa!"
   comment: string;
-  date: string;
+  source: "whatsapp" | "facebook" | "instagram" | "website" | "google";
+  customerImage?: string; // optional avatar/photo (base64 or URL)
+  reviewImages?: string[]; // optional photos the customer shared of the product
+  verifiedPurchase?: boolean;
+  status: "pending" | "published"; // only "published" reviews are shown on the site / schema
+  reviewDate: string; // ISO date the review was actually given (may differ from createdAt)
+  createdAt?: any;
+  updatedAt?: any;
 }
 
 export interface Category {

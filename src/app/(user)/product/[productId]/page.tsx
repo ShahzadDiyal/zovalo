@@ -92,7 +92,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
   return (
     <>
       <Schema type="BreadcrumbList" data={{ items: breadcrumbItems }} />
-      <Schema type="Product" data={{ product: productData, reviews: reviewsData }} />
+      <Schema
+        type="Product"
+        data={{ product: productData, reviews: reviewsData }}
+      />
       <ProductClient product={productData} />
     </>
   );

@@ -268,7 +268,7 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
   if (categories.length === 0) return null;
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-white">
+    <section className="py-12 sm:py-16 md:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-8 sm:mb-12">
@@ -567,70 +567,6 @@ function WhyChooseUsSection() {
   );
 }
 
-function NewsletterSection() {
-  const [email, setEmail] = useState("");
-  const [newsletterSuccess, setNewsletterSuccess] = useState(false);
-
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      console.log("Newsletter signup:", email);
-      setNewsletterSuccess(true);
-      setEmail("");
-      setTimeout(() => setNewsletterSuccess(false), 3000);
-    }
-  };
-
-  return (
-    <section className="bg-neutral-900 text-white py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto text-center space-y-6 sm:space-y-7 md:space-y-8">
-        <div className="space-y-2 sm:space-y-3">
-          <span className="text-[9px] sm:text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] sm:tracking-[0.4em] text-amber-400">
-            Join the Collective
-          </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-medium tracking-tight">
-            Signature Style, Delivered.
-          </h2>
-          <p className="text-neutral-400 font-light text-sm sm:text-base max-w-lg mx-auto px-4">
-            Subscribe for exclusive design inspiration, seasonal collection
-            reveals, and artisanal insights.
-          </p>
-        </div>
-
-        {newsletterSuccess && (
-          <div className="bg-emerald-50/10 text-emerald-400 py-2 px-4 rounded-xl text-sm border border-emerald-500/20">
-            ✓ Thank you for subscribing! Check your inbox soon.
-          </div>
-        )}
-
-        <form
-          onSubmit={handleNewsletterSubmit}
-          className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-md mx-auto"
-        >
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Your email address"
-            required
-            className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-sm outline-none focus:border-amber-500 focus:bg-white/20 transition-all placeholder:text-white/40"
-          />
-          <button
-            type="submit"
-            className="bg-amber-500 text-neutral-900 px-6 py-3 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-white transition-colors rounded-xl whitespace-nowrap"
-          >
-            Subscribe
-          </button>
-        </form>
-
-        <p className="text-[10px] text-white/40">
-          No spam, just beautiful furniture inspiration. Unsubscribe anytime.
-        </p>
-      </div>
-    </section>
-  );
-}
-
 const aggregate = {
   count: 42,
   average: 4.8,
@@ -650,6 +586,8 @@ export function HomeClient({
       {/* Hero Section - Always visible instantly */}
       <HeroSection />
 
+      {/* Categories */}
+      <CategoriesSection categories={categories} />
       {/* Featured Products */}
       <FeaturedProductsSection products={featuredProducts} />
 
@@ -660,14 +598,8 @@ export function HomeClient({
   title="Loved by Our Customers"
   subtitle="Real reviews from real Royal Furniture customers across the UK"
 /> */}
-      {/* Why Choose Us - Static */}
-      <WhyChooseUsSection />
-
-      {/* Categories */}
-      <CategoriesSection categories={categories} />
 
       {/* Newsletter Section - Static */}
-      <NewsletterSection />
 
       {/* <HomeBlogSection /> */}
     </div>

@@ -5,7 +5,6 @@ import { HomeClient } from "./home/HomeClient";
 import { HomeBlogSection } from "@/src/components/blog/HomeBlogSection";
 import { HomeReviewsSection } from "@/src/components/reviews/HomeReviewsSection";
 
-
 export default async function HomePage() {
   const { categories, featuredProducts, recentProducts } =
     await fetchHomeData();
@@ -24,7 +23,7 @@ export default async function HomePage() {
         initialRecentProducts={recentProducts}
       />
 
-<HomeReviewsSection />
+      <HomeReviewsSection />
       <HomeBlogSection />
     </Suspense>
   );

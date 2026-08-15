@@ -1,6 +1,7 @@
 // src/app/(user)/reviews/page.tsx
 import { Metadata } from "next";
 import { reviewApi } from "../../../services/reviewApi";
+import { productApi } from "../../../services/productApi";
 import { Schema } from "../../../components/SEO/Schema";
 import { AllReviewsPageClient } from "../../../components/reviews/AllReviewsPageClient";
 
@@ -27,13 +28,34 @@ export const metadata: Metadata = {
 };
 
 export default async function ReviewsPage() {
-  // Fetch reviews directly (no cache for now)
-  const [reviews, aggregate] = await Promise.all([
+  // Fetch reviews and products in parallel
+  const [reviews, products] = await Promise.all([
     reviewApi.getAllPublished().catch(() => []),
-    reviewApi.getSiteAggregate().catch(() => ({ count: 0, average: 0 })),
+    productApi.getAll().catch(() => []),
   ]);
 
-  // Optional: log to server console to verify data
+  // Create a map of product ID -> slug
+  const productSlugMap = new Map<string, string>();
+  products.forEach((product) => {
+    if (product.id && product.slug) {
+      productSlugMap.set(product.id, product.slug);
+    }
+  });
+
+  // Aggregate
+  const aggregate = {
+    count: reviews.length,
+    average:
+      reviews.length > 0
+        ? Number(
+            (
+              reviews.reduce((sum, r) => sum + (r.rating || 0), 0) /
+              reviews.length
+            ).toFixed(1),
+          )
+        : 0,
+  };
+
   console.log(`✅ ReviewsPage: ${reviews.length} reviews loaded`);
 
   const breadcrumbItems = [
@@ -58,7 +80,11 @@ export default async function ReviewsPage() {
         </div>
       </div>
 
-      <AllReviewsPageClient initialReviews={reviews} aggregate={aggregate} />
+      <AllReviewsPageClient
+        initialReviews={reviews}
+        aggregate={aggregate}
+        productSlugMap={productSlugMap}
+      />
     </>
   );
 }

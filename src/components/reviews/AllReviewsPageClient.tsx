@@ -1,3 +1,4 @@
+// src/components/reviews/AllReviewsPageClient.tsx
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -45,11 +46,13 @@ function Stars({ value, size = "w-4 h-4" }: { value: number; size?: string }) {
 interface AllReviewsPageClientProps {
   initialReviews: Review[];
   aggregate: { count: number; average: number };
+  productSlugMap: Map<string, string>; // productId -> slug
 }
 
 export function AllReviewsPageClient({
   initialReviews,
   aggregate,
+  productSlugMap,
 }: AllReviewsPageClientProps) {
   const [reviews] = useState(initialReviews);
   const [searchQuery, setSearchQuery] = useState("");
@@ -174,6 +177,9 @@ export function AllReviewsPageClient({
           {displayed.map((review) => {
             const Source = SOURCE_META[review.source] ?? SOURCE_META.website;
             const SourceIcon = Source.icon;
+            // Get product slug from the map, fallback to productId if not found
+            const productSlug =
+              productSlugMap.get(review.productId) || review.productId;
             return (
               <div
                 key={review.id}
@@ -219,7 +225,7 @@ export function AllReviewsPageClient({
                     </p>
                     {review.productTitle && review.productId && (
                       <Link
-                        href={`/product/${review.productId}`}
+                        href={`/product/${productSlug}`}
                         className="inline-block text-xs text-amber-700 mt-2 bg-amber-50 px-2.5 py-1 rounded-full hover:bg-amber-100 transition-colors"
                       >
                         {review.productTitle}

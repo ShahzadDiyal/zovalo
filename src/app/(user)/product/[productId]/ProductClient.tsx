@@ -398,7 +398,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight mb-3">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl text-white tracking-tight mb-3">
             {product.title}
           </h1>
 
@@ -493,7 +493,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                 {product.category}
               </span>
               {product.featured && (
-                <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-amber-700 border border-amber-600 px-2 sm:px-3 py-1 rounded-full bg-amber-50/50">
+                <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-white border border-amber-600 px-2 sm:px-3 py-1 rounded-full">
                   Featured
                 </span>
               )}
@@ -502,15 +502,6 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                   Only {product.stock} left!
                 </span>
               )}
-              {product.tags &&
-                product.tags.slice(0, 2).map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest bg-neutral-900 text-white px-2 sm:px-3 py-1 rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
             </div>
 
             {/* Price */}

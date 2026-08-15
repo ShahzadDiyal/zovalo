@@ -80,7 +80,9 @@ export default function AdminReviews() {
   const [current, setCurrent] = useState<Partial<Review> | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "published">("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "pending" | "published"
+  >("all");
   const [productFilter, setProductFilter] = useState<string>("all");
 
   useEffect(() => {
@@ -166,7 +168,11 @@ export default function AdminReviews() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Delete this review? This will also update the product's rating."))
+    if (
+      !window.confirm(
+        "Delete this review? This will also update the product's rating.",
+      )
+    )
       return;
     try {
       await reviewApi.deleteReview(id);
@@ -199,7 +205,8 @@ export default function AdminReviews() {
       r.comment.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (r.productTitle || "").toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === "all" || r.status === statusFilter;
-    const matchesProduct = productFilter === "all" || r.productId === productFilter;
+    const matchesProduct =
+      productFilter === "all" || r.productId === productFilter;
     return matchesSearch && matchesStatus && matchesProduct;
   });
 
@@ -327,7 +334,8 @@ export default function AdminReviews() {
                   </div>
                   <StarRow value={review.rating} size="w-3.5 h-3.5" />
                   <p className="text-[10px] text-walnut font-bold uppercase tracking-widest mt-1 truncate">
-                    {review.productTitle || productMap.get(review.productId)?.title}
+                    {review.productTitle ||
+                      productMap.get(review.productId)?.title}
                   </p>
                   {review.title && (
                     <p className="text-sm font-semibold text-near-black mt-1">
@@ -406,7 +414,10 @@ export default function AdminReviews() {
                   required
                   value={current.productId}
                   onChange={(e) =>
-                    setCurrent((prev) => ({ ...prev, productId: e.target.value }))
+                    setCurrent((prev) => ({
+                      ...prev,
+                      productId: e.target.value,
+                    }))
                   }
                   className="w-full bg-cream border border-warm-beige py-2.5 px-3 text-sm rounded outline-none focus:border-gold"
                 >
@@ -429,7 +440,10 @@ export default function AdminReviews() {
                     type="text"
                     value={current.customerName || ""}
                     onChange={(e) =>
-                      setCurrent((prev) => ({ ...prev, customerName: e.target.value }))
+                      setCurrent((prev) => ({
+                        ...prev,
+                        customerName: e.target.value,
+                      }))
                     }
                     placeholder="e.g. Sarah M."
                     className="w-full bg-cream border border-warm-beige py-2.5 px-3 text-sm rounded outline-none focus:border-gold"
@@ -464,7 +478,9 @@ export default function AdminReviews() {
                 </label>
                 <StarRow
                   value={current.rating || 5}
-                  onChange={(n) => setCurrent((prev) => ({ ...prev, rating: n }))}
+                  onChange={(n) =>
+                    setCurrent((prev) => ({ ...prev, rating: n }))
+                  }
                   size="w-6 h-6"
                 />
               </div>
@@ -509,7 +525,10 @@ export default function AdminReviews() {
                     type="date"
                     value={current.reviewDate || ""}
                     onChange={(e) =>
-                      setCurrent((prev) => ({ ...prev, reviewDate: e.target.value }))
+                      setCurrent((prev) => ({
+                        ...prev,
+                        reviewDate: e.target.value,
+                      }))
                     }
                     className="w-full bg-cream border border-warm-beige py-2.5 px-3 text-sm rounded outline-none focus:border-gold"
                   />
@@ -564,7 +583,12 @@ export default function AdminReviews() {
                       <ImageIcon className="w-4 h-4 text-gray-300" />
                     </div>
                   )}
-                  <input type="file" accept="image/*" onChange={handleImageUpload} className="text-xs" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="text-xs"
+                  />
                 </div>
               </div>
 
@@ -581,7 +605,11 @@ export default function AdminReviews() {
                   disabled={isSubmitting}
                   className="flex-1 bg-near-black text-white py-2.5 text-[10px] font-bold uppercase tracking-widest rounded hover:bg-gold transition-colors disabled:opacity-50"
                 >
-                  {isSubmitting ? "Saving..." : current.id ? "Save Changes" : "Add Review"}
+                  {isSubmitting
+                    ? "Saving..."
+                    : current.id
+                      ? "Save Changes"
+                      : "Add Review"}
                 </button>
               </div>
             </form>

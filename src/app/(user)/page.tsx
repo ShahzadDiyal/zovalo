@@ -3,6 +3,8 @@ import { Suspense } from "react";
 import { fetchHomeData } from "./home/HomeData";
 import { HomeClient } from "./home/HomeClient";
 import { HomeBlogSection } from "@/src/components/blog/HomeBlogSection";
+import { HomeReviewsSection } from "@/src/components/reviews/HomeReviewsSection";
+
 
 export default async function HomePage() {
   const { categories, featuredProducts, recentProducts } =
@@ -22,6 +24,7 @@ export default async function HomePage() {
         initialRecentProducts={recentProducts}
       />
 
+<HomeReviewsSection />
       <HomeBlogSection />
     </Suspense>
   );

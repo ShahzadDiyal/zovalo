@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { Product, Category } from "../../../types";
 import { HomeBlogSection } from "../../../components/blog/HomeBlogSection";
+import { ReviewsCarouselClient } from "@/src/components/reviews/ReviewsCarouselClient";
+import { HomeReviewsSection } from "@/src/components/reviews/HomeReviewsSection";
 
 interface HomeClientProps {
   initialCategories: Category[];
@@ -629,6 +631,11 @@ function NewsletterSection() {
   );
 }
 
+const aggregate = {
+  count: 42,
+  average: 4.8,
+};
+
 export function HomeClient({
   initialCategories,
   initialFeaturedProducts,
@@ -649,6 +656,10 @@ export function HomeClient({
       {/* Recent Products */}
       <RecentProductsSection products={recentProducts} />
 
+      {/* <HomeReviewsSection
+  title="Loved by Our Customers"
+  subtitle="Real reviews from real Royal Furniture customers across the UK"
+/> */}
       {/* Why Choose Us - Static */}
       <WhyChooseUsSection />
 

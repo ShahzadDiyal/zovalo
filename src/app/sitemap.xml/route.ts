@@ -31,7 +31,9 @@ function formatDate(dateValue: any): string {
   }
 
   const parsed = new Date(dateValue);
-  return isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
+  return isNaN(parsed.getTime())
+    ? new Date().toISOString()
+    : parsed.toISOString();
 }
 
 const getSitemapData = unstable_cache(
@@ -68,7 +70,7 @@ const getSitemapData = unstable_cache(
     return { blogPosts, cities, products, categories };
   },
   ["sitemap-data"],
-  { revalidate: 120 }
+  { revalidate: 120 },
 );
 
 function escapeXml(value: string): string {
@@ -174,7 +176,7 @@ export async function GET() {
     <lastmod>${formatDate(post.updatedAt || post.publishedAt)}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
-  </url>`
+  </url>`,
           )
           .join("")
       : ""
@@ -190,7 +192,7 @@ export async function GET() {
     <lastmod>${formatDate(city.updatedAt)}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-  </url>`
+  </url>`,
           )
           .join("")
       : ""
@@ -209,7 +211,7 @@ export async function GET() {
     <image:image>
       <image:loc>${escapeXml(img)}</image:loc>
       ${product.title ? `<image:title>${escapeXml(product.title)}</image:title>` : ""}
-    </image:image>`
+    </image:image>`,
               )
               .join("");
             return `
@@ -233,7 +235,7 @@ export async function GET() {
     <loc>${baseUrl}/category/${category.slug}</loc>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
-  </url>`
+  </url>`,
           )
           .join("")
       : ""

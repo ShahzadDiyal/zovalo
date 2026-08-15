@@ -11,7 +11,10 @@ import {
 import { reviewApi } from "../../services/reviewApi";
 import { Review, Product } from "../../types";
 
-const SOURCE_META: Record<Review["source"], { label: string; icon: React.ElementType }> = {
+const SOURCE_META: Record<
+  Review["source"],
+  { label: string; icon: React.ElementType }
+> = {
   whatsapp: { label: "via WhatsApp", icon: MessageCircle },
   facebook: { label: "via Facebook", icon: ThumbsUp },
   instagram: { label: "via Instagram", icon: Camera },
@@ -26,7 +29,9 @@ function Stars({ value, size = "w-4 h-4" }: { value: number; size?: string }) {
         <Star
           key={n}
           className={`${size} ${
-            n <= Math.round(value) ? "fill-amber-500 text-amber-500" : "text-neutral-200"
+            n <= Math.round(value)
+              ? "fill-amber-500 text-amber-500"
+              : "text-neutral-200"
           }`}
         />
       ))}
@@ -119,7 +124,10 @@ export function ProductReviews({ product }: ProductReviewsProps) {
         {reviews.length > 0 && (
           <div className="flex-1 space-y-1.5 max-w-md">
             {breakdown.map(({ star, count, pct }) => (
-              <div key={star} className="flex items-center gap-2 text-xs text-neutral-500">
+              <div
+                key={star}
+                className="flex items-center gap-2 text-xs text-neutral-500"
+              >
                 <span className="w-8 flex-shrink-0">{star} star</span>
                 <div className="flex-1 h-2 bg-neutral-100 rounded-full overflow-hidden">
                   <div
@@ -137,7 +145,8 @@ export function ProductReviews({ product }: ProductReviewsProps) {
       {/* List */}
       {reviews.length === 0 ? (
         <p className="text-sm text-neutral-500">
-          No reviews yet — be the first to share your experience with this piece.
+          No reviews yet — be the first to share your experience with this
+          piece.
         </p>
       ) : (
         <div className="space-y-5">

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { categoryApi } from "../../services/categoryApi";
 import { Category } from "../../types";
 import SocialLinks from "../SocialLinks";
+import { ReviewsBadge } from "../reviews/ReviewsBadge";
 
 export function Footer() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -45,6 +46,7 @@ export function Footer() {
               Crafting premium furniture for the modern home. Our pieces blend
               traditional joinery with timeless silhouettes.
             </p>
+            {/* <ReviewsBadge href="/reviews" /> */}
           </div>
 
           {/* Shop Collections - Dynamic Categories */}
@@ -94,6 +96,14 @@ export function Footer() {
                   className="hover:text-gold transition-colors"
                 >
                   Locations
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/reviews"
+                  className="hover:text-gold transition-colors"
+                >
+                 Customers Reviews
                 </Link>
               </li>
               <li>

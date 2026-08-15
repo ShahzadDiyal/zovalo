@@ -12,7 +12,8 @@ interface SchemaProps {
     | "LocalBusiness"
     | "Article"
     | "CollectionPage"
-    | "SearchAction";
+    | "SearchAction"
+    | "SiteReviews";
   data?: any;
 }
 
@@ -283,6 +284,69 @@ export function Schema({ type, data }: SchemaProps) {
                 }))
               : undefined,
         };
+
+      case "SiteReviews": {
+        // Site-wide reviews (across all products) - used by ReviewsBadge,
+        // HomeReviewsSection and the /reviews page so search engines and AI
+        // agents (ChatGPT, Perplexity, Gemini, etc.) can see real review
+        // text and an accurate total, not just a claimed star rating.
+        // Note: Google's rich-result guidelines restrict *self-published*
+        // Organization/LocalBusiness review stars from showing in search -
+        // this markup is still fully valid schema.org data that AI crawlers
+        // and answer engines can read and cite.
+        const siteAggregate = data?.aggregate as
+          | { count: number; average: number }
+          | undefined;
+        const siteReviews = (data?.reviews || []).filter(Boolean);
+        if (
+          (!siteAggregate || !siteAggregate.count) &&
+          siteReviews.length === 0
+        ) {
+          return null;
+        }
+        return {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://royalfurnitures.store/#organization",
+          name: "Royal Furniture",
+          url: "https://royalfurnitures.store",
+          ...(siteAggregate && siteAggregate.count > 0
+            ? {
+                aggregateRating: {
+                  "@type": "AggregateRating",
+                  ratingValue: siteAggregate.average,
+                  reviewCount: siteAggregate.count,
+                  bestRating: 5,
+                  worstRating: 1,
+                },
+              }
+            : {}),
+          ...(siteReviews.length > 0
+            ? {
+                review: siteReviews.slice(0, 50).map((r: any) => ({
+                  "@type": "Review",
+                  reviewRating: {
+                    "@type": "Rating",
+                    ratingValue: r.rating,
+                    bestRating: 5,
+                    worstRating: 1,
+                  },
+                  author: {
+                    "@type": "Person",
+                    name: r.customerName,
+                  },
+                  reviewBody: r.comment,
+                  name: r.title || undefined,
+                  datePublished: r.reviewDate,
+                  itemReviewed: {
+                    "@type": "Product",
+                    name: r.productTitle || "Royal Furniture",
+                  },
+                })),
+              }
+            : {}),
+        };
+      }
 
       case "BreadcrumbList":
         if (!data?.items || data.items.length === 0) return null;

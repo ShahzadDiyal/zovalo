@@ -35,6 +35,7 @@ import { formatCurrency } from "../../../../lib/utils";
 import { useRouter } from "next/navigation";
 import { RelatedProducts } from "../../../../components/products/RelatedProducts";
 import { ProductReviews } from "../../../../components/products/ProductReviews";
+import { Stars } from "@/src/components/reviews/Stars";
 
 interface ProductClientProps {
   product: Product;

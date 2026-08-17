@@ -165,6 +165,11 @@ export async function GET() {
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  <url>
+    <loc>${baseUrl}/reviews</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 
   ${
     blogPosts.length > 0

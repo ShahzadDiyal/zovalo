@@ -69,7 +69,7 @@ function BlogCard({ post, featured }: { post: BlogPost; featured?: boolean }) {
   return (
     <Link href={`/blog/${post.slug}`} className="group h-full block">
       <article
-        className={`bg-white border border-neutral-200/80 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-500 h-full flex flex-col ${
+        className={`bg-white border border-neutral-200/80 overflow-hidden hover:shadow-xl transition-all duration-500 h-full flex flex-col ${
           featured ? "md:col-span-2 lg:col-span-2" : ""
         }`}
       >

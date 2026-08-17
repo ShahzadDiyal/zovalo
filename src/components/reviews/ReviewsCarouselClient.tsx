@@ -60,12 +60,7 @@ export function ReviewsCarouselClient({
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 sm:mb-10">
           <div>
-            <div className="inline-flex items-center gap-2 bg-amber-100/80 px-4 py-1.5 rounded-full mb-3">
-              <Stars value={5} size="w-3.5 h-3.5" />
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-amber-800">
-                Customer Reviews
-              </span>
-            </div>
+           
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-neutral-900">
               {title}
             </h2>
@@ -123,7 +118,7 @@ export function ReviewsCarouselClient({
             return (
               <div
                 key={review.id}
-                className="snap-start flex-shrink-0 w-[280px] sm:w-[320px] border border-neutral-200/80 rounded-2xl p-5 bg-white flex flex-col"
+                className="snap-start flex-shrink-0 w-[280px] sm:w-[320px] border border-neutral-200/80 p-5 bg-white flex flex-col"
               >
                 <div className="flex items-start gap-3 mb-3">
                   <div className="w-10 h-10 rounded-full bg-amber-50 flex-shrink-0 overflow-hidden flex items-center justify-center">

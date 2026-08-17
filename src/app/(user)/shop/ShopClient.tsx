@@ -495,7 +495,7 @@ export function ShopClient({
               )}
 
               {/* Seater Filter */}
-              {availableSeaters.length > 0 && (
+              {/* {availableSeaters.length > 0 && (
                 <div className="space-y-2.5">
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 flex items-center gap-1.5">
                     <Sofa className="w-3.5 h-3.5 text-amber-600" /> Seater
@@ -519,7 +519,7 @@ export function ShopClient({
                     })}
                   </div>
                 </div>
-              )}
+              )} */}
 
               {/* Price Range */}
               <div className="space-y-3 pt-2 border-t border-neutral-200/60">

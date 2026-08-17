@@ -269,7 +269,7 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
 
   return (
     <section className="py-12 sm:py-16 md:py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-2 md:px-0">
         {/* Section Header */}
         <div className="text-center mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/50 mb-3">
@@ -288,13 +288,13 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
 
         {/* Category Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
-          {categories.slice(0, 5).map((category) => {
+          {categories.slice(0, 10).map((category) => {
             const imageSrc = getCategoryImage(category);
             return (
               <Link
                 key={category.id}
                 href={`/category/${category.slug}`}
-                className="group relative overflow-hidden rounded-xl bg-neutral-800 aspect-square hover:shadow-lg transition-shadow duration-300"
+                className="group relative overflow-hidden bg-neutral-800 aspect-square hover:shadow-lg transition-shadow duration-300"
               >
                 {/* Image - only render if exists */}
                 {imageSrc && (

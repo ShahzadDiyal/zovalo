@@ -62,7 +62,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group block bg-white overflow-hidden transition-all duration-300 hover:shadow-lg rounded-lg"
+      className="group block bg-white overflow-hidden transition-all duration-300 hover:shadow-lg"
     >
       {/* Product Image */}
       <div className="aspect-square bg-cream overflow-hidden relative">
@@ -113,7 +113,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <p className="text-[9px] sm:text-[10px] font-bold text-gray-a0 uppercase tracking-widest mb-1">
           {product.category}
         </p>
-        <h3 className="text-sm sm:text-base font-display text-near-black group-hover:text-gold transition-colors line-clamp-1 mb-2">
+        <h3 className="text-sm sm:text-base font-display text-near-black group-hover:text-gold transition-colors line-clamp-2 mb-2">
           {product.title}
         </h3>
         <p className="text-base sm:text-lg font-light text-near-black mb-3">

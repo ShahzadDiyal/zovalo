@@ -321,7 +321,7 @@ function ProfileContent() {
       <div className="bg-[#FAF8F5] min-h-screen flex items-center justify-center px-4">
         <div className="text-center space-y-3 sm:space-y-4 bg-white p-8 sm:p-12 rounded-2xl border border-neutral-200/80 shadow-sm max-w-md">
           <AlertCircle className="w-12 h-12 sm:w-16 sm:h-16 text-neutral-300 mx-auto" />
-          <h2 className="text-xl sm:text-2xl font-serif text-neutral-900">
+          <h2 className="text-xl sm:text-2xl  text-neutral-900">
             Please Login
           </h2>
           <p className="text-neutral-500 text-sm sm:text-base">
@@ -352,7 +352,7 @@ function ProfileContent() {
               My Profile
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl  text-white tracking-tight">
             Account Dashboard
           </h1>
           <p className="text-neutral-400 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
@@ -399,7 +399,7 @@ function ProfileContent() {
               {uploadingAvatar && (
                 <p className="text-[10px] text-amber-600 mt-2">Uploading...</p>
               )}
-              <h3 className="text-base sm:text-lg font-serif text-neutral-900 mt-3 sm:mt-4">
+              <h3 className="text-base sm:text-lg  text-neutral-900 mt-3 sm:mt-4">
                 {formData.displayName || "User"}
               </h3>
               <p className="text-xs text-neutral-500 break-all">
@@ -484,7 +484,7 @@ function ProfileContent() {
                 ) : orders.length === 0 ? (
                   <div className="text-center py-12 bg-white border border-neutral-200/80 rounded-2xl shadow-sm">
                     <Package className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
-                    <h3 className="text-lg font-serif text-neutral-900 mb-2">
+                    <h3 className="text-lg  text-neutral-900 mb-2">
                       No Orders Yet
                     </h3>
                     <p className="text-neutral-500 mb-6 text-sm">
@@ -580,7 +580,7 @@ function ProfileContent() {
             {activeTab === "profile" && (
               <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 sm:p-6 shadow-sm">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-neutral-200/80">
-                  <h3 className="text-base sm:text-lg font-serif text-neutral-900">
+                  <h3 className="text-base sm:text-lg  text-neutral-900">
                     Personal Information
                   </h3>
                   {!editing ? (
@@ -753,7 +753,7 @@ function ProfileContent() {
           />
           <div className="bg-white max-w-3xl w-full max-h-[90vh] sm:max-h-[85vh] overflow-y-auto relative z-10 shadow-2xl border border-neutral-200/80 rounded-2xl">
             <div className="sticky top-0 bg-white border-b border-neutral-200/80 p-4 sm:p-5 flex flex-wrap justify-between items-center gap-3 rounded-t-2xl">
-              <h3 className="text-lg sm:text-xl font-serif text-neutral-900">
+              <h3 className="text-lg sm:text-xl  text-neutral-900">
                 Order Details
               </h3>
               <div className="flex gap-1 sm:gap-2">

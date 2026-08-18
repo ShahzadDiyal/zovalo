@@ -82,7 +82,7 @@ export function AllReviewsPageClient({
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
         <div className="bg-white border border-neutral-200/80 rounded-2xl p-8">
           <div className="text-6xl mb-4">⭐</div>
-          <h3 className="text-xl font-serif text-neutral-900 mb-2">
+          <h3 className="text-xl  text-neutral-900 mb-2">
             No reviews yet
           </h3>
           <p className="text-neutral-500 max-w-md mx-auto">
@@ -107,7 +107,7 @@ export function AllReviewsPageClient({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-3">
-            <span className="text-3xl font-serif font-bold text-neutral-900">
+            <span className="text-3xl  font-bold text-neutral-900">
               {aggregate.average ? aggregate.average.toFixed(1) : "—"}
             </span>
             <Stars value={aggregate.average || 0} size="w-5 h-5" />

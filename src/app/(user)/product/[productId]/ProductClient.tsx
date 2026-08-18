@@ -359,7 +359,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
             />
           </svg>
         </div>
-        <h2 className="text-xl sm:text-2xl font-serif text-neutral-900">
+        <h2 className="text-xl sm:text-2xl  text-neutral-900">
           Product Not Found
         </h2>
         <p className="text-gray-500 text-sm sm:text-base max-w-md mx-auto px-4">
@@ -952,7 +952,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
           />
           <div className="bg-white max-w-sm w-full relative z-10 shadow-2xl border border-neutral-200/80 rounded-2xl overflow-hidden">
             <div className="p-4 border-b border-neutral-200/80 flex justify-between items-center">
-              <h3 className="text-lg font-serif text-neutral-900">
+              <h3 className="text-lg  text-neutral-900">
                 Share this product
               </h3>
               <button

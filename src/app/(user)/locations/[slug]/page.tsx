@@ -172,7 +172,7 @@ export default async function CityDetailPage({
               </span>
             </div>
             {/* FIX: Only ONE H1 tag */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl  text-white tracking-tight">
               {serializedCity.h1Heading ||
                 `Premium Furniture & Sofas in ${serializedCity.name}`}
             </h1>
@@ -298,7 +298,7 @@ export default async function CityDetailPage({
           {serializedProducts.length > 0 && (
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl sm:text-2xl font-serif text-neutral-900">
+                <h2 className="text-xl sm:text-2xl  text-neutral-900">
                   Popular Furniture in {serializedCity.name}
                 </h2>
                 <Link
@@ -320,7 +320,7 @@ export default async function CityDetailPage({
           {serializedCity.whyChooseUs &&
             serializedCity.whyChooseUs.length > 0 && (
               <div className="bg-white border border-neutral-200/60 rounded-xl p-5 mb-6">
-                <h2 className="text-lg sm:text-xl font-serif text-neutral-900 mb-3">
+                <h2 className="text-lg sm:text-xl  text-neutral-900 mb-3">
                   Why Choose Royal Furniture in {serializedCity.name}
                 </h2>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -342,7 +342,7 @@ export default async function CityDetailPage({
           {/* FAQs - Clean Accordion Style */}
           {serializedCity.faqs && serializedCity.faqs.length > 0 && (
             <div className="bg-white border border-neutral-200/60 rounded-xl p-5">
-              <h2 className="text-lg sm:text-xl font-serif text-neutral-900 mb-3">
+              <h2 className="text-lg sm:text-xl  text-neutral-900 mb-3">
                 Frequently Asked Questions
               </h2>
               <div className="space-y-3">
@@ -372,7 +372,7 @@ export default async function CityDetailPage({
 
           {/* CTA Section */}
           <div className="mt-6 bg-gradient-to-r from-neutral-900 to-neutral-800 text-white rounded-xl p-5 sm:p-6 text-center">
-            <h3 className="text-lg sm:text-xl font-serif mb-1">
+            <h3 className="text-lg sm:text-xl  mb-1">
               Ready to Furnish Your Home in {serializedCity.name}?
             </h3>
             <p className="text-neutral-400 text-xs sm:text-sm mb-3">

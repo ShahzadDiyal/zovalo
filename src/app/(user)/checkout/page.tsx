@@ -359,7 +359,7 @@ export default function CheckoutPage() {
           <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-50 rounded-full">
             <CheckCircle2 className="w-10 h-10 text-emerald-600" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif text-neutral-900">
+          <h1 className="text-3xl sm:text-4xl  text-neutral-900">
             Thank You For Your Order!
           </h1>
           <p className="text-neutral-600">
@@ -406,7 +406,7 @@ export default function CheckoutPage() {
     return (
       <div className="bg-[#FAF8F5] min-h-screen py-12 sm:py-16 md:py-20">
         <div className="text-center py-12 sm:py-16">
-          <h2 className="text-xl font-serif text-neutral-900">
+          <h2 className="text-xl  text-neutral-900">
             No items to checkout
           </h2>
           <Link
@@ -443,7 +443,7 @@ export default function CheckoutPage() {
               Secure Checkout
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl  text-white tracking-tight">
             Complete Your Order
           </h1>
           <p className="text-neutral-400 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
@@ -471,7 +471,7 @@ export default function CheckoutPage() {
           {/* Checkout Form */}
           <div className="flex-1">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-neutral-200/80 pb-4 mb-6 gap-2">
-              <h2 className="text-xl sm:text-2xl font-serif text-neutral-900">
+              <h2 className="text-xl sm:text-2xl  text-neutral-900">
                 Shipping Details
               </h2>
               <Link
@@ -821,7 +821,7 @@ export default function CheckoutPage() {
           {/* Order Summary Sidebar */}
           <aside className="lg:w-[420px]">
             <div className="bg-white p-6 rounded-2xl sticky top-24 ">
-              <h2 className="text-xl font-serif text-neutral-900 mb-4">
+              <h2 className="text-xl  text-neutral-900 mb-4">
                 Review Order
               </h2>
               <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
@@ -920,7 +920,7 @@ export default function CheckoutPage() {
           />
           <div className="bg-white max-w-md w-full rounded-2xl overflow-hidden relative z-10 shadow-2xl">
             <div className="p-5 border-b border-neutral-200/80 flex justify-between items-center">
-              <h3 className="text-lg font-serif text-neutral-900">
+              <h3 className="text-lg  text-neutral-900">
                 Confirm Order
               </h3>
               <button

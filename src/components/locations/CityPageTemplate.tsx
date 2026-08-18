@@ -51,7 +51,7 @@ export function CityPageTemplate({
                 {cityPage.name}
               </span>
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-white tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl  text-white tracking-tight">
               {cityPage.h1Heading ||
                 `Premium Furniture & Sofas in ${cityPage.name}`}
             </h1>
@@ -116,7 +116,7 @@ export function CityPageTemplate({
           {/* Popular Products */}
           {products.length > 0 && (
             <div className="mb-8">
-              <h2 className="text-2xl sm:text-3xl font-serif text-neutral-900 mb-6">
+              <h2 className="text-2xl sm:text-3xl  text-neutral-900 mb-6">
                 Popular Furniture in {cityPage.name}
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -138,7 +138,7 @@ export function CityPageTemplate({
           {/* Why Choose Us */}
           {cityPage.whyChooseUs && cityPage.whyChooseUs.length > 0 && (
             <div className="bg-white border border-neutral-200/80 rounded-2xl p-6 mb-8 shadow-sm">
-              <h2 className="text-xl sm:text-2xl font-serif text-neutral-900 mb-4">
+              <h2 className="text-xl sm:text-2xl  text-neutral-900 mb-4">
                 Why Choose Royal Furniture in {cityPage.name}
               </h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -158,7 +158,7 @@ export function CityPageTemplate({
           {/* FAQs */}
           {cityPage.faqs && cityPage.faqs.length > 0 && (
             <div className="bg-white border border-neutral-200/80 rounded-2xl p-6 shadow-sm">
-              <h2 className="text-xl sm:text-2xl font-serif text-neutral-900 mb-4">
+              <h2 className="text-xl sm:text-2xl  text-neutral-900 mb-4">
                 Frequently Asked Questions
               </h2>
               <div className="space-y-4">

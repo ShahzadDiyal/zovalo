@@ -82,7 +82,7 @@ export function BlogPostClient({ post, relatedPosts }: BlogPostClientProps) {
             {post.categoryName || "Blog"}
           </Link>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-neutral-900 leading-tight mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl  text-neutral-900 leading-tight mb-4">
             {post.title}
           </h1>
 
@@ -120,7 +120,7 @@ export function BlogPostClient({ post, relatedPosts }: BlogPostClientProps) {
 
         {/* Content */}
         <div
-          className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-neutral-900 prose-p:text-neutral-600 prose-a:text-amber-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-neutral-900 prose-li:text-neutral-600 prose-blockquote:border-l-amber-500 prose-blockquote:bg-amber-50/50 prose-blockquote:p-4 prose-blockquote:rounded-r-xl prose-blockquote:border-l-4 prose-img:rounded-xl"
+          className="prose prose-lg max-w-none prose-headings: prose-headings:text-neutral-900 prose-p:text-neutral-600 prose-a:text-amber-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-neutral-900 prose-li:text-neutral-600 prose-blockquote:border-l-amber-500 prose-blockquote:bg-amber-50/50 prose-blockquote:p-4 prose-blockquote:rounded-r-xl prose-blockquote:border-l-4 prose-img:rounded-xl"
           dangerouslySetInnerHTML={{ __html: post.content || "" }}
         />
 
@@ -179,7 +179,7 @@ export function BlogPostClient({ post, relatedPosts }: BlogPostClientProps) {
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-          <h2 className="text-2xl font-serif text-neutral-900 mb-6">
+          <h2 className="text-2xl  text-neutral-900 mb-6">
             Related Articles
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -204,7 +204,7 @@ export function BlogPostClient({ post, relatedPosts }: BlogPostClientProps) {
                   )}
                 </div>
                 <div className="p-4">
-                  <h3 className="font-serif text-neutral-900 group-hover:text-amber-600 transition-colors line-clamp-2">
+                  <h3 className=" text-neutral-900 group-hover:text-amber-600 transition-colors line-clamp-2">
                     {relatedPost.title}
                   </h3>
                   <p className="text-sm text-neutral-500 line-clamp-2 mt-1">

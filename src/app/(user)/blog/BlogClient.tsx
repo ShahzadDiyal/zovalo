@@ -93,7 +93,7 @@ function BlogCard({ post }: { post: BlogPost }) {
             </span>
           </div>
 
-          <h3 className="text-lg font-serif text-neutral-900 group-hover:text-amber-600 transition-colors line-clamp-2 mb-2">
+          <h3 className="text-lg  text-neutral-900 group-hover:text-amber-600 transition-colors line-clamp-2 mb-2">
             {post.title}
           </h3>
 
@@ -278,7 +278,7 @@ export function BlogClient({
                   : "Royal Blog"}
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl  text-white tracking-tight">
             {initialSearchQuery
               ? `Search: "${initialSearchQuery}"`
               : displayCategoryName
@@ -380,7 +380,7 @@ export function BlogClient({
         ) : posts.length === 0 ? (
           <div className="text-center py-16 bg-white border border-neutral-200/80 rounded-2xl">
             <div className="text-6xl mb-4">📝</div>
-            <h3 className="text-xl font-serif text-neutral-900 mb-2">
+            <h3 className="text-xl  text-neutral-900 mb-2">
               No articles found
             </h3>
             <p className="text-neutral-500">

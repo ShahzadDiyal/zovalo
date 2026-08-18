@@ -132,7 +132,7 @@ export function AllReviewsPageClient({
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
         <div className="bg-white border border-neutral-200/80 p-12 shadow-sm">
           <div className="text-7xl mb-6">⭐</div>
-          <h2 className="text-2xl sm:text-3xl font-serif text-neutral-900 mb-3">
+          <h2 className="text-2xl sm:text-3xl  text-neutral-900 mb-3">
             No reviews yet
           </h2>
           <p className="text-neutral-500 max-w-md mx-auto mb-6">

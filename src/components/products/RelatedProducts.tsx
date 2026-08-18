@@ -79,7 +79,7 @@ export function RelatedProducts({
                 Complete Your Look
               </span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-serif text-neutral-900">
+            <h2 className="text-2xl sm:text-3xl  text-neutral-900">
               {title}
             </h2>
             <p className="text-sm text-neutral-500 mt-1">{subtitle}</p>

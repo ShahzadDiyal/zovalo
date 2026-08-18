@@ -121,7 +121,7 @@ function HeroSection() {
               `}
               >
                 {/* H1 - Main heading */}
-                <h1 className="text-white font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl max-w-md md:max-w-3xl font-bold leading-tight">
+                <h1 className="text-white  text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl max-w-md md:max-w-3xl font-bold leading-tight">
                   {slide.title}
                 </h1>
 
@@ -192,7 +192,7 @@ function FeaturedProductsSection({ products }: { products: Product[] }) {
               Premium Selection
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl  text-neutral-900">
             Featured Collection
           </h2>
           <div className="w-12 sm:w-16 h-0.5 bg-amber-500 mx-auto sm:mx-0" />
@@ -231,7 +231,7 @@ function RecentProductsSection({ products }: { products: Product[] }) {
           <h3 className="text-[10px] sm:text-[12px] font-bold uppercase tracking-[0.2em] text-neutral-400">
             Just Arrived
           </h3>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl  text-neutral-900">
             Newest Additions
           </h2>
           <div className="w-12 sm:w-16 h-0.5 bg-amber-500 mx-auto sm:mx-0" />
@@ -278,7 +278,7 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
               Shop by Category
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl  text-neutral-900">
             Explore Our Collections
           </h2>
           <p className="text-neutral-500 text-sm mt-2">
@@ -312,7 +312,7 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
 
                 {/* Content - Centered */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-                  <h3 className="text-white font-serif text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-center leading-tight">
+                  <h3 className="text-white  text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-center leading-tight">
                     {category.name}
                   </h3>
                   <span className="mt-2 w-8 h-0.5 bg-amber-400 group-hover:w-12 transition-all duration-300" />

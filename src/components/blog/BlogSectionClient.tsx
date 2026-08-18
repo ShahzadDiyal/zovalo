@@ -119,7 +119,7 @@ function BlogCard({ post, featured }: { post: BlogPost; featured?: boolean }) {
 
           {/* Title */}
           <h3
-            className={`font-serif text-neutral-900 group-hover:text-amber-600 transition-colors line-clamp-2 mb-2 ${
+            className={` text-neutral-900 group-hover:text-amber-600 transition-colors line-clamp-2 mb-2 ${
               featured ? "text-xl sm:text-2xl" : "text-lg"
             }`}
           >
@@ -198,7 +198,7 @@ export function BlogSectionClient({
                 Our Blog
               </span>
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-neutral-900 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl  text-neutral-900 tracking-tight">
               {title}
             </h2>
             <p className="text-sm sm:text-base text-neutral-500 max-w-2xl">

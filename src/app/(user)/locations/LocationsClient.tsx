@@ -138,7 +138,7 @@ export function LocationsClient({ initialCities }: LocationsClientProps) {
         (filteredCities.length === 0 ? (
           <div className="text-center py-16 bg-white border border-neutral-200/80 rounded-2xl">
             <div className="text-6xl mb-4">📍</div>
-            <h3 className="text-xl font-serif text-neutral-900 mb-2">
+            <h3 className="text-xl  text-neutral-900 mb-2">
               {searchTerm ? "No cities found" : "No cities available yet"}
             </h3>
             <p className="text-neutral-500">
@@ -176,7 +176,7 @@ function LocationCard({ city }: { city: CityPage }) {
             <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center">
               <MapPin className="w-5 h-5 text-amber-600" />
             </div>
-            <h3 className="text-lg font-serif text-neutral-900 group-hover:text-amber-600 transition-colors">
+            <h3 className="text-lg  text-neutral-900 group-hover:text-amber-600 transition-colors">
               {city.name}
             </h3>
           </div>

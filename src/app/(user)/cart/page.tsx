@@ -47,7 +47,7 @@ export default function CartPage() {
               Your Cart
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl  text-white tracking-tight">
             Shopping Cart
           </h1>
           <p className="text-neutral-400 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
@@ -96,7 +96,7 @@ export default function CartPage() {
                           {item.category}
                         </p>
                         <Link href={`/product/${item.slug}`}>
-                          <h3 className="text-sm sm:text-base md:text-lg font-serif text-neutral-900 hover:text-amber-600 transition-colors break-words">
+                          <h3 className="text-sm sm:text-base md:text-lg  text-neutral-900 hover:text-amber-600 transition-colors break-words">
                             {item.title}
                             {item.quantity > 1 && (
                               <span className="text-xs  text-neutral-500 font-normal normal-case tracking-normal ml-2">
@@ -176,7 +176,7 @@ export default function CartPage() {
           {/* Order Summary Sidebar */}
           <aside className="w-full lg:w-[360px] space-y-4 sm:space-y-5 mb-6">
             <div className="bg-white border border-neutral-200/80 p-5 sm:p-6 md:p-8 sticky top-24 md:top-32 lg:top-44 rounded-2xl">
-              <h2 className="text-xl sm:text-2xl font-serif text-neutral-900 mb-4 sm:mb-5">
+              <h2 className="text-xl sm:text-2xl  text-neutral-900 mb-4 sm:mb-5">
                 Order Summary
               </h2>
 
@@ -199,7 +199,7 @@ export default function CartPage() {
                   <span className="font-medium text-neutral-900">£0.00</span>
                 </div>
                 <div className="pt-3 sm:pt-4 border-t border-neutral-200/80 flex justify-between items-baseline">
-                  <span className="text-base sm:text-lg font-serif text-neutral-900">
+                  <span className="text-base sm:text-lg  text-neutral-900">
                     Total
                   </span>
                   <span className="text-xl sm:text-2xl md:text-3xl font-light text-amber-600">

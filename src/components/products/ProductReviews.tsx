@@ -97,14 +97,14 @@ export function ProductReviews({ product }: ProductReviewsProps) {
 
   return (
     <div id="reviews" className="py-8 sm:py-10 border-t border-neutral-200/80">
-      <h2 className="text-xl sm:text-2xl font-serif text-neutral-900 mb-6">
+      <h2 className="text-xl sm:text-2xl  text-neutral-900 mb-6">
         Customer Reviews
       </h2>
 
       <div className="flex flex-col md:flex-row gap-6 md:gap-10 mb-8">
         {/* Summary */}
         <div className="flex flex-col items-center md:items-start md:w-56 flex-shrink-0 text-center md:text-left">
-          <div className="text-4xl font-serif text-neutral-900">
+          <div className="text-4xl  text-neutral-900">
             {avgRating ? avgRating.toFixed(1) : "—"}
           </div>
           <Stars value={avgRating} size="w-5 h-5" />

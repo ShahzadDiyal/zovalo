@@ -43,7 +43,7 @@ export function CollectionsClient({
               {totalProducts} Products Available
             </span>
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-white tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl  text-white tracking-tight">
             All Collections
           </h1>
           <p className="text-neutral-400 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
@@ -74,7 +74,7 @@ export function CollectionsClient({
         {filteredCategories.length === 0 ? (
           <div className="text-center py-16 bg-white border border-neutral-200/80 rounded-2xl">
             <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-serif text-neutral-900 mb-2">
+            <h3 className="text-xl  text-neutral-900 mb-2">
               No collections found
             </h3>
             <p className="text-neutral-500 text-sm">
@@ -130,7 +130,7 @@ export function CollectionsClient({
                   {/* Content */}
                   <div className="p-4 sm:p-5 flex flex-col">
                     {/* Category Name */}
-                    <h3 className="text-base sm:text-lg font-serif text-neutral-900 group-hover:text-amber-600 transition-colors mb-1">
+                    <h3 className="text-base sm:text-lg  text-neutral-900 group-hover:text-amber-600 transition-colors mb-1">
                       {category.name}
                     </h3>
 
@@ -159,7 +159,7 @@ export function CollectionsClient({
 
         {/* Bottom CTA */}
         <div className="mt-12 sm:mt-16 bg-neutral-900 text-white rounded-2xl p-6 sm:p-8 text-center">
-          <h3 className="text-xl sm:text-2xl font-serif mb-2">
+          <h3 className="text-xl sm:text-2xl  mb-2">
             Can't find what you're looking for?
           </h3>
           <p className="text-neutral-400 text-sm mb-4">

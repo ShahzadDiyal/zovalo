@@ -99,7 +99,7 @@ export default async function LocationsPage() {
               </span>
             </div>
             {/* ONLY ONE H1 - Removed "Royal Furniture." */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-white tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl  text-white tracking-tight">
               We Deliver to Cities Across the UK
             </h1>
             <p className="text-neutral-400 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
@@ -119,7 +119,7 @@ export default async function LocationsPage() {
       <div className="bg-[#FAF8F5] min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
           <div className="text-6xl mb-4">📍</div>
-          <h2 className="text-2xl font-serif text-neutral-900 mb-2">
+          <h2 className="text-2xl  text-neutral-900 mb-2">
             Unable to Load Locations
           </h2>
           <p className="text-neutral-500">

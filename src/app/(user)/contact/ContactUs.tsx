@@ -126,7 +126,7 @@ const ContactUs = () => {
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif text-white tracking-tight mb-4">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl  text-white tracking-tight mb-4">
               We're Here to Help You Build <br className="hidden sm:block" />
               <span className="text-amber-400 italic">Your Perfect Home</span>
             </h1>
@@ -155,7 +155,7 @@ const ContactUs = () => {
                     </span>
                     <MessageSquare className="w-6 h-6 text-emerald-400" />
                   </div>
-                  <h3 className="text-xl font-serif text-white font-bold mb-1">
+                  <h3 className="text-xl  text-white font-bold mb-1">
                     Chat via WhatsApp
                   </h3>
                   <p className="text-neutral-300 text-xs leading-relaxed mb-5 font-light">
@@ -175,7 +175,7 @@ const ContactUs = () => {
 
               {/* Contact Information Block */}
               <div className="bg-white border border-neutral-200/80 p-6 sm:p-8 rounded-2xl shadow-sm space-y-6">
-                <h3 className="text-lg font-serif font-bold text-neutral-900 border-b border-neutral-100 pb-3">
+                <h3 className="text-lg  font-bold text-neutral-900 border-b border-neutral-100 pb-3">
                   Contact Information
                 </h3>
 
@@ -293,7 +293,7 @@ const ContactUs = () => {
                   <span className="text-amber-600 text-xs font-bold uppercase tracking-widest block mb-1">
                     Send a Message
                   </span>
-                  <h2 className="text-2xl sm:text-3xl font-serif text-neutral-900 font-bold">
+                  <h2 className="text-2xl sm:text-3xl  text-neutral-900 font-bold">
                     How Can We Assist You Today?
                   </h2>
                   <p className="text-neutral-500 text-xs sm:text-sm mt-1">
@@ -427,7 +427,7 @@ const ContactUs = () => {
               <span className="text-amber-600 text-xs font-bold uppercase tracking-widest">
                 Got Questions?
               </span>
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 mt-1">
+              <h2 className="text-2xl sm:text-3xl  font-bold text-neutral-900 mt-1">
                 Frequently Asked Questions
               </h2>
             </div>

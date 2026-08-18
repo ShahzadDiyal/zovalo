@@ -186,7 +186,7 @@ export function ColorSelection({
 
                 <div className="px-4 py-3 border-b border-warm-beige flex justify-between items-center">
                   <div>
-                    <h3 className="text-base font-serif text-near-black">
+                    <h3 className="text-base  text-near-black">
                       Choose Your Color
                     </h3>
                     <p className="text-[10px] text-gray-400">

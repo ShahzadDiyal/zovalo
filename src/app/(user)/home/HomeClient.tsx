@@ -269,7 +269,7 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
 
   return (
     <section className="py-12 sm:py-16 md:py-20">
-      <div className="max-w-7xl mx-auto px-2 md:px-0">
+      <div className="px-2 md:px-10 mx-auto">
         {/* Section Header */}
         <div className="text-center mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/50 mb-3">
@@ -287,8 +287,8 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
         </div>
 
         {/* Category Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
-          {categories.slice(0, 10).map((category) => {
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+          {categories.slice(0, 8).map((category) => {
             const imageSrc = getCategoryImage(category);
             return (
               <Link
@@ -419,7 +419,7 @@ function WhyChooseUsSection() {
 
   return (
     <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-b from-white to-amber-50/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12 sm:mb-16 md:mb-20">
           <div className="inline-flex items-center gap-2 bg-amber-100/80 px-4 py-1.5 rounded-full mb-4">

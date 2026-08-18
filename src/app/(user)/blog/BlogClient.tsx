@@ -65,7 +65,7 @@ function BlogCard({ post }: { post: BlogPost }) {
 
   return (
     <Link href={`/blog/${post.slug}`} className="group">
-      <article className="bg-white border border-neutral-200/80 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 h-full flex flex-col">
+      <article className="bg-white border border-neutral-200/80 overflow-hidden hover:shadow-lg transition-all duration-300 h-full flex flex-col">
         <div className="relative aspect-video overflow-hidden bg-neutral-100">
           {post.featuredImage ? (
             <img
@@ -267,7 +267,7 @@ export function BlogClient({
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-xs font-bold uppercase tracking-widest text-amber-300">
@@ -295,7 +295,7 @@ export function BlogClient({
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-4 rounded-2xl mb-6 flex items-start gap-3">
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />

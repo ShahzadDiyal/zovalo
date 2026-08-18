@@ -83,7 +83,7 @@ export default function RootLayout({
         <Schema type="Organization" />
         <Schema type="WebSite" />
       </head>
-      <body className="flex flex-col min-h-screen font-sans">
+      <body className="flex flex-col min-h-screen ">
         <AuthProvider>
           <CartProvider>{children}</CartProvider>
           <BackToTop />

@@ -36,7 +36,7 @@ export function CollectionsClient({
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full">
             <Grid3x3 className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-xs font-bold uppercase tracking-widest text-amber-300">
@@ -53,10 +53,10 @@ export function CollectionsClient({
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-12 relative z-10 pb-16 sm:pb-24">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-12 relative z-10 pb-16 sm:pb-24">
         {/* Search Bar */}
         <div className="max-w-xl mx-auto mb-8 sm:mb-12">
-          <div className="bg-white border border-neutral-200/80 rounded-2xl p-1 sm:p-1.5 shadow-sm">
+          <div className="bg-white border border-neutral-200/80 p-1 sm:p-1.5 shadow-sm">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
               <input
@@ -99,7 +99,7 @@ export function CollectionsClient({
                 <Link
                   key={category.id}
                   href={`/category/${category.slug}`}
-                  className="group bg-white border border-neutral-200/80 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                  className="group bg-white border border-neutral-200/80 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                 >
                   {/* Image Container */}
                   <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100">

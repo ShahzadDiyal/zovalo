@@ -1,4 +1,3 @@
-// src/components/reviews/AllReviewsPageClient.tsx
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -11,19 +10,23 @@ import {
   Camera,
   Globe,
   Search,
+  Filter,
+  ArrowUpDown,
+  Sparkles,
+  Quote,
 } from "lucide-react";
 import { Review } from "../../types";
 
 // Source icons
 const SOURCE_META: Record<
   Review["source"],
-  { label: string; icon: React.ElementType }
+  { label: string; icon: React.ElementType; color: string }
 > = {
-  whatsapp: { label: "WhatsApp", icon: MessageCircle },
-  facebook: { label: "Facebook", icon: ThumbsUp },
-  instagram: { label: "Instagram", icon: Camera },
-  google: { label: "Google", icon: Globe },
-  website: { label: "Website", icon: Globe },
+  whatsapp: { label: "WhatsApp", icon: MessageCircle, color: "text-[#25d366]" },
+  facebook: { label: "Facebook", icon: ThumbsUp, color: "text-[#1877f2]" },
+  instagram: { label: "Instagram", icon: Camera, color: "text-[#E1306C]" },
+  google: { label: "Google", icon: Globe, color: "text-[#4285F4]" },
+  website: { label: "Website", icon: Globe, color: "text-walnut" },
 };
 
 function Stars({ value, size = "w-4 h-4" }: { value: number; size?: string }) {
@@ -46,8 +49,10 @@ function Stars({ value, size = "w-4 h-4" }: { value: number; size?: string }) {
 interface AllReviewsPageClientProps {
   initialReviews: Review[];
   aggregate: { count: number; average: number };
-  productSlugMap: Map<string, string>; // productId -> slug
+  productSlugMap: Map<string, string>;
 }
+
+type SortOption = "newest" | "highest" | "lowest";
 
 export function AllReviewsPageClient({
   initialReviews,
@@ -57,55 +62,86 @@ export function AllReviewsPageClient({
   const [reviews] = useState(initialReviews);
   const [searchQuery, setSearchQuery] = useState("");
   const [ratingFilter, setRatingFilter] = useState<number | null>(null);
-  const [visibleCount, setVisibleCount] = useState(6);
+  const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const [visibleCount, setVisibleCount] = useState(9);
 
+  // Rating breakdown
+  const breakdown = useMemo(() => {
+    const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    reviews.forEach((r) => {
+      const star = Math.round(r.rating);
+      if (star >= 1 && star <= 5) counts[star as keyof typeof counts]++;
+    });
+    return counts;
+  }, [reviews]);
+
+  // Filter and sort
   const filtered = useMemo(() => {
     let result = reviews;
+
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(
         (r) =>
           r.customerName.toLowerCase().includes(q) ||
           r.comment.toLowerCase().includes(q) ||
-          (r.productTitle || "").toLowerCase().includes(q),
+          (r.productTitle || "").toLowerCase().includes(q)
       );
     }
+
     if (ratingFilter !== null) {
       result = result.filter((r) => Math.round(r.rating) === ratingFilter);
     }
+
+    // Sort
+    switch (sortBy) {
+      case "newest":
+        result.sort(
+          (a, b) =>
+            new Date(b.reviewDate).getTime() - new Date(a.reviewDate).getTime()
+        );
+        break;
+      case "highest":
+        result.sort((a, b) => b.rating - a.rating);
+        break;
+      case "lowest":
+        result.sort((a, b) => a.rating - b.rating);
+        break;
+    }
+
     return result;
-  }, [reviews, searchQuery, ratingFilter]);
+  }, [reviews, searchQuery, ratingFilter, sortBy]);
 
   const displayed = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
 
-  const handleLoadMore = () => setVisibleCount((prev) => prev + 6);
+  const handleLoadMore = () => setVisibleCount((prev) => prev + 9);
 
   const handleWriteReview = () => {
     const message =
       "Hi Royal Furniture,\n\nI'd like to share a review for my recent purchase.\nMy review: ";
     window.open(
       `https://wa.me/447529661726?text=${encodeURIComponent(message)}`,
-      "_blank",
+      "_blank"
     );
   };
 
-  // If no reviews, show empty state
+  // Empty state
   if (reviews.length === 0) {
     return (
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-        <div className="bg-white border border-neutral-200/80 rounded-2xl p-8">
-          <div className="text-6xl mb-4">⭐</div>
-          <h3 className="text-xl font-serif text-neutral-900 mb-2">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+        <div className="bg-white border border-neutral-200/80 p-12 shadow-sm">
+          <div className="text-7xl mb-6">⭐</div>
+          <h2 className="text-2xl sm:text-3xl font-serif text-neutral-900 mb-3">
             No reviews yet
-          </h3>
-          <p className="text-neutral-500 max-w-md mx-auto">
+          </h2>
+          <p className="text-neutral-500 max-w-md mx-auto mb-6">
             We haven't received any reviews yet. Be the first to share your
             experience!
           </p>
           <button
             onClick={handleWriteReview}
-            className="mt-4 inline-flex items-center gap-2 bg-[#25d366] text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-[#128C7E] transition-colors"
+            className="inline-flex items-center gap-2 bg-[#25d366] text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-[#128C7E] transition-colors shadow-lg"
           >
             <MessageCircle className="w-4 h-4" />
             Write a review on WhatsApp
@@ -116,146 +152,204 @@ export function AllReviewsPageClient({
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      {/* Summary */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-        <div>
-          <div className="flex items-center gap-3">
-            <span className="text-3xl font-serif font-bold text-neutral-900">
-              {aggregate.average ? aggregate.average.toFixed(1) : "—"}
-            </span>
-            <Stars value={aggregate.average || 0} size="w-5 h-5" />
-            <span className="text-sm text-neutral-500">
-              ({aggregate.count} reviews)
-            </span>
+    <div className="bg-[#FAF8F5] min-h-screen py-8 sm:py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Hero / Summary Section */}
+        <div className="bg-white border border-neutral-200/80 p-6 sm:p-8 mb-10">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-8">
+            {/* Left: Average Rating */}
+            <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-5xl sm:text-6xl font-bold text-neutral-900">
+                  {aggregate.average ? aggregate.average.toFixed(1) : "—"}
+                </span>
+                <span className="text-xl text-neutral-400">/ 5</span>
+              </div>
+              <Stars value={aggregate.average || 0} size="w-6 h-6" />
+              <p className="text-sm text-neutral-500 mt-2">
+                Based on <span className="font-bold">{aggregate.count}</span>{" "}
+                reviews
+              </p>
+              <button
+                onClick={handleWriteReview}
+                className="mt-4 inline-flex items-center gap-2 bg-[#25d366] text-white text-xs font-semibold px-4 py-2 rounded-xl hover:bg-[#128C7E] transition-colors"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                Send your review
+              </button>
+            </div>
+
+            {/* Right: Rating Breakdown */}
+            <div className="flex-1 w-full">
+              <div className="space-y-2">
+                {[5, 4, 3, 2, 1].map((star) => {
+                  const count = breakdown[star as keyof typeof breakdown] || 0;
+                  const pct =
+                    aggregate.count > 0 ? (count / aggregate.count) * 100 : 0;
+                  return (
+                    <div key={star} className="flex items-center gap-3 text-sm">
+                      <span className="w-12 text-right font-medium text-neutral-700">
+                        {star} ★
+                      </span>
+                      <div className="flex-1 h-2.5 bg-neutral-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-amber-500 rounded-full transition-all duration-700 ease-out"
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                      <span className="w-10 text-right text-neutral-500 text-xs">
+                        {count}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
-          <button
-            onClick={handleWriteReview}
-            className="mt-2 inline-flex items-center gap-2 bg-[#25d366] text-white text-xs font-semibold px-4 py-2 rounded-xl hover:bg-[#128C7E] transition-colors"
-          >
-            <MessageCircle className="w-3.5 h-3.5" />
-            Send your review on WhatsApp
-          </button>
         </div>
 
-        {/* Search & Filter */}
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <div className="relative flex-1 sm:w-56">
+        {/* Controls: Search, Filter, Sort */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
+          <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
             <input
               type="text"
-              placeholder="Search reviews..."
+              placeholder="Search reviews by customer, product, or text..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-neutral-200/80 py-2 pl-9 pr-3 text-sm rounded-xl outline-none focus:border-amber-500"
+              className="w-full bg-white border border-neutral-200/80 py-2.5 pl-9 pr-3 text-sm rounded-xl outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 transition-all"
             />
           </div>
-          <select
-            value={ratingFilter ?? ""}
-            onChange={(e) =>
-              setRatingFilter(e.target.value ? Number(e.target.value) : null)
-            }
-            className="w-full sm:w-auto bg-white border border-neutral-200/80 py-2 px-3 text-sm rounded-xl outline-none focus:border-amber-500"
-          >
-            <option value="">All ratings</option>
-            <option value="5">5 ★</option>
-            <option value="4">4 ★ & up</option>
-            <option value="3">3 ★ & up</option>
-            <option value="2">2 ★ & up</option>
-            <option value="1">1 ★ & up</option>
-          </select>
+          <div className="flex gap-3 flex-wrap">
+            <select
+              value={ratingFilter ?? ""}
+              onChange={(e) =>
+                setRatingFilter(e.target.value ? Number(e.target.value) : null)
+              }
+              className="bg-white border border-neutral-200/80 py-2.5 px-3 text-sm rounded-xl outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 transition-all"
+            >
+              <option value="">All ratings</option>
+              <option value="5">5 ★</option>
+              <option value="4">4 ★ & up</option>
+              <option value="3">3 ★ & up</option>
+              <option value="2">2 ★ & up</option>
+              <option value="1">1 ★ & up</option>
+            </select>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              className="bg-white border border-neutral-200/80 py-2.5 px-3 text-sm rounded-xl outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 transition-all"
+            >
+              <option value="newest">Newest first</option>
+              <option value="highest">Highest rated</option>
+              <option value="lowest">Lowest rated</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      {/* Reviews List */}
-      {filtered.length === 0 ? (
-        <div className="text-center py-12 bg-white border border-neutral-200/80 rounded-2xl">
-          <p className="text-neutral-500">No reviews match your filters.</p>
-        </div>
-      ) : (
-        <div className="space-y-5">
-          {displayed.map((review) => {
-            const Source = SOURCE_META[review.source] ?? SOURCE_META.website;
-            const SourceIcon = Source.icon;
-            // Get product slug from the map, fallback to productId if not found
-            const productSlug =
-              productSlugMap.get(review.productId) || review.productId;
-            return (
-              <div
-                key={review.id}
-                className="bg-white border border-neutral-200/80 rounded-2xl p-5 sm:p-6 transition-shadow hover:shadow-md"
-              >
-                <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-full bg-amber-50 flex-shrink-0 overflow-hidden flex items-center justify-center">
-                    {review.customerImage ? (
-                      <img
-                        src={review.customerImage}
-                        alt={review.customerName}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-amber-700 font-bold text-lg">
-                        {review.customerName.charAt(0).toUpperCase()}
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                      <span className="font-semibold text-neutral-900 text-sm">
-                        {review.customerName}
-                      </span>
-                      {review.verifiedPurchase && (
-                        <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-green-700">
-                          <BadgeCheck className="w-3.5 h-3.5" /> Verified
-                        </span>
-                      )}
-                      <span className="flex items-center gap-1 text-[10px] text-neutral-400">
-                        <SourceIcon className="w-3.5 h-3.5" /> via{" "}
-                        {Source.label}
-                      </span>
+        {/* Reviews Grid */}
+        {filtered.length === 0 ? (
+          <div className="text-center py-16 bg-white border border-neutral-200/80">
+            <p className="text-neutral-500">No reviews match your filters.</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+              {displayed.map((review) => {
+                const Source = SOURCE_META[review.source] ?? SOURCE_META.website;
+                const SourceIcon = Source.icon;
+                const productSlug =
+                  productSlugMap.get(review.productId) || review.productId;
+
+                return (
+                  <div
+                    key={review.id}
+                    className="group bg-white border border-neutral-200/80 p-5 sm:p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col"
+                  >
+                    {/* Top: Avatar & Name */}
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="w-11 h-11 rounded-full bg-amber-50 flex-shrink-0 overflow-hidden flex items-center justify-center border border-amber-100">
+                        {review.customerImage ? (
+                          <img
+                            src={review.customerImage}
+                            alt={review.customerName}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-amber-700 font-bold text-lg">
+                            {review.customerName.charAt(0).toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="font-semibold text-neutral-900 text-sm truncate">
+                            {review.customerName}
+                          </span>
+                          {review.verifiedPurchase && (
+                            <BadgeCheck className="w-3.5 h-3.5 text-green-700 flex-shrink-0" />
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1.5 text-xs text-neutral-400">
+                          <SourceIcon className="w-3 h-3" />
+                          <span className="truncate">via {Source.label}</span>
+                        </div>
+                      </div>
                     </div>
-                    <Stars value={review.rating} size="w-4 h-4" />
+
+                    {/* Rating & Title */}
+                    <Stars value={review.rating} size="w-3.5 h-3.5" />
                     {review.title && (
-                      <p className="text-sm font-semibold text-neutral-900 mt-1.5">
+                      <h3 className="text-sm font-semibold text-neutral-900 mt-2 leading-tight">
                         {review.title}
-                      </p>
+                      </h3>
                     )}
-                    <p className="text-sm text-neutral-600 mt-1.5 leading-relaxed">
+
+                    {/* Review Text */}
+                    <p className="text-sm text-neutral-600 mt-2 leading-relaxed flex-1 line-clamp-4">
                       {review.comment}
                     </p>
-                    {review.productTitle && review.productId && (
-                      <Link
-                        href={`/product/${productSlug}`}
-                        className="inline-block text-xs text-amber-700 mt-2 bg-amber-50 px-2.5 py-1 rounded-full hover:bg-amber-100 transition-colors"
-                      >
-                        {review.productTitle}
-                      </Link>
-                    )}
-                    <p className="text-xs text-neutral-400 mt-3">
-                      {new Date(review.reviewDate).toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
 
-          {hasMore && (
-            <div className="text-center mt-6">
-              <button
-                onClick={handleLoadMore}
-                className="px-6 py-2.5 border border-neutral-200/80 text-sm font-bold uppercase tracking-widest text-neutral-600 hover:bg-neutral-50 rounded-xl transition-colors"
-              >
-                Load more reviews ({filtered.length - visibleCount} remaining)
-              </button>
+                    {/* Footer: Product & Date */}
+                    <div className="mt-4 pt-3 border-t border-neutral-100 flex flex-wrap items-center justify-between gap-2">
+                      {review.productTitle && review.productId && (
+                        <Link
+                          href={`/product/${productSlug}`}
+                          className="text-xs text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full hover:bg-amber-100 transition-colors truncate max-w-[70%]"
+                        >
+                          {review.productTitle}
+                        </Link>
+                      )}
+                      <span className="text-xs text-neutral-400 flex-shrink-0">
+                        {new Date(review.reviewDate).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          }
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          )}
-        </div>
-      )}
+
+            {/* Load More */}
+            {hasMore && (
+              <div className="text-center mt-10">
+                <button
+                  onClick={handleLoadMore}
+                  className="px-8 py-3 border-2 border-neutral-900 text-neutral-900 text-sm font-bold uppercase tracking-widest hover:bg-neutral-900 hover:text-white transition-all rounded-xl"
+                >
+                  Load more reviews ({filtered.length - visibleCount} remaining)
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

@@ -118,7 +118,7 @@ const ContactUs = () => {
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px]" />
           <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="relative mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full mb-4">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               <span className="text-xs font-bold uppercase tracking-widest text-amber-300">
@@ -140,7 +140,7 @@ const ContactUs = () => {
         </section>
 
         {/* Main Content Grid */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-12 relative z-10 pb-16 sm:pb-24">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-12 relative z-10 pb-16 sm:pb-24">
           <div className="grid lg:grid-cols-12 gap-8 items-start">
             {/* Left Column: Direct Contact Details & WhatsApp Banner */}
             <div className="lg:col-span-5 space-y-6">

@@ -345,7 +345,7 @@ function ProfileContent() {
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-xs font-bold uppercase tracking-widest text-amber-300">
@@ -361,7 +361,7 @@ function ProfileContent() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-20">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-20">
         <div className="flex flex-col lg:flex-row gap-6 md:gap-8">
           {/* Sidebar */}
           <aside className="lg:w-80 w-full space-y-5 md:space-y-6">

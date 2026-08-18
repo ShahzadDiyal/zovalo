@@ -279,7 +279,7 @@ export default function CreateCityPage() {
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen py-6 sm:py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <SEO
           title="Create City Page"
           description="Create a new SEO-optimized city page"

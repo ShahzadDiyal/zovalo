@@ -326,14 +326,14 @@ export function CategoryClient({
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-xs font-bold uppercase tracking-widest text-amber-300">
               {categoryName || "Collection"}
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif text-white tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl  text-white tracking-tight">
             {categoryName || "Shop All"}
           </h1>
           <p className="text-neutral-400 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
@@ -347,7 +347,7 @@ export function CategoryClient({
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* Filters Sidebar (Desktop) - Shows ALL categories */}
-          <aside className="hidden lg:block w-72 space-y-6 flex-shrink-0 sticky top-24 bg-white p-6 rounded-2xl border border-neutral-200/80">
+          <aside className="hidden lg:block w-72 space-y-6 flex-shrink-0 sticky top-24 bg-white p-6 border border-neutral-200/80">
             <div className="flex items-center justify-between pb-4 border-b border-neutral-200/80">
               <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-900 flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-amber-600" />

@@ -164,7 +164,7 @@ export default async function CityDetailPage({
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-3">
+          <div className="mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-3">
             <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1 rounded-full">
               <MapPin className="w-3.5 h-3.5 text-amber-400" />
               <span className="text-[10px] font-bold uppercase tracking-widest text-amber-300">
@@ -183,7 +183,7 @@ export default async function CityDetailPage({
         </section>
 
         {/* Map Section - Smaller and Less Distracting */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10">
           <div className="bg-white rounded-xl overflow-hidden">
             <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-200/60">
               <div className="flex items-center gap-2">
@@ -202,7 +202,7 @@ export default async function CityDetailPage({
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
           {/* Trust Signals - Clean Card Design */}
           {serializedCity.localTrustSignals &&
             serializedCity.localTrustSignals.length > 0 && (

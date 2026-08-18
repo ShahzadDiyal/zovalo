@@ -390,7 +390,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px]" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-4">
+        <div className="relative mx-auto px-4 sm:px-6 lg:px-8 text-center mt-4">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full mb-4">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-xs font-bold uppercase tracking-widest text-amber-300">
@@ -408,13 +408,13 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-12 relative z-10 pb-16 sm:pb-24">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-12 relative z-10 pb-16 sm:pb-24">
         <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 md:gap-12">
           {/* Image Gallery */}
           <div className="lg:w-1/2 space-y-3 sm:space-y-4">
             <div
               onClick={() => setIsZoomModalOpen(true)}
-              className="group aspect-square bg-white border border-neutral-200/80 overflow-hidden rounded-2xl relative cursor-zoom-in"
+              className="group aspect-square bg-white overflow-hidden relative cursor-zoom-in"
             >
               {isOutOfStock && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 rounded-2xl pointer-events-none">
@@ -423,7 +423,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                   </span>
                 </div>
               )}
-              <div className="absolute top-3 right-3 z-10 bg-black/40 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute top-3 right-3 z-10 bg-black/40 text-white p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <ZoomIn className="w-5 h-5" />
               </div>
               <Image
@@ -442,7 +442,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(idx)}
-                    className={`relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-white border-2 transition-all rounded-xl overflow-hidden ${
+                    className={`relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-white border-2 transition-all overflow-hidden ${
                       selectedImage === idx
                         ? "border-amber-500 ring-1 ring-amber-500/20"
                         : "border-neutral-200/80 hover:border-amber-300"

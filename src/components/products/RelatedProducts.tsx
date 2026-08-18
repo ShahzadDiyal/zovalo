@@ -49,7 +49,7 @@ export function RelatedProducts({
   if (loading) {
     return (
       <section className="py-8 sm:py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center min-h-[200px]">
             <div className="text-center">
               <Loader2 className="w-8 h-8 text-amber-500 animate-spin mx-auto" />

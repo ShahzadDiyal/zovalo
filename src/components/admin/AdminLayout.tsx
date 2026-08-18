@@ -83,7 +83,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               className="text-xl font-display tracking-tighter hover:text-gold transition-colors"
             >
               Royal Furniture{" "}
-              <span className="text-[10px] tracking-widest font-sans font-bold bg-gold px-2 py-0.5 rounded ml-2">
+              <span className="text-[10px] tracking-widest font-bold bg-gold px-2 py-0.5 rounded ml-2">
                 ADMIN
               </span>
             </Link>

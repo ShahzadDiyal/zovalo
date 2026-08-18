@@ -20,7 +20,7 @@ export default function CartPage() {
   if (cart.length === 0) {
     return (
       <div className="bg-[#FAF8F5] min-h-screen py-12 sm:py-16 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <EmptyState
             icon={ShoppingBag}
             title="Your Cart is Empty"
@@ -40,7 +40,7 @@ export default function CartPage() {
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-xs font-bold uppercase tracking-widest text-amber-300">
@@ -56,7 +56,7 @@ export default function CartPage() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-10">
           {/* Cart Items List */}
           <div className="flex-1 space-y-4 sm:space-y-5">
@@ -99,7 +99,7 @@ export default function CartPage() {
                           <h3 className="text-sm sm:text-base md:text-lg font-serif text-neutral-900 hover:text-amber-600 transition-colors break-words">
                             {item.title}
                             {item.quantity > 1 && (
-                              <span className="text-xs font-sans text-neutral-500 font-normal normal-case tracking-normal ml-2">
+                              <span className="text-xs  text-neutral-500 font-normal normal-case tracking-normal ml-2">
                                 ({formatCurrency(item.price)} each)
                               </span>
                             )}

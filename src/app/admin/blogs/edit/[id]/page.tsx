@@ -295,7 +295,7 @@ export default function EditBlogPost() {
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen py-6 sm:py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <SEO
           title="Edit Blog Post"
           description="Edit your blog post for Royal Furniture"

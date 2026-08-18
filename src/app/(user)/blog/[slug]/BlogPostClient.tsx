@@ -108,7 +108,7 @@ export function BlogPostClient({ post, relatedPosts }: BlogPostClientProps) {
 
         {/* Featured Image */}
         {post.featuredImage && (
-          <div className="mb-8 rounded-2xl overflow-hidden bg-neutral-100">
+          <div className="mb-8 overflow-hidden bg-neutral-100">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={post.featuredImage}

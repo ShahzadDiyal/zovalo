@@ -47,7 +47,8 @@ export default function AdminProducts() {
     const productsToExport = products.filter((p) => {
       const matchesSearch =
         p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.category.toLowerCase().includes(searchQuery.toLowerCase());
+        p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.slug.toLowerCase().includes(searchQuery.toLowerCase()); // Added slug search
       const matchesCategory =
         selectedCategory === "All" || p.category === selectedCategory;
       return matchesSearch && matchesCategory;
@@ -137,7 +138,8 @@ export default function AdminProducts() {
   const filteredProducts = products.filter((p) => {
     const matchesSearch =
       p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.category.toLowerCase().includes(searchQuery.toLowerCase());
+      p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.slug.toLowerCase().includes(searchQuery.toLowerCase()); // Added slug search
     const matchesCategory =
       selectedCategory === "All" || p.category === selectedCategory;
     return matchesSearch && matchesCategory;
@@ -184,7 +186,7 @@ export default function AdminProducts() {
           <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search by title, category, or SKU..."
+            placeholder="Search by title, category, slug, or SKU..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-cream border-none py-2 sm:py-2.5 md:py-3 pl-9 sm:pl-10 md:pl-12 pr-3 sm:pr-4 text-xs sm:text-sm focus:ring-1 focus:ring-gold outline-none rounded"

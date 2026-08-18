@@ -59,7 +59,7 @@ export function LocationsClient({ initialCities }: LocationsClientProps) {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       {/* Search & View Toggle */}
       <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 sm:p-6 mb-8 shadow-sm">
         <div className="flex flex-col sm:flex-row gap-4">

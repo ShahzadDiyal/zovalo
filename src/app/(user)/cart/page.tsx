@@ -108,26 +108,26 @@ export default function CartPage() {
 
                         {(item.selectedOptions?.color ||
                           item.selectedOptions?.seater) && (
-                          <div className="flex flex-wrap items-center gap-2 mt-1">
-                            {item.selectedOptions?.color && (
-                              <span className="inline-flex items-center gap-1 text-[12px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-full">
-                                <span
-                                  className="w-2.5 h-2.5 rounded-full border border-gray-300"
-                                  style={{
-                                    backgroundColor:
-                                      item.selectedOptions.color.toLowerCase(),
-                                  }}
-                                />
-                                {item.selectedOptions.color}
-                              </span>
-                            )}
-                            {item.selectedOptions?.seater && (
-                              <span className="inline-flex items-center gap-1 text-[12px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-full">
-                                {item.selectedOptions.seater}
-                              </span>
-                            )}
-                          </div>
-                        )}
+                            <div className="flex flex-wrap items-center gap-2 mt-1">
+                              {item.selectedOptions?.color && (
+                                <span className="inline-flex items-center gap-1 text-[12px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-full">
+                                  <span
+                                    className="w-2.5 h-2.5 rounded-full border border-gray-300"
+                                    style={{
+                                      backgroundColor:
+                                        item.selectedOptions.color.toLowerCase(),
+                                    }}
+                                  />
+                                  {item.selectedOptions.color}
+                                </span>
+                              )}
+                              {item.selectedOptions?.seater && (
+                                <span className="inline-flex items-center gap-1 text-[12px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-full">
+                                  {item.selectedOptions.seater}
+                                </span>
+                              )}
+                            </div>
+                          )}
                       </div>
                       <p className="text-sm sm:text-base md:text-lg font-light text-neutral-900 md:text-center sm:text-right whitespace-nowrap">
                         {formatCurrency(item.price * item.quantity)}

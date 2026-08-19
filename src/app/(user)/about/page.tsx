@@ -23,13 +23,12 @@ import {
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { reviewApi } from "../../../services/reviewApi";
 
 const SITE_URL = "https://royalfurnitures.store";
 
 export const metadata: Metadata = {
-  // FIX 1: Title shortened to under 60 characters
   title: "About Us | Premium Furniture Store UK",
-  // FIX 2: Description shortened to under 155 characters
   description:
     "Discover Royal Furniture - premium quality furniture crafted for modern homes. Learn about our story and commitment to excellence.",
   keywords:
@@ -39,13 +38,13 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: `${SITE_URL}/about`, // Full URL
+    canonical: `${SITE_URL}/about`,
   },
   openGraph: {
-    title: "About Royal Furniture | Premium Quality Furniture UK", // Shortened
+    title: "About Royal Furniture | Premium Quality Furniture UK",
     description:
-      "Learn about Royal Furniture - premium furniture crafted for the modern home. Quality pieces with Cash on Delivery across UK.", // Shortened
-    url: `${SITE_URL}/about`, // Fixed: Full URL
+      "Learn about Royal Furniture - premium furniture crafted for the modern home. Quality pieces with Cash on Delivery across UK.",
+    url: `${SITE_URL}/about`,
     type: "website",
     siteName: "Royal Furniture",
     locale: "en_GB",
@@ -67,7 +66,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  // Fetch real review aggregate
+  const aggregate = await reviewApi.getSiteAggregate().catch(() => ({
+    count: 0,
+    average: 0,
+  }));
+
+  const reviewCount = aggregate.count;
+  const avgRating = aggregate.average;
+  const displayCount = reviewCount > 0 ? reviewCount.toLocaleString() : "0";
+  const displayAvg = avgRating > 0 ? avgRating.toFixed(1) : "—";
+
   return (
     <div className="mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
       {/* Header Section */}
@@ -78,7 +88,6 @@ export default function AboutPage() {
             Welcome to Royal Furniture
           </span>
         </div>
-        {/* FIX 3: Only ONE H1 tag - Removed "Royal Furniture." */}
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-display text-near-black mb-4">
           About <span className="text-gold">Royal Furniture</span>
         </h1>
@@ -89,7 +98,6 @@ export default function AboutPage() {
         </p>
       </div>
 
-      {/* Rest of your component remains exactly the same */}
       {/* Parent Company & Trust Statement */}
       <div className="bg-gradient-to-r from-amber-50/50 via-white to-amber-50/50 border border-gold/20 rounded-xl p-6 md:p-8 mb-12">
         <div className="flex items-center gap-3 mb-4">
@@ -113,11 +121,15 @@ export default function AboutPage() {
               <span className="text-xs text-gray-500">Years of Excellence</span>
             </div>
             <div className="text-center p-3 bg-white rounded-lg border border-warm-beige">
-              <span className="block text-2xl font-bold text-gold">12K+</span>
+              <span className="block text-2xl font-bold text-gold">
+                {displayCount}
+              </span>
               <span className="text-xs text-gray-500">Happy Customers</span>
             </div>
             <div className="text-center p-3 bg-white rounded-lg border border-warm-beige">
-              <span className="block text-2xl font-bold text-gold">4.9★</span>
+              <span className="block text-2xl font-bold text-gold">
+                {displayAvg}★
+              </span>
               <span className="text-xs text-gray-500">Customer Rating</span>
             </div>
           </div>
@@ -188,7 +200,7 @@ export default function AboutPage() {
                   <div>
                     <h4 className="font-bold text-sm">Trusted Brand</h4>
                     <p className="text-sm text-gray-500">
-                      4.9/5 rating from 12,000+ satisfied customers
+                      {displayAvg}/5 rating from {displayCount} satisfied customers
                     </p>
                   </div>
                 </div>
@@ -317,8 +329,8 @@ export default function AboutPage() {
           <strong>authentic, high-quality furniture</strong>
           that you can trust. As a <strong>UK-based company</strong>, we adhere
           to strict quality standards and consumer protection regulations. Our{" "}
-          <strong>4.9-star rating</strong> from over 12,000 customers reflects
-          our dedication to{" "}
+          <strong>{displayAvg}-star rating</strong> from over{" "}
+          <strong>{displayCount}</strong> customers reflects our dedication to{" "}
           <strong>excellence, transparency, and customer satisfaction</strong>.
         </p>
         <div className="flex flex-wrap justify-center gap-4 mt-6">
@@ -328,7 +340,7 @@ export default function AboutPage() {
           </div>
           <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
             <Star className="w-4 h-4 text-gold fill-gold" />
-            <span className="text-xs font-medium">4.9★ Rating</span>
+            <span className="text-xs font-medium">{displayAvg}★ Rating</span>
           </div>
           <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
             <Truck className="w-4 h-4 text-gold" />

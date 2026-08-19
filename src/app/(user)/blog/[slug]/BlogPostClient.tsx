@@ -149,11 +149,10 @@ export function BlogPostClient({ post, relatedPosts }: BlogPostClientProps) {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsLiked(!isLiked)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${
-                isLiked
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${isLiked
                   ? "bg-amber-50 text-amber-600 border border-amber-200"
                   : "bg-white border border-neutral-200/80 text-neutral-600 hover:bg-neutral-50"
-              }`}
+                }`}
             >
               <Heart className={`w-4 h-4 ${isLiked ? "fill-amber-600" : ""}`} />
               {isLiked ? "Liked" : "Like"}

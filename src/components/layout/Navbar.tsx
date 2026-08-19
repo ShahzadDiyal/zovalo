@@ -22,6 +22,8 @@ import { useAuth } from "../../context/AuthContext";
 import { categoryApi } from "../../services/categoryApi";
 import { Category } from "../../types";
 import { LoadingSpinner } from "../ui/Loading";
+import { reviewApi } from "../../services/reviewApi";
+
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,6 +32,8 @@ export function Navbar() {
   const { totalItems, subtotal } = useCart();
   const { user, profile, isAdmin, logout } = useAuth();
   const router = useRouter();
+  const [reviewAggregate, setReviewAggregate] = useState({ count: 0, average: 0 });
+
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [openSubmenus, setOpenSubmenus] = useState<{ [key: string]: boolean }>(
     {},
@@ -38,6 +42,20 @@ export function Navbar() {
   // Timer state - 5 hours in seconds (5 * 60 * 60 = 18000)
   const [timeLeft, setTimeLeft] = useState(18000);
   const [isTimerRunning, setIsTimerRunning] = useState(true);
+
+
+  useEffect(() => {
+    const fetchAggregate = async () => {
+      try {
+        const agg = await reviewApi.getSiteAggregate();
+        setReviewAggregate(agg);
+      } catch (error) {
+        console.error("Error fetching review aggregate:", error);
+      }
+    };
+    fetchAggregate();
+  }, []);
+
 
   // Timer logic
   useEffect(() => {
@@ -139,9 +157,8 @@ export function Navbar() {
               setIsOpen(false);
             }
           }}
-          className={`flex items-center justify-between text-[11px] font-bold text-gray-666 hover:text-near-black uppercase tracking-widest transition-colors relative group py-2 px-3 rounded-lg ${
-            level > 0 ? "ml-4" : ""
-          }`}
+          className={`flex items-center justify-between text-[11px] font-bold text-gray-666 hover:text-near-black uppercase tracking-widest transition-colors relative group py-2 px-3 rounded-lg ${level > 0 ? "ml-4" : ""
+            }`}
           style={{ marginLeft: level * 12 }}
         >
           <span>{category.name}</span>
@@ -233,12 +250,22 @@ export function Navbar() {
         {/* Left: Rating - Hidden on mobile and tablet */}
         <div className="hidden lg:flex items-center gap-2 min-w-[180px]">
           <div className="flex items-center gap-0.5">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-            ))}
+            {[1, 2, 3, 4, 5].map((i) => {
+              const fill = Math.min(Math.max((reviewAggregate.average - (i - 1)) * 100, 0), 100);
+              return (
+                <div key={i} className="relative w-4 h-4">
+                  <Star className="absolute w-4 h-4 text-amber-400 fill-amber-400" style={{ clipPath: `inset(0 ${100 - fill}% 0 0)` }} />
+                  <Star className="absolute w-4 h-4 text-amber-300/30" />
+                </div>
+              );
+            })}
           </div>
-          <span className="text-amber-100 font-bold text-[12px]">4.9/5</span>
-          <span className="text-yellow-200 text-[12px] font-bold">(2,847)</span>
+          <span className="text-amber-100 font-bold text-[12px]">
+            {reviewAggregate.average ? reviewAggregate.average.toFixed(1) : "—"}
+          </span>
+          <span className="text-yellow-200 text-[12px] font-bold">
+            ({reviewAggregate.count.toLocaleString()})
+          </span>
         </div>
 
         {/* Center: Cash on Delivery + Timer */}

@@ -32,6 +32,7 @@ interface ReviewsCarouselClientProps {
   viewAllHref?: string;
   title?: string;
   subtitle?: string;
+  productSlugMap?: Map<string, string>; // productId -> slug
 }
 
 export function ReviewsCarouselClient({
@@ -40,6 +41,7 @@ export function ReviewsCarouselClient({
   viewAllHref = "/reviews",
   title = "Loved by Our Customers",
   subtitle = "Real reviews from real Royal Furniture customers across the UK",
+  productSlugMap = new Map(),
 }: ReviewsCarouselClientProps) {
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -55,12 +57,16 @@ export function ReviewsCarouselClient({
   if (!reviews || reviews.length === 0) return null;
 
   return (
-    <section className="py-14 sm:py-20 md:py-24 bg-white">
-      <div className="mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-14 sm:py-20 md:py-24 bg-gradient-to-b from-amber-50/30 to-white border-t border-amber-100/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 sm:mb-10">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10 sm:mb-12">
           <div>
-           
+            <div className="inline-flex items-center gap-2 bg-amber-100/80 px-3.5 py-1 rounded-full mb-3">
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-amber-800">
+                ★ Real Reviews
+              </span>
+            </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-neutral-900">
               {title}
             </h2>
@@ -86,7 +92,7 @@ export function ReviewsCarouselClient({
               type="button"
               onClick={() => scroll("left")}
               aria-label="Scroll reviews left"
-              className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center text-neutral-500 hover:bg-neutral-50 transition-colors"
+              className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center text-neutral-500 hover:bg-amber-50 hover:border-amber-300 transition-all"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -94,7 +100,7 @@ export function ReviewsCarouselClient({
               type="button"
               onClick={() => scroll("right")}
               aria-label="Scroll reviews right"
-              className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center text-neutral-500 hover:bg-neutral-50 transition-colors"
+              className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center text-neutral-500 hover:bg-amber-50 hover:border-amber-300 transition-all"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -110,18 +116,25 @@ export function ReviewsCarouselClient({
         {/* Carousel track */}
         <div
           ref={trackRef}
-          className="flex gap-4 sm:gap-5 overflow-x-auto pb-2 snap-x snap-mandatory scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex gap-5 sm:gap-6 overflow-x-auto pb-3 snap-x snap-mandatory scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {reviews.map((review) => {
             const Source = SOURCE_META[review.source] ?? SOURCE_META.website;
             const SourceIcon = Source.icon;
+
+            // Get product slug from map or fallback to productId
+            const productSlug = review.productId
+              ? productSlugMap.get(review.productId) || review.productId
+              : null;
+
             return (
               <div
                 key={review.id}
-                className="snap-start flex-shrink-0 w-[280px] sm:w-[320px] border border-neutral-200/80 p-5 bg-white flex flex-col"
+                className="snap-start flex-shrink-0 w-[280px] sm:w-[340px] bg-white rounded-2xl border border-neutral-200/80 transition-all duration-300 p-5 sm:p-6 flex flex-col group"
               >
+                {/* User info */}
                 <div className="flex items-start gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-amber-50 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-amber-50 flex-shrink-0 overflow-hidden flex items-center justify-center border border-amber-100">
                     {review.customerImage ? (
                       <img
                         src={review.customerImage}
@@ -134,7 +147,7 @@ export function ReviewsCarouselClient({
                       </span>
                     )}
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="font-semibold text-neutral-900 text-sm truncate">
                         {review.customerName}
@@ -160,8 +173,18 @@ export function ReviewsCarouselClient({
                   {review.comment}
                 </p>
 
-                {review.productTitle && (
-                  <span className="mt-3 inline-block w-fit text-[10px] font-semibold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-full truncate max-w-full">
+                {/* Product link */}
+                {review.productTitle && productSlug && (
+                  <Link
+                    href={`/product/${productSlug}`}
+                    className="mt-3 inline-flex items-center gap-1 w-fit text-xs font-semibold text-amber-700 bg-amber-50 px-3 py-1.5  hover:bg-amber-100 hover:text-amber-800 transition-colors group-hover:shadow-sm"
+                  >
+                    {review.productTitle}
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
+                )}
+                {review.productTitle && !productSlug && (
+                  <span className="mt-3 inline-block w-fit text-xs font-semibold text-amber-800 bg-amber-50 px-3 py-1.5 ">
                     {review.productTitle}
                   </span>
                 )}

@@ -346,11 +346,10 @@ export function BlogClient({
         <div className="flex flex-wrap gap-2 mb-8">
           <button
             onClick={() => handleCategoryFilter(null)}
-            className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all ${
-              !selectedCategory
+            className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all ${!selectedCategory
                 ? "bg-neutral-900 text-white"
                 : "bg-white border border-neutral-200/80 text-neutral-600 hover:bg-neutral-50"
-            }`}
+              }`}
           >
             All
           </button>
@@ -358,11 +357,10 @@ export function BlogClient({
             <button
               key={category.id}
               onClick={() => handleCategoryFilter(category.slug)}
-              className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all ${
-                selectedCategory === category.slug
+              className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all ${selectedCategory === category.slug
                   ? "bg-neutral-900 text-white"
                   : "bg-white border border-neutral-200/80 text-neutral-600 hover:bg-neutral-50"
-              }`}
+                }`}
             >
               {category.name}
             </button>

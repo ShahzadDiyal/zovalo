@@ -216,7 +216,6 @@ export default function CheckoutPage() {
 
     // Check if user is logged in
     if (!user) {
-      // Save current path to session storage before redirecting
       sessionStorage.setItem("redirectAfterLogin", "/checkout");
       router.push("/login");
       return;
@@ -238,12 +237,47 @@ export default function CheckoutPage() {
     }
   };
 
+  // ---------- SERVER‑SIDE reCAPTCHA VERIFICATION ----------
+  const verifyCaptcha = async (token: string): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/verify-captcha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+      const data = await res.json();
+      return data.success === true;
+    } catch (error) {
+      console.error("Captcha verification error:", error);
+      return false;
+    }
+  };
+
   const handleConfirmOrder = async () => {
     setShowConfirmModal(false);
     setLoading(true);
     setEmailStatus("sending");
 
     try {
+      // ----- Verify reCAPTCHA (if required) -----
+      if (requireCaptcha && recaptchaRef.current) {
+        const token = recaptchaRef.current.getValue();
+        if (!token) {
+          setValidationError("Please complete the security check");
+          setShowWarning(true);
+          setLoading(false);
+          return;
+        }
+        const isValid = await verifyCaptcha(token);
+        if (!isValid) {
+          setValidationError("Security verification failed. Please try again.");
+          setShowWarning(true);
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Proceed with order creation
       const fullPhoneNumber = `${selectedCountryCode.code} ${formData.phone}`;
       const fullAlternativePhone = formData.alternativePhone
         ? `${selectedCountryCode.code} ${formData.alternativePhone}`
@@ -406,9 +440,7 @@ export default function CheckoutPage() {
     return (
       <div className="bg-[#FAF8F5] min-h-screen py-12 sm:py-16 md:py-20">
         <div className="text-center py-12 sm:py-16">
-          <h2 className="text-xl  text-neutral-900">
-            No items to checkout
-          </h2>
+          <h2 className="text-xl  text-neutral-900">No items to checkout</h2>
           <Link
             href="/shop"
             className="text-amber-600 hover:text-amber-700 underline mt-2 inline-block"
@@ -420,9 +452,7 @@ export default function CheckoutPage() {
     );
   }
 
-  const RECAPTCHA_SITE_KEY =
-    process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ||
-    "6LfwWVQtAAAAACmScZEoGpi1Sx5IXEVY-84SAbMT";
+  const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen">
@@ -431,7 +461,6 @@ export default function CheckoutPage() {
         description="Complete your order with Cash on Delivery"
       />
 
-      {/* Hero Header Section */}
       <section className="relative overflow-hidden bg-neutral-900 text-white py-12 sm:py-16 md:py-20 mb-8 sm:mb-12">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -452,7 +481,6 @@ export default function CheckoutPage() {
         </div>
       </section>
 
-      {/* Warning Banner */}
       {showWarning && validationError && (
         <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 animate-bounce max-w-[90%] sm:max-w-md">
           <AlertCircle className="w-5 h-5 flex-shrink-0" />
@@ -468,7 +496,6 @@ export default function CheckoutPage() {
 
       <div className="mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-20">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Checkout Form */}
           <div className="flex-1">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-neutral-200/80 pb-4 mb-6 gap-2">
               <h2 className="text-xl sm:text-2xl  text-neutral-900">
@@ -489,7 +516,6 @@ export default function CheckoutPage() {
               </div>
             )}
 
-            {/* Login Required Message */}
             {!user && (
               <div className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
                 <div className="flex items-start gap-3">
@@ -513,7 +539,6 @@ export default function CheckoutPage() {
               </div>
             )}
 
-            {/* reCAPTCHA Info Banner */}
             {requireCaptcha && !captchaVerified && user && (
               <div className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
                 <div className="flex items-center gap-3">
@@ -523,7 +548,7 @@ export default function CheckoutPage() {
                       Security Verification Required
                     </p>
                     <p className="text-xs text-amber-700">
-                      You've placed {orderCount} orders. Please complete the
+                    Please complete the
                       verification below to continue.
                     </p>
                   </div>
@@ -533,7 +558,6 @@ export default function CheckoutPage() {
 
             <form onSubmit={handleProceedToConfirmation} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {/* Full Name */}
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
                     Full Name <span className="text-red-500">*</span>
@@ -551,7 +575,6 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                {/* Email */}
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
                     Email Address <span className="text-red-500">*</span>
@@ -570,7 +593,6 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                {/* Country */}
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
                     Country <span className="text-red-500">*</span>
@@ -589,7 +611,6 @@ export default function CheckoutPage() {
                   </select>
                 </div>
 
-                {/* Phone Number */}
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
                     Phone Number <span className="text-red-500">*</span>
@@ -635,11 +656,9 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                {/* Alternative Phone Number */}
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
-                    Whatsapp Number{" "}<span className="text-red-500">*</span>
-                    
+                    Whatsapp Number <span className="text-red-500">*</span>
                   </label>
                   <div className="flex gap-2">
                     <div className="relative w-28">
@@ -673,7 +692,6 @@ export default function CheckoutPage() {
                   </p>
                 </div>
 
-                {/* City */}
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
                     City <span className="text-red-500">*</span>
@@ -688,7 +706,6 @@ export default function CheckoutPage() {
                   />
                 </div>
 
-                {/* Postal Code */}
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
                     Postal Code <span className="text-red-500">*</span>
@@ -703,7 +720,6 @@ export default function CheckoutPage() {
                   />
                 </div>
 
-                {/* Address */}
                 <div className="md:col-span-2">
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
                     Street Address <span className="text-red-500">*</span>
@@ -722,7 +738,6 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                {/* Notes */}
                 <div className="md:col-span-2">
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700 block mb-1">
                     Order Notes (Optional)
@@ -741,7 +756,6 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* reCAPTCHA */}
               {requireCaptcha && user && (
                 <div className="flex justify-center my-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
                   <div className="text-center">
@@ -761,7 +775,6 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              {/* Order Count Info */}
               <div className="text-center text-[10px] text-neutral-400">
                 {orderCount === 0 ? (
                   <p className="text-[15px] text-amber-700 italic">
@@ -777,7 +790,6 @@ export default function CheckoutPage() {
                 )}
               </div>
 
-              {/* Payment Method */}
               <div className="bg-emerald-50/60 border border-emerald-200/80 p-4 rounded-2xl">
                 <div className="flex items-center gap-3 mb-3">
                   <CreditCard className="w-5 h-5 text-emerald-600" />
@@ -818,12 +830,9 @@ export default function CheckoutPage() {
             </form>
           </div>
 
-          {/* Order Summary Sidebar */}
           <aside className="lg:w-[420px]">
             <div className="bg-white p-6 rounded-2xl sticky top-24 ">
-              <h2 className="text-xl  text-neutral-900 mb-4">
-                Review Order
-              </h2>
+              <h2 className="text-xl  text-neutral-900 mb-4">Review Order</h2>
               <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
                 {cart.map((item) => (
                   <div
@@ -863,11 +872,7 @@ export default function CheckoutPage() {
                               </span>
                             )}
                             <p className="text-[12px] text-neutral-500">
-                              QTY:{" "}
-                              <span className="font-bold">
-                                {" "}
-                                {item.quantity}
-                              </span>
+                              QTY: <span className="font-bold"> {item.quantity}</span>
                             </p>
                           </div>
                         )}
@@ -920,9 +925,7 @@ export default function CheckoutPage() {
           />
           <div className="bg-white max-w-md w-full rounded-2xl overflow-hidden relative z-10 shadow-2xl">
             <div className="p-5 border-b border-neutral-200/80 flex justify-between items-center">
-              <h3 className="text-lg  text-neutral-900">
-                Confirm Order
-              </h3>
+              <h3 className="text-lg  text-neutral-900">Confirm Order</h3>
               <button
                 onClick={() => setShowConfirmModal(false)}
                 className="hover:text-amber-600 transition-colors"

@@ -179,27 +179,11 @@ export function ColorSelection({
 
           <div className="fixed inset-x-0 bottom-0 z-[9999] flex justify-center pointer-events-none">
             <div className="w-full max-w-5xl mx-4 pointer-events-auto transform transition-transform duration-300 ease-out">
-              <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[80vh] min-h-[400px] md:min-h-[500px]">
+              <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[60vh] min-h-[300px] md:min-h-[400px]">
                 <div className="flex justify-center pt-3 pb-1">
                   <div className="w-12 h-1 bg-gray-300 rounded-full" />
                 </div>
 
-                <div className="px-4 py-3 border-b border-warm-beige flex justify-between items-center">
-                  <div>
-                    <h3 className="text-base  text-near-black">
-                      Choose Your Color
-                    </h3>
-                    <p className="text-[10px] text-gray-400">
-                      Select from our premium collection
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setIsOpen(false)}
-                    className="p-1.5 hover:bg-cream rounded-full transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
 
                 <div className="px-4 py-2.5 border-b border-warm-beige">
                   <input
@@ -242,11 +226,10 @@ export function ColorSelection({
                         <button
                           key={fabric}
                           onClick={() => handleFabricSelect(fabric)}
-                          className={`w-full text-left px-3 py-2 text-sm hover:bg-cream/50 transition-colors flex items-center justify-between ${
-                            selectedFabric === fabric
+                          className={`w-full text-left px-3 py-2 text-sm hover:bg-cream/50 transition-colors flex items-center justify-between ${selectedFabric === fabric
                               ? "bg-gold/10 text-gold"
                               : ""
-                          }`}
+                            }`}
                         >
                           <span>{fabric}</span>
                           <span className="text-xs text-gray-400">

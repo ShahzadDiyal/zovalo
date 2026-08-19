@@ -1,6 +1,6 @@
-// src/components/blog/HomeBlogSection.tsx
 import { fetchBlogPosts } from "./BlogData";
 import { BlogSectionClient } from "./BlogSectionClient";
+import { serializeFirestoreData } from "../../lib/serialize";
 
 interface HomeBlogSectionProps {
   limit?: number;
@@ -15,14 +15,15 @@ export async function HomeBlogSection({
 }: HomeBlogSectionProps) {
   const { posts } = await fetchBlogPosts(limit);
 
-  // If no posts, return null (don't render the section)
   if (posts.length === 0) {
     return null;
   }
 
+  const serializedPosts = serializeFirestoreData(posts);
+
   return (
     <BlogSectionClient
-      initialPosts={posts}
+      initialPosts={serializedPosts}
       limit={limit}
       title={title}
       subtitle={subtitle}

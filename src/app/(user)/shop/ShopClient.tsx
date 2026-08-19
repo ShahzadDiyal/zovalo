@@ -439,11 +439,10 @@ export function ShopClient({
                 <div className="space-y-1 max-h-[220px] overflow-y-auto pr-1 custom-scrollbar">
                   <button
                     onClick={() => handleCategoryClick("All")}
-                    className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
-                      selectedCategory === "All" && !slug
+                    className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${selectedCategory === "All" && !slug
                         ? "bg-neutral-900 text-white font-medium shadow-sm"
                         : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
-                    }`}
+                      }`}
                   >
                     All Products
                   </button>
@@ -451,11 +450,10 @@ export function ShopClient({
                     <button
                       key={cat.id}
                       onClick={() => handleCategoryClick(cat.name, cat.slug)}
-                      className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
-                        selectedCategoryId === cat.id
+                      className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${selectedCategoryId === cat.id
                           ? "bg-neutral-900 text-white font-medium shadow-sm"
                           : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
-                      }`}
+                        }`}
                     >
                       {cat.name}
                     </button>
@@ -476,11 +474,10 @@ export function ShopClient({
                         <button
                           key={color}
                           onClick={() => toggleColor(color)}
-                          className={`px-2.5 py-1 text-[11px] rounded-full transition-all flex items-center gap-1.5 border ${
-                            isSelected
+                          className={`px-2.5 py-1 text-[11px] rounded-full transition-all flex items-center gap-1.5 border ${isSelected
                               ? "bg-neutral-900 text-white border-neutral-900 font-medium shadow-sm"
                               : "bg-neutral-50 text-neutral-600 border-neutral-200/80 hover:border-amber-400"
-                          }`}
+                            }`}
                         >
                           <span
                             className="w-2.5 h-2.5 rounded-full border border-black/10 shrink-0"
@@ -730,11 +727,10 @@ export function ShopClient({
                       <button
                         onClick={goToPrevPage}
                         disabled={currentPage === 1}
-                        className={`p-2 rounded-xl border transition-all ${
-                          currentPage === 1
+                        className={`p-2 rounded-xl border transition-all ${currentPage === 1
                             ? "border-neutral-200 text-neutral-300 cursor-not-allowed"
                             : "border-neutral-200 text-neutral-700 hover:bg-neutral-100 hover:border-amber-400"
-                        }`}
+                          }`}
                         aria-label="Previous page"
                       >
                         <ChevronLeft className="w-4 h-4" />
@@ -748,13 +744,12 @@ export function ShopClient({
                             onClick={() =>
                               typeof page === "number" && goToPage(page)
                             }
-                            className={`min-w-[32px] h-8 px-2 rounded-xl text-xs font-medium transition-all ${
-                              page === currentPage
+                            className={`min-w-[32px] h-8 px-2 rounded-xl text-xs font-medium transition-all ${page === currentPage
                                 ? "bg-neutral-900 text-white"
                                 : page === "..."
                                   ? "text-neutral-400 cursor-default"
                                   : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
-                            }`}
+                              }`}
                             disabled={page === "..."}
                           >
                             {page}
@@ -766,11 +761,10 @@ export function ShopClient({
                       <button
                         onClick={goToNextPage}
                         disabled={currentPage === totalPages}
-                        className={`p-2 rounded-xl border transition-all ${
-                          currentPage === totalPages
+                        className={`p-2 rounded-xl border transition-all ${currentPage === totalPages
                             ? "border-neutral-200 text-neutral-300 cursor-not-allowed"
                             : "border-neutral-200 text-neutral-700 hover:bg-neutral-100 hover:border-amber-400"
-                        }`}
+                          }`}
                         aria-label="Next page"
                       >
                         <ChevronRight className="w-4 h-4" />
@@ -834,11 +828,10 @@ export function ShopClient({
                       handleCategoryClick("All");
                       setShowMobileFilters(false);
                     }}
-                    className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
-                      selectedCategory === "All" && !slug
+                    className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${selectedCategory === "All" && !slug
                         ? "bg-neutral-900 text-white font-medium shadow-sm"
                         : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
-                    }`}
+                      }`}
                   >
                     All Products
                   </button>
@@ -849,11 +842,10 @@ export function ShopClient({
                         handleCategoryClick(cat.name, cat.slug);
                         setShowMobileFilters(false);
                       }}
-                      className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
-                        selectedCategoryId === cat.id
+                      className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${selectedCategoryId === cat.id
                           ? "bg-neutral-900 text-white font-medium shadow-sm"
                           : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
-                      }`}
+                        }`}
                     >
                       {cat.name}
                     </button>
@@ -872,11 +864,10 @@ export function ShopClient({
                       <button
                         key={color}
                         onClick={() => toggleColor(color)}
-                        className={`px-2.5 py-1 text-[10px] rounded-full transition-all border ${
-                          selectedColors.includes(color)
+                        className={`px-2.5 py-1 text-[10px] rounded-full transition-all border ${selectedColors.includes(color)
                             ? "bg-neutral-900 text-white border-neutral-900 font-medium"
                             : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
-                        }`}
+                          }`}
                       >
                         {color}
                       </button>
@@ -896,11 +887,10 @@ export function ShopClient({
                       <button
                         key={seater}
                         onClick={() => toggleSeater(seater)}
-                        className={`px-2.5 py-1 text-[10px] rounded-full transition-all border ${
-                          selectedSeaters.includes(seater)
+                        className={`px-2.5 py-1 text-[10px] rounded-full transition-all border ${selectedSeaters.includes(seater)
                             ? "bg-neutral-900 text-white border-neutral-900 font-medium"
                             : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
-                        }`}
+                          }`}
                       >
                         {seater}
                       </button>

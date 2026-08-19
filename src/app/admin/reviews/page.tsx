@@ -62,9 +62,8 @@ function StarRow({
           className={onChange ? "cursor-pointer" : "cursor-default"}
         >
           <Star
-            className={`${size} ${
-              n <= value ? "fill-gold text-gold" : "text-gray-300"
-            }`}
+            className={`${size} ${n <= value ? "fill-gold text-gold" : "text-gray-300"
+              }`}
           />
         </button>
       ))}
@@ -323,11 +322,10 @@ export default function AdminReviews() {
                       <SourceIcon className="w-3 h-3" /> {Source.label}
                     </span>
                     <span
-                      className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${
-                        review.status === "published"
+                      className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${review.status === "published"
                           ? "bg-gold/20 text-walnut"
                           : "bg-gray-100 text-gray-500"
-                      }`}
+                        }`}
                     >
                       {review.status}
                     </span>

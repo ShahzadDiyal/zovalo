@@ -42,7 +42,7 @@ class EmailService {
         },
       });
       this.isConfigured = true;
-      console.log("Email service configured with shahzaddiyal786@gmail.com");
+      console.log("Email service configured with ");
     } else {
       console.warn(
         "⚠️ Email service not configured. SMTP credentials missing.",
@@ -70,21 +70,19 @@ class EmailService {
       console.log(
         `📧 Sending order notification for order #${orderData.orderId.slice(-8).toUpperCase()}...`,
       );
-      console.log(
-        `📧 Sending to: ${process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com"}`,
-      );
+      console.log(`📧 Sending to: ${process.env.ADMIN_EMAIL || ""}`);
 
       const htmlContent = this.generateOrderEmailHTML(orderData);
       const textContent = this.generateOrderEmailText(orderData);
 
       const mailOptions = {
-        from: process.env.SMTP_FROM || "shahzaddiyal786@gmail.com",
-        to: process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com",
+        from: process.env.SMTP_FROM || "",
+        to: process.env.ADMIN_EMAIL || "",
         subject: `🛍️ NEW ORDER #${orderData.orderId.slice(-8).toUpperCase()} - Royal Furniture`,
         text: textContent,
         html: htmlContent,
         // Also send a copy to yourself
-        bcc: process.env.BCC_EMAIL || "shahzaddiyal786@gmail.com",
+        bcc: process.env.BCC_EMAIL || "",
         // Add reply-to so you can reply directly
         replyTo: orderData.customerEmail,
       };
@@ -93,9 +91,7 @@ class EmailService {
       console.log(
         `Order email sent successfully! Message ID: ${info.messageId}`,
       );
-      console.log(
-        `Admin notified at: ${process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com"}`,
-      );
+      console.log(`Admin notified at: ${process.env.ADMIN_EMAIL || ""}`);
       return true;
     } catch (error) {
       console.error("❌ Error sending order email:", error);
@@ -118,14 +114,14 @@ class EmailService {
       const textContent = this.generateCustomerEmailText(orderData);
 
       const mailOptions = {
-        from: process.env.SMTP_FROM || "shahzaddiyal786@gmail.com",
+        from: process.env.SMTP_FROM || "",
         to: orderData.customerEmail,
         subject: `Order Confirmation #${orderData.orderId.slice(-8).toUpperCase()} - Royal Furniture`,
         text: textContent,
         html: htmlContent,
-        replyTo: process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com",
+        replyTo: process.env.ADMIN_EMAIL || "",
         // Send a copy to admin as well
-        bcc: process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com",
+        bcc: process.env.ADMIN_EMAIL || "",
       };
 
       const info = await this.transporter.sendMail(mailOptions);
@@ -262,7 +258,7 @@ class EmailService {
 
           <div class="footer">
             <p>© ${new Date().getFullYear()} Royal Furniture. All rights reserved.</p>
-            <p style="color: #ccc; font-size: 11px;">This order notification was sent to shahzaddiyal786@gmail.com</p>
+            <p style="color: #ccc; font-size: 11px;">This order notification was sent to </p>
           </div>
         </div>
       </body>
@@ -307,7 +303,7 @@ Payment: Cash on Delivery
 ---
 Royal Furniture
 https://royalfurnitures.store
-This notification sent to shahzaddiyal786@gmail.com
+This notification sent to 
     `;
   }
 

@@ -409,11 +409,10 @@ export function CategoryClient({
                       router.push("/shop");
                       setCurrentPage(1);
                     }}
-                    className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
-                      !currentCategory
+                    className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${!currentCategory
                         ? "bg-neutral-900 text-white font-medium shadow-sm"
                         : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
-                    }`}
+                      }`}
                   >
                     All Products
                   </button>
@@ -424,11 +423,10 @@ export function CategoryClient({
                         handleCategoryClick(cat.slug);
                         setCurrentPage(1);
                       }}
-                      className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${
-                        currentCategory?.id === cat.id
+                      className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${currentCategory?.id === cat.id
                           ? "bg-neutral-900 text-white font-medium shadow-sm"
                           : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
-                      }`}
+                        }`}
                     >
                       {cat.name}
                     </button>
@@ -449,11 +447,10 @@ export function CategoryClient({
                         <button
                           key={color}
                           onClick={() => toggleColor(color)}
-                          className={`px-2.5 py-1 text-[11px] rounded-full transition-all flex items-center gap-1.5 border ${
-                            isSelected
+                          className={`px-2.5 py-1 text-[11px] rounded-full transition-all flex items-center gap-1.5 border ${isSelected
                               ? "bg-neutral-900 text-white border-neutral-900 font-medium shadow-sm"
                               : "bg-neutral-50 text-neutral-600 border-neutral-200/80 hover:border-amber-400"
-                          }`}
+                            }`}
                         >
                           <span
                             className="w-2.5 h-2.5 rounded-full border border-black/10 shrink-0"
@@ -480,11 +477,10 @@ export function CategoryClient({
                         <button
                           key={seater}
                           onClick={() => toggleSeater(seater)}
-                          className={`px-2.5 py-1 text-[11px] rounded-full transition-all border ${
-                            isSelected
+                          className={`px-2.5 py-1 text-[11px] rounded-full transition-all border ${isSelected
                               ? "bg-neutral-900 text-white border-neutral-900 font-medium shadow-sm"
                               : "bg-neutral-50 text-neutral-600 border-neutral-200/80 hover:border-amber-400"
-                          }`}
+                            }`}
                         >
                           {seater}
                         </button>
@@ -693,11 +689,10 @@ export function CategoryClient({
                       <button
                         onClick={goToPrevPage}
                         disabled={currentPage === 1}
-                        className={`p-2 rounded-xl border transition-all ${
-                          currentPage === 1
+                        className={`p-2 rounded-xl border transition-all ${currentPage === 1
                             ? "border-neutral-200 text-neutral-300 cursor-not-allowed"
                             : "border-neutral-200 text-neutral-700 hover:bg-neutral-100 hover:border-amber-400"
-                        }`}
+                          }`}
                         aria-label="Previous page"
                       >
                         <ChevronLeft className="w-4 h-4" />
@@ -711,13 +706,12 @@ export function CategoryClient({
                             onClick={() =>
                               typeof page === "number" && goToPage(page)
                             }
-                            className={`min-w-[32px] h-8 px-2 rounded-xl text-xs font-medium transition-all ${
-                              page === currentPage
+                            className={`min-w-[32px] h-8 px-2 rounded-xl text-xs font-medium transition-all ${page === currentPage
                                 ? "bg-neutral-900 text-white"
                                 : page === "..."
                                   ? "text-neutral-400 cursor-default"
                                   : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
-                            }`}
+                              }`}
                             disabled={page === "..."}
                           >
                             {page}
@@ -729,11 +723,10 @@ export function CategoryClient({
                       <button
                         onClick={goToNextPage}
                         disabled={currentPage === totalPages}
-                        className={`p-2 rounded-xl border transition-all ${
-                          currentPage === totalPages
+                        className={`p-2 rounded-xl border transition-all ${currentPage === totalPages
                             ? "border-neutral-200 text-neutral-300 cursor-not-allowed"
                             : "border-neutral-200 text-neutral-700 hover:bg-neutral-100 hover:border-amber-400"
-                        }`}
+                          }`}
                         aria-label="Next page"
                       >
                         <ChevronRight className="w-4 h-4" />
@@ -803,11 +796,10 @@ export function CategoryClient({
                       setShowMobileFilters(false);
                       setCurrentPage(1);
                     }}
-                    className={`text-left text-xs py-2 px-3 rounded-xl border transition-all ${
-                      !currentCategory
+                    className={`text-left text-xs py-2 px-3 rounded-xl border transition-all ${!currentCategory
                         ? "bg-neutral-900 text-white border-neutral-900 font-medium"
                         : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
-                    }`}
+                      }`}
                   >
                     All Products
                   </button>
@@ -819,11 +811,10 @@ export function CategoryClient({
                         setShowMobileFilters(false);
                         setCurrentPage(1);
                       }}
-                      className={`text-left text-xs py-2 px-3 rounded-xl border transition-all ${
-                        currentCategory?.id === cat.id
+                      className={`text-left text-xs py-2 px-3 rounded-xl border transition-all ${currentCategory?.id === cat.id
                           ? "bg-neutral-900 text-white border-neutral-900 font-medium"
                           : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
-                      }`}
+                        }`}
                     >
                       {cat.name}
                     </button>
@@ -842,11 +833,10 @@ export function CategoryClient({
                       <button
                         key={color}
                         onClick={() => toggleColor(color)}
-                        className={`px-2.5 py-1 text-[10px] rounded-full transition-all border ${
-                          selectedColors.includes(color)
+                        className={`px-2.5 py-1 text-[10px] rounded-full transition-all border ${selectedColors.includes(color)
                             ? "bg-neutral-900 text-white border-neutral-900 font-medium"
                             : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
-                        }`}
+                          }`}
                       >
                         {color}
                       </button>
@@ -866,11 +856,10 @@ export function CategoryClient({
                       <button
                         key={seater}
                         onClick={() => toggleSeater(seater)}
-                        className={`px-2.5 py-1 text-[10px] rounded-full transition-all border ${
-                          selectedSeaters.includes(seater)
+                        className={`px-2.5 py-1 text-[10px] rounded-full transition-all border ${selectedSeaters.includes(seater)
                             ? "bg-neutral-900 text-white border-neutral-900 font-medium"
                             : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
-                        }`}
+                          }`}
                       >
                         {seater}
                       </button>

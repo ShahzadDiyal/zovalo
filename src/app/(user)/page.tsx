@@ -1,13 +1,18 @@
-// src/app/(user)/page.tsx
 import { Suspense } from "react";
 import { fetchHomeData } from "./home/HomeData";
 import { HomeClient } from "./home/HomeClient";
 import { HomeBlogSection } from "@/src/components/blog/HomeBlogSection";
 import { HomeReviewsSection } from "@/src/components/reviews/HomeReviewsSection";
+import { reviewApi } from "../../services/reviewApi";
 
 export default async function HomePage() {
   const { categories, featuredProducts, recentProducts } =
     await fetchHomeData();
+
+  const aggregate = await reviewApi.getSiteAggregate().catch(() => ({
+    count: 0,
+    average: 0,
+  }));
 
   return (
     <Suspense
@@ -21,8 +26,8 @@ export default async function HomePage() {
         initialCategories={categories}
         initialFeaturedProducts={featuredProducts}
         initialRecentProducts={recentProducts}
+        aggregate={aggregate}
       />
-
       <HomeReviewsSection />
       <HomeBlogSection />
     </Suspense>

@@ -69,9 +69,8 @@ function BlogCard({ post, featured }: { post: BlogPost; featured?: boolean }) {
   return (
     <Link href={`/blog/${post.slug}`} className="group h-full block">
       <article
-        className={`bg-white border border-neutral-200/80 overflow-hidden hover:shadow-xl transition-all duration-500 h-full flex flex-col ${
-          featured ? "md:col-span-2 lg:col-span-2" : ""
-        }`}
+        className={`bg-white border border-neutral-200/80 overflow-hidden hover:shadow-xl transition-all duration-500 h-full flex flex-col ${featured ? "md:col-span-2 lg:col-span-2" : ""
+          }`}
       >
         {/* Image Container */}
         <div className="relative overflow-hidden bg-neutral-100">
@@ -119,18 +118,16 @@ function BlogCard({ post, featured }: { post: BlogPost; featured?: boolean }) {
 
           {/* Title */}
           <h3
-            className={` text-neutral-900 group-hover:text-amber-600 transition-colors line-clamp-2 mb-2 ${
-              featured ? "text-xl sm:text-2xl" : "text-lg"
-            }`}
+            className={` text-neutral-900 group-hover:text-amber-600 transition-colors line-clamp-2 mb-2 ${featured ? "text-xl sm:text-2xl" : "text-lg"
+              }`}
           >
             {post.title}
           </h3>
 
           {/* Excerpt */}
           <p
-            className={`text-neutral-500 line-clamp-2 flex-1 ${
-              featured ? "text-sm sm:text-base" : "text-sm"
-            }`}
+            className={`text-neutral-500 line-clamp-2 flex-1 ${featured ? "text-sm sm:text-base" : "text-sm"
+              }`}
           >
             {post.excerpt || post.content?.substring(0, 120) + "..."}
           </p>
@@ -216,13 +213,12 @@ export function BlogSectionClient({
 
         {/* Blog Grid */}
         <div
-          className={`grid gap-6 ${
-            posts.length === 1
+          className={`grid gap-6 ${posts.length === 1
               ? "grid-cols-1 max-w-2xl mx-auto"
               : posts.length === 2
                 ? "grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto"
                 : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-          }`}
+            }`}
         >
           {posts.map((post, index) => (
             <BlogCard

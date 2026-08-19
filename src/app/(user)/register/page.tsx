@@ -48,32 +48,22 @@ function RegisterForm() {
 
     setLoading(true);
 
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
+   try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
-      // Update auth profile
       await updateProfile(user, { displayName: name });
 
-      // Create Firestore document with proper role
+      // Always create with role: "user" – NEVER admin
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         email: user.email,
         displayName: name,
-        role: isAdminEmail(email) ? "admin" : "user",
+        role: "user",   // <-- FIXED
         createdAt: serverTimestamp(),
       });
 
-      // Redirect based on role
-      if (isAdminEmail(email)) {
-        router.push("/admin");
-      } else {
-        router.push("/");
-      }
+      router.push("/");
+      
     } catch (err: any) {
       console.error(err);
       let message = "Failed to create account. Please try again.";

@@ -33,12 +33,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    console.log(
-      `📧 Sending emails for order #${orderData.orderId.slice(-8).toUpperCase()}...`,
-    );
-    console.log(
-      `📧 Admin email: ${process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com"}`,
-    );
+    // console.log(
+    //   `📧 Sending emails for order #${orderData.orderId.slice(-8).toUpperCase()}...`,
+    // );
+    // console.log(
+    //   `📧 Admin email: ${process.env.ADMIN_EMAIL }`,
+    // );
 
     // Send emails
     const result = await emailService.sendOrderEmails(orderData);

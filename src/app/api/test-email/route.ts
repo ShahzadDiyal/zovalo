@@ -1,14 +1,28 @@
 // src/app/api/test-order-email/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { emailService } from "../../../services/emailService";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Only allow if the secret token matches
+  const authHeader = request.headers.get("authorization");
+  const token = authHeader?.replace("Bearer ", "");
+  if (token !== process.env.TEST_API_SECRET) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const adminEmail = process.env.ADMIN_EMAIL;
+  if (!adminEmail) {
+    return NextResponse.json(
+      { error: "ADMIN_EMAIL not configured" },
+      { status: 500 }
+    );
+  }
+
   try {
-    // Create sample order data
     const testOrderData = {
       orderId: "test-" + Date.now(),
       customerName: "Test Customer",
-      customerEmail: "shahzaddiyal786@gmail.com",
+      customerEmail: adminEmail,
       customerPhone: "+44 7123 456789",
       customerAddress: "123 Test Street",
       customerCity: "Manchester",
@@ -43,36 +57,27 @@ export async function GET() {
       deliveryNotes: "Please call before delivery. Gate code: 1234",
     };
 
-    console.log("📧 Sending test order email...");
-    console.log(
-      "📧 Admin email:",
-      process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com",
-    );
-
-    // Send emails
     const result = await emailService.sendOrderEmails(testOrderData);
 
     if (result.adminSent && result.customerSent) {
-      console.log("Test order emails sent successfully");
       return NextResponse.json({
         success: true,
         message: "Test order emails sent successfully",
         data: {
           adminSent: result.adminSent,
           customerSent: result.customerSent,
-          adminEmail: process.env.ADMIN_EMAIL || "shahzaddiyal786@gmail.com",
-          customerEmail: testOrderData.customerEmail,
+          adminEmail,
+          customerEmail: adminEmail,
         },
       });
     } else {
-      console.warn("⚠️ Some test emails failed:", result);
       return NextResponse.json(
         {
           success: false,
           message: "Some test emails failed",
           data: result,
         },
-        { status: 500 },
+        { status: 500 }
       );
     }
   } catch (error) {
@@ -82,7 +87,7 @@ export async function GET() {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

@@ -333,12 +333,12 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
 
   const discountPercent =
     currentCompareAtPrice &&
-    currentPrice &&
-    currentCompareAtPrice > currentPrice
+      currentPrice &&
+      currentCompareAtPrice > currentPrice
       ? Math.round(
-          ((currentCompareAtPrice - currentPrice) / currentCompareAtPrice) *
-            100,
-        )
+        ((currentCompareAtPrice - currentPrice) / currentCompareAtPrice) *
+        100,
+      )
       : 0;
 
   if (!product) {
@@ -381,16 +381,16 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
     (product.colors && product.colors.length > 0) ||
     (product.seaterCount && product.seaterCount.length > 0);
 
-  // Get custom colors from product.colors if they exist
   const customColors = product.colors || [];
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen">
+      {/* Hero Section – refined */}
       <section className="relative bg-neutral-900 text-white py-12 sm:py-16 md:py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px]" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative mx-auto px-4 sm:px-6 lg:px-8 text-center mt-4">
+        <div className="relative mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-full mb-4">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-xs font-bold uppercase tracking-widest text-amber-300">
@@ -398,32 +398,33 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl md:text-5xl text-white tracking-tight mb-3">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold tracking-tight max-w-4xl mx-auto leading-tight">
             {product.title}
           </h1>
 
-          <p className="text-neutral-400 text-xs sm:text-sm max-w-2xl mx-auto font-light">
-            {product.category} • {product.featured && "Featured Piece"}
+          <p className="text-neutral-400 text-xs sm:text-sm max-w-2xl mx-auto font-light mt-3">
+            {product.category} {product.featured && "• Featured Piece"}
           </p>
         </div>
       </section>
 
       <div className="mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-12 relative z-10 pb-16 sm:pb-24">
-        <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 md:gap-12">
-          {/* Image Gallery */}
+        {/* Main product layout */}
+        <div className="flex flex-col lg:flex-row gap-8 sm:gap-10 md:gap-12">
+          {/* Image Gallery – more elegant */}
           <div className="lg:w-1/2 space-y-3 sm:space-y-4">
             <div
               onClick={() => setIsZoomModalOpen(true)}
-              className="group aspect-square bg-white overflow-hidden relative cursor-zoom-in"
+              className="group relative aspect-square bg-white rounded-2xl overflow-hidden shadow-md cursor-zoom-in"
             >
               {isOutOfStock && (
-                <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 rounded-2xl pointer-events-none">
-                  <span className="bg-red-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-bold uppercase tracking-widest rounded-xl">
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 pointer-events-none">
+                  <span className="bg-red-500 text-white px-4 py-2 text-sm font-bold uppercase tracking-widest rounded-xl">
                     Out of Stock
                   </span>
                 </div>
               )}
-              <div className="absolute top-3 right-3 z-10 bg-black/40 text-white p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute top-3 right-3 z-10 bg-black/40 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <ZoomIn className="w-5 h-5" />
               </div>
               <Image
@@ -437,16 +438,15 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
             </div>
 
             {product.images.length > 1 && (
-              <div className="flex gap-2 sm:gap-3 md:gap-4 overflow-x-auto pb-2">
+              <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2">
                 {product.images.map((img: string, idx: number) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(idx)}
-                    className={`relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-white border-2 transition-all overflow-hidden ${
-                      selectedImage === idx
-                        ? "border-amber-500 ring-1 ring-amber-500/20"
-                        : "border-neutral-200/80 hover:border-amber-300"
-                    }`}
+                    className={`relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-white rounded-xl overflow-hidden border-2 transition-all ${selectedImage === idx
+                      ? "border-amber-500 ring-1 ring-amber-500/20"
+                      : "border-neutral-200/80 hover:border-amber-300"
+                      }`}
                   >
                     <Image
                       src={img}
@@ -459,70 +459,69 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                 ))}
               </div>
             )}
-            <div className="pt-4 pb-2">
-              <div className="bg-amber-50/60 border border-amber-200/80 rounded-2xl p-4">
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <MessageCircle className="w-4 h-4 text-amber-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">
-                      Looking for a different color or seater?
-                    </p>
-                    <p className="text-xs text-neutral-500">
-                      Contact us directly on WhatsApp and we'll customize it for
-                      you!
-                    </p>
-                  </div>
+
+            {/* WhatsApp support */}
+            <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 ">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <MessageCircle className="w-4 h-4 text-amber-600" />
                 </div>
-                <WhatsAppProductButton
-                  product={product}
-                  selectedSeater={selectedSeater}
-                  selectedColor={selectedColorName}
-                  currentPrice={currentPrice}
-                />
+                <div>
+                  <p className="text-sm font-semibold text-neutral-900">
+                    Looking for a different color or seater?
+                  </p>
+                  <p className="text-xs text-neutral-500">
+                    Contact us directly on WhatsApp and we'll customize it for
+                    you!
+                  </p>
+                </div>
               </div>
+              <WhatsAppProductButton
+                product={product}
+                selectedSeater={selectedSeater}
+                selectedColor={selectedColorName}
+                currentPrice={currentPrice}
+              />
             </div>
           </div>
 
-          {/* Product Info */}
-          <div className="lg:w-1/2 space-y-4 sm:space-y-5 md:space-y-6">
+          {/* Product Info – clean, refined */}
+          <div className="lg:w-1/2 space-y-5">
             {/* Badges */}
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-amber-700 bg-amber-50 border border-amber-200/50 px-2 sm:px-3 py-1 rounded-full">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-amber-700 bg-amber-50 border border-amber-200/50 px-3 py-1 rounded-full">
                 {product.category}
               </span>
               {product.featured && (
-                <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-white border border-amber-600 px-2 sm:px-3 py-1 rounded-full">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white bg-amber-600 px-3 py-1 rounded-full">
                   Featured
                 </span>
               )}
               {!isOutOfStock && product.stock < 10 && (
-                <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-amber-700 bg-amber-50 border border-amber-200/50 px-2 sm:px-3 py-1 rounded-full">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-amber-700 bg-amber-50 border border-amber-200/50 px-3 py-1 rounded-full">
                   Only {product.stock} left!
                 </span>
               )}
             </div>
 
-            {/* Price */}
-            <div className="flex items-center gap-3 flex-wrap pt-4">
-              <p className="text-2xl md:text-3xl sm:text-3xl font-bold text-neutral-900">
+            {/* Price block */}
+            <div className="flex items-center gap-3 flex-wrap md:pt-12">
+              <p className="text-3xl sm:text-4xl font-bold text-neutral-900">
                 {formatCurrency(currentPrice)}
               </p>
-              {currentCompareAtPrice &&
-                currentCompareAtPrice > currentPrice && (
-                  <>
-                    <p className="text-lg sm:text-xl text-gray-400 italic line-through">
-                      {formatCurrency(currentCompareAtPrice)}
-                    </p>
-                    <span className="bg-red-500 text-white text-[12px] px-2 py-1 rounded-full">
-                      Save {discountPercent}%
-                    </span>
-                  </>
-                )}
+              {currentCompareAtPrice && currentCompareAtPrice > currentPrice && (
+                <>
+                  <p className="text-lg text-gray-400 line-through">
+                    {formatCurrency(currentCompareAtPrice)}
+                  </p>
+                  <span className="bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                    Save {discountPercent}%
+                  </span>
+                </>
+              )}
             </div>
 
-            {/* Stock Alert */}
+            {/* Stock alert */}
             {!isOutOfStock && product.stock < 5 && (
               <div className="bg-amber-50/80 border border-amber-200/80 p-3 rounded-xl">
                 <p className="text-center text-amber-700 text-sm font-bold">
@@ -533,7 +532,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
 
             {/* Features */}
             {product.features && product.features.length > 0 && (
-              <div className="border border-neutral-200/80 rounded-2xl p-4 sm:p-5 bg-white">
+              <div className="border border-neutral-200/80 rounded-2xl p-5 bg-white">
                 <div className="flex items-center gap-2 mb-3">
                   <List className="w-4 h-4 text-amber-600" />
                   <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-700">
@@ -541,11 +540,10 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                   </h3>
                 </div>
                 <ul
-                  className={`space-y-1.5 ${
-                    product.featuresStyle === "bullet"
-                      ? "list-disc list-inside"
-                      : "list-decimal list-inside"
-                  }`}
+                  className={`space-y-1.5 ${product.featuresStyle === "bullet"
+                    ? "list-disc list-inside"
+                    : "list-decimal list-inside"
+                    }`}
                 >
                   {product.features.map((feature, index) => (
                     <li key={index} className="text-sm text-neutral-600">
@@ -556,9 +554,9 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
               </div>
             )}
 
-            {/* Color Selection - Shows both palette and custom colors */}
+            {/* Color Selection */}
             {product.enableColorSelection && (
-              <div className="border-t border-neutral-200/80 pt-4 mt-4 z-[9999]">
+              <div className="border-t border-neutral-200/80 pt-4 mt-4">
                 <ColorSelection
                   productId={product.id}
                   onColorSelect={handleColorSelection}
@@ -574,7 +572,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
               </div>
             )}
 
-            {/* Custom Colors from product.colors */}
+            {/* Custom Colors */}
             {customColors.length > 0 && !product.enableColorSelection && (
               <div className="border-t border-neutral-200/80 pt-4 mt-4">
                 <label className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-neutral-700 block mb-3">
@@ -588,11 +586,10 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                         setSelectedColorName(color);
                         setSelectedColorHex(color.toLowerCase());
                       }}
-                      className={`px-3 py-1.5 text-xs rounded-full border transition-all flex items-center gap-1.5 ${
-                        selectedColorName === color
-                          ? "border-amber-500 bg-amber-50 text-amber-700 font-medium"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-amber-300"
-                      }`}
+                      className={`px-3 py-1.5 text-xs rounded-full border transition-all flex items-center gap-1.5 ${selectedColorName === color
+                        ? "border-amber-500 bg-amber-50 text-amber-700 font-medium"
+                        : "border-neutral-200 bg-white text-neutral-700 hover:border-amber-300"
+                        }`}
                     >
                       <span
                         className="w-3 h-3 rounded-full border border-gray-200 flex-shrink-0"
@@ -602,15 +599,14 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                     </button>
                   ))}
                 </div>
-                {selectedColorName &&
-                  customColors.includes(selectedColorName) && (
-                    <p className="text-xs text-neutral-500 mt-2">
-                      Selected:{" "}
-                      <span className="font-bold text-neutral-900">
-                        {selectedColorName}
-                      </span>
-                    </p>
-                  )}
+                {selectedColorName && customColors.includes(selectedColorName) && (
+                  <p className="text-xs text-neutral-500 mt-2">
+                    Selected:{" "}
+                    <span className="font-bold text-neutral-900">
+                      {selectedColorName}
+                    </span>
+                  </p>
+                )}
               </div>
             )}
 
@@ -625,11 +621,10 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                     <button
                       key={seater}
                       onClick={() => handleSeaterChange(seater)}
-                      className={`px-2 md:px-4 py-1 md:py-2 text-sm rounded-[6px] cursor-pointer transition-all flex items-center gap-2 ${
-                        selectedSeater === seater
-                          ? "bg-amber-700 text-white font-bold"
-                          : "bg-white text-neutral-700 hover:bg-amber-50"
-                      }`}
+                      className={`px-3 md:px-4 py-2 text-sm rounded-xl transition-all flex items-center gap-2 ${selectedSeater === seater
+                        ? "bg-amber-700 text-white font-bold "
+                        : "bg-white text-neutral-700 hover:bg-amber-50 border border-neutral-200/80"
+                        }`}
                     >
                       <Sofa className="w-3.5 h-3.5" />
                       <span>{seater}</span>
@@ -651,16 +646,16 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
               </div>
             )}
 
-            {/* Quantity & Action Buttons */}
+            {/* Quantity & Actions */}
             <div className="space-y-4 pt-2">
               {!isOutOfStock ? (
                 <>
                   <div className="flex items-center gap-4">
-                    <div className="flex items-center border border-neutral-200/80 bg-white h-10 rounded-xl">
+                    <div className="flex items-center border border-neutral-200/80 bg-white rounded-xl overflow-hidden">
                       <button
                         onClick={() => handleQuantityChange("decrease")}
                         disabled={quantity <= 1}
-                        className="w-10 h-full flex items-center justify-center cursor-pointer hover:bg-amber-50 transition-colors disabled:opacity-50 rounded-l-xl"
+                        className="w-10 h-10 flex items-center justify-center hover:bg-amber-50 transition-colors disabled:opacity-50"
                       >
                         <Minus className="w-3 h-3" />
                       </button>
@@ -670,7 +665,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                       <button
                         onClick={() => handleQuantityChange("increase")}
                         disabled={quantity >= product.stock}
-                        className="w-10 h-full flex items-center justify-center cursor-pointer hover:bg-amber-50 transition-colors disabled:opacity-50 rounded-r-xl"
+                        className="w-10 h-10 flex items-center justify-center hover:bg-amber-50 transition-colors disabled:opacity-50"
                       >
                         <Plus className="w-3 h-3" />
                       </button>
@@ -691,7 +686,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                               product.seaterCount.length > 0 &&
                               !selectedSeater)))
                       }
-                      className="flex-1 bg-white border-2 cursor-pointer border-neutral-900 text-neutral-900 py-3 text-[11px] font-bold uppercase tracking-widest hover:bg-amber-600 hover:border-amber-600 hover:text-white transition-all duration-300 flex items-center justify-center gap-2 rounded-xl disabled:opacity-50"
+                      className="flex-1 bg-white border-2 border-neutral-900 text-neutral-900 py-3 text-xs font-bold uppercase tracking-widest hover:bg-amber-600 hover:border-amber-600 hover:text-white transition-all duration-300 flex items-center justify-center gap-2 rounded-xl disabled:opacity-50"
                     >
                       <ShoppingCart className="w-4 h-4" />
                       {addingToCart ? "Adding..." : "Add to Cart"}
@@ -706,7 +701,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                               product.seaterCount.length > 0 &&
                               !selectedSeater)))
                       }
-                      className="flex-1 bg-neutral-900 text-white py-3 cursor-pointer text-[11px] font-bold uppercase tracking-widest hover:bg-amber-600 transition-all duration-300 flex items-center justify-center gap-2 rounded-xl disabled:opacity-50"
+                      className="flex-1 bg-neutral-900 text-white py-3 text-xs font-bold uppercase tracking-widest hover:bg-amber-600 transition-all duration-300 flex items-center justify-center gap-2 rounded-xl disabled:opacity-50"
                     >
                       <ShoppingBag className="w-4 h-4" />
                       {orderingNow ? "Processing..." : "Order Now"}
@@ -716,7 +711,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
               ) : (
                 <button
                   onClick={handleContactUs}
-                  className="w-full bg-neutral-200 text-neutral-600 py-3 text-[11px] font-bold uppercase tracking-widest hover:bg-amber-600 hover:text-white transition-all duration-300 rounded-xl"
+                  className="w-full bg-neutral-200 text-neutral-600 py-3 text-xs font-bold uppercase tracking-widest hover:bg-amber-600 hover:text-white transition-all duration-300 rounded-xl"
                 >
                   Contact Us for Availability
                 </button>
@@ -736,27 +731,27 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
               <div className="flex gap-3">
                 <button
                   onClick={handleAddToWishlist}
-                  className="flex-1 border border-neutral-200/80 bg-white py-2.5 cursor-pointer text-[10px] font-bold uppercase tracking-widest hover:bg-amber-50 transition-colors flex items-center justify-center gap-2 rounded-xl"
+                  className="flex-1 border border-neutral-200/80 bg-white py-2.5 text-xs font-bold uppercase tracking-widest hover:bg-amber-50 transition-colors flex items-center justify-center gap-2 rounded-xl"
                 >
                   <Heart className="w-3.5 h-3.5" /> Add to Wishlist
                 </button>
                 <button
                   onClick={handleShare}
-                  className="flex-1 border border-neutral-200/80 bg-white py-2.5 cursor-pointer text-[10px] font-bold uppercase tracking-widest hover:bg-amber-50 transition-colors flex items-center justify-center gap-2 rounded-xl"
+                  className="flex-1 border border-neutral-200/80 bg-white py-2.5 text-xs font-bold uppercase tracking-widest hover:bg-amber-50 transition-colors flex items-center justify-center gap-2 rounded-xl"
                 >
                   <Share2 className="w-3.5 h-3.5" /> Share
                 </button>
               </div>
 
               {/* Delivery Info */}
-              <div className="space-y-3 p-4 bg-white border border-neutral-200/80 rounded-2xl">
+              <div className="space-y-2 p-4 bg-white border border-neutral-200/80 rounded-2xl">
                 <div className="flex items-center gap-3">
                   <Truck className="w-4 h-4 text-amber-600" />
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-900">
+                    <p className="text-xs font-bold uppercase tracking-widest text-neutral-900">
                       Free UK Delivery
                     </p>
-                    <p className="text-[9px] text-neutral-500">
+                    <p className="text-[10px] text-neutral-500">
                       Estimated delivery: 1-3 business days
                     </p>
                   </div>
@@ -764,10 +759,10 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                 <div className="flex items-center gap-3">
                   <ShieldCheck className="w-4 h-4 text-amber-600" />
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-900">
+                    <p className="text-xs font-bold uppercase tracking-widest text-neutral-900">
                       Cash on Delivery
                     </p>
-                    <p className="text-[9px] text-neutral-500">
+                    <p className="text-[10px] text-neutral-500">
                       Pay when your furniture arrives
                     </p>
                   </div>
@@ -777,27 +772,25 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
           </div>
         </div>
 
-        {/* Tabs - Description & FAQs */}
+        {/* Description & FAQs – cleaner tabs */}
         <div className="mt-12 sm:mt-16 md:mt-20 border-t border-neutral-200/80 pt-8 sm:pt-10 md:pt-12">
-          <div className="flex border-b border-neutral-200/80 mb-6 sm:mb-8">
+          <div className="flex border-b border-neutral-200/80 mb-6">
             <button
               onClick={() => setActiveTab("description")}
-              className={`px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-widest transition-all duration-300 relative ${
-                activeTab === "description"
-                  ? "text-amber-600 border-b-2 border-amber-600"
-                  : "text-neutral-400 hover:text-neutral-900"
-              }`}
+              className={`px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-widest transition-all duration-300 relative ${activeTab === "description"
+                ? "text-amber-600 border-b-2 border-amber-600"
+                : "text-neutral-400 hover:text-neutral-900"
+                }`}
             >
               Product Description
             </button>
             {product.faqs && product.faqs.length > 0 && (
               <button
                 onClick={() => setActiveTab("faqs")}
-                className={`px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-widest transition-all duration-300 relative ${
-                  activeTab === "faqs"
-                    ? "text-amber-600 border-b-2 border-amber-600"
-                    : "text-neutral-400 hover:text-neutral-900"
-                }`}
+                className={`px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-widest transition-all duration-300 relative ${activeTab === "faqs"
+                  ? "text-amber-600 border-b-2 border-amber-600"
+                  : "text-neutral-400 hover:text-neutral-900"
+                  }`}
               >
                 FAQs ({product.faqs.length})
               </button>
@@ -806,19 +799,16 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
 
           <div className="py-2 sm:py-4">
             {activeTab === "description" && (
-              <div className="prose prose-sm sm:prose-base max-w-none">
-                {/* Render HTML content properly */}
-                <div
-                  className="text-neutral-600 text-sm sm:text-base leading-relaxed space-y-3 sm:space-y-4"
-                  dangerouslySetInnerHTML={{ __html: product.description }}
-                />
-              </div>
+              <div
+                className="prose prose-sm sm:prose-base max-w-none text-neutral-600 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: product.description }}
+              />
             )}
 
             {activeTab === "faqs" &&
               product.faqs &&
               product.faqs.length > 0 && (
-                <div className="space-y-3 sm:space-y-4">
+                <div className="space-y-4">
                   {product.faqs.map((faq, index) => {
                     const isOpen = openFaqs.includes(index);
                     return (
@@ -842,11 +832,10 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                           </span>
                         </button>
                         <div
-                          className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                            isOpen
-                              ? "max-h-[500px] opacity-100"
-                              : "max-h-0 opacity-0"
-                          }`}
+                          className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen
+                            ? "max-h-[500px] opacity-100"
+                            : "max-h-0 opacity-0"
+                            }`}
                         >
                           <div className="p-4 sm:p-5 pt-0 sm:pt-0 border-t border-neutral-100">
                             <p className="text-sm sm:text-base text-neutral-600 leading-relaxed">
@@ -862,8 +851,8 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
           </div>
         </div>
 
+        {/* Reviews & Related */}
         <ProductReviews product={product} />
-
         <RelatedProducts
           currentProduct={product}
           limit={4}
@@ -924,11 +913,10 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(idx)}
-                    className={`w-12 h-12 rounded-full overflow-hidden border-2 transition-all flex-shrink-0 ${
-                      selectedImage === idx
-                        ? "border-amber-500 scale-110"
-                        : "border-transparent opacity-60 hover:opacity-100"
-                    }`}
+                    className={`w-12 h-12 rounded-full overflow-hidden border-2 transition-all flex-shrink-0 ${selectedImage === idx
+                      ? "border-amber-500 scale-110"
+                      : "border-transparent opacity-60 hover:opacity-100"
+                      }`}
                   >
                     <img
                       src={img}
@@ -943,7 +931,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
         </div>
       )}
 
-      {/* Share Options Modal */}
+      {/* Share Modal */}
       {showShareOptions && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
           <div

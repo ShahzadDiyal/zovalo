@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
 import { ProductCard } from "../../../components/ui/ProductCard";
 import Link from "next/link";
@@ -264,7 +264,6 @@ function RecentProductsSection({ products }: { products: Product[] }) {
 }
 
 function CategoriesSection({ categories }: { categories: Category[] }) {
-  // ... unchanged
   const getCategoryImage = (category: Category): string | null => {
     if (category.image && category.image.startsWith("data:image"))
       return category.image;
@@ -273,10 +272,23 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
     return null;
   };
 
+  // Shuffle categories once on mount and keep stable across renders
+  const shuffledCategories = useMemo(() => {
+    const shuffled = [...categories];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }, [categories]);
+
+  // Take only first 8 after shuffling
+  const displayCategories = shuffledCategories.slice(0, 8);
+
   if (categories.length === 0) return null;
 
   return (
-    <section className="">
+    <section>
       <div className="px-2 md:px-10 mx-auto">
         <div className="text-center mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/50 mb-3">
@@ -294,7 +306,7 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-          {categories.slice(0, 8).map((category) => {
+          {displayCategories.map((category) => {
             const imageSrc = getCategoryImage(category);
             return (
               <Link
@@ -339,7 +351,6 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
     </section>
   );
 }
-
 // ---------- Existing WhyChooseUsSection ----------
 function WhyChooseUsSection({
   aggregate,

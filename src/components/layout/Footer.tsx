@@ -9,6 +9,7 @@ import { ReviewsBadge } from "../reviews/ReviewsBadge";
 
 export function Footer() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [shuffledCategories, setShuffledCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,6 +26,21 @@ export function Footer() {
     fetchCategories();
   }, []);
 
+  // Shuffle categories once they are loaded
+  useEffect(() => {
+    if (categories.length > 0) {
+      const shuffled = [...categories];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      setShuffledCategories(shuffled);
+    }
+  }, [categories]);
+
+  // Display up to 10 random categories
+  const displayCategories = shuffledCategories.slice(0, 10);
+
   return (
     <footer className="bg-white border-t border-warm-beige pt-20 pb-8 mt-auto">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -38,18 +54,14 @@ export function Footer() {
                 className="w-40 h-auto sm:w-60 sm:h-30 object-contain"
                 fetchPriority="high"
               />
-              {/* <h2 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tighter text-near-black">
-    Royal Furniture<span className="text-gold">.</span>
-  </h2> */}
             </Link>
             <p className="text-[13px] text-gray-666 leading-relaxed max-w-xs font-light">
               Crafting premium furniture for the modern home. Our pieces blend
               traditional joinery with timeless silhouettes.
             </p>
-            {/* <ReviewsBadge href="/reviews" /> */}
           </div>
 
-          {/* Shop Collections - Dynamic Categories */}
+          {/* Shop Collections - Random 10 categories */}
           <div className="space-y-6">
             <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-walnut">
               Shop Collections
@@ -62,7 +74,7 @@ export function Footer() {
               </div>
             ) : (
               <ul className="space-y-3 text-[13px] text-gray-666 font-light">
-                {categories.slice(0, 5).map((cat) => (
+                {displayCategories.map((cat) => (
                   <li key={cat.id}>
                     <Link
                       href={`/category/${cat.slug}`}
@@ -103,7 +115,7 @@ export function Footer() {
                   href="/reviews"
                   className="hover:text-gold transition-colors"
                 >
-                 Customers Reviews
+                  Customers Reviews
                 </Link>
               </li>
               <li>
@@ -114,14 +126,6 @@ export function Footer() {
                   Shipping Policy
                 </Link>
               </li>
-              {/* <li>
-                <Link
-                  href="/returns"
-                  className="hover:text-gold transition-colors"
-                >
-                  Returns & Exchanges
-                </Link>
-              </li> */}
               <li>
                 <Link
                   href="/terms"
@@ -136,6 +140,30 @@ export function Footer() {
                   className="hover:text-gold transition-colors"
                 >
                   Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/faq"
+                  className="hover:text-gold transition-colors"
+                >
+                  FAQ
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/sitemap.xml"
+                  className="hover:text-gold transition-colors"
+                >
+                  Sitemap
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/robots.txt"
+                  className="hover:text-gold transition-colors"
+                >
+                  Robots
                 </Link>
               </li>
               <li>
@@ -222,7 +250,7 @@ export function Footer() {
           </div>
 
           <p className="text-[12px] text-black font-bold uppercase tracking-[0.15em]">
-            Copyright © {new Date().getFullYear()} Royal Furniture LTD
+            Copyright © {new Date().getFullYear()} Royal Furnitures Store
           </p>
         </div>
       </div>

@@ -1,7 +1,7 @@
 // src/components/reviews/AllReviewsPageClient.tsx
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Star,
   BadgeCheck,
@@ -10,7 +10,8 @@ import {
   Camera,
   Globe,
   Search,
-  Filter,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Review } from "../../../types";
 import { Stars } from "@/src/components/reviews/Stars";
@@ -31,6 +32,30 @@ interface AllReviewsPageClientProps {
   aggregate: { count: number; average: number };
 }
 
+const ITEMS_PER_PAGE = 15;
+
+function ReviewCardSkeleton() {
+  return (
+    <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 sm:p-6 animate-pulse">
+      <div className="flex items-start gap-3">
+        <div className="w-12 h-12 rounded-full bg-neutral-200 flex-shrink-0" />
+        <div className="flex-1 min-w-0 space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="h-4 w-32 bg-neutral-200 rounded" />
+            <div className="h-3 w-16 bg-neutral-200 rounded" />
+          </div>
+          <div className="h-3 w-20 bg-neutral-200 rounded" />
+          <div className="space-y-2 pt-1">
+            <div className="h-4 w-full bg-neutral-200 rounded" />
+            <div className="h-4 w-4/5 bg-neutral-200 rounded" />
+          </div>
+          <div className="h-3 w-24 bg-neutral-200 rounded pt-2" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function AllReviewsPageClient({
   initialReviews,
   aggregate,
@@ -38,24 +63,23 @@ export function AllReviewsPageClient({
   const [reviews] = useState(initialReviews);
   const [searchQuery, setSearchQuery] = useState("");
   const [ratingFilter, setRatingFilter] = useState<number | null>(null);
-  const [visibleCount, setVisibleCount] = useState(6);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Filter reviews
   const filtered = useMemo(() => {
     let result = reviews;
 
-    // Search by name, comment, or product title
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(
         (r) =>
           r.customerName.toLowerCase().includes(q) ||
           r.comment.toLowerCase().includes(q) ||
-          (r.productTitle || "").toLowerCase().includes(q),
+          (r.productTitle || "").toLowerCase().includes(q)
       );
     }
 
-    // Filter by rating
     if (ratingFilter !== null) {
       result = result.filter((r) => Math.round(r.rating) === ratingFilter);
     }
@@ -63,17 +87,38 @@ export function AllReviewsPageClient({
     return result;
   }, [reviews, searchQuery, ratingFilter]);
 
-  const displayed = filtered.slice(0, visibleCount);
-  const hasMore = visibleCount < filtered.length;
+  // Reset page to 1 whenever search or filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, ratingFilter]);
 
-  const handleLoadMore = () => setVisibleCount((prev) => prev + 6);
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+
+  const displayed = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filtered.slice(start, start + ITEMS_PER_PAGE);
+  }, [filtered, currentPage]);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages || newPage === currentPage) return;
+    setIsLoading(true);
+    setCurrentPage(newPage);
+
+    // Smooth scroll back to top of review list
+    window.scrollTo({ top: 180, behavior: "smooth" });
+
+    // Simulate subtle page transition skeleton delay
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 300);
+  };
 
   const handleWriteReview = () => {
     const message =
       "Hi Royal Furniture,\n\nI'd like to share a review for my recent purchase.\nMy review: ";
     window.open(
       `https://wa.me/447529661726?text=${encodeURIComponent(message)}`,
-      "_blank",
+      "_blank"
     );
   };
 
@@ -82,12 +127,9 @@ export function AllReviewsPageClient({
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
         <div className="bg-white border border-neutral-200/80 rounded-2xl p-8">
           <div className="text-6xl mb-4">⭐</div>
-          <h3 className="text-xl  text-neutral-900 mb-2">
-            No reviews yet
-          </h3>
+          <h3 className="text-xl text-neutral-900 mb-2">No reviews yet</h3>
           <p className="text-neutral-500 max-w-md mx-auto">
-            We haven't received any reviews for this product yet. Be the first
-            to share your experience!
+            We haven't received any reviews yet. Be the first to share your experience!
           </p>
           <button
             onClick={handleWriteReview}
@@ -103,16 +145,16 @@ export function AllReviewsPageClient({
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      {/* Summary */}
+      {/* Summary Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-3">
-            <span className="text-3xl  font-bold text-neutral-900">
+            <span className="text-3xl font-bold text-neutral-900">
               {aggregate.average ? aggregate.average.toFixed(1) : "—"}
             </span>
             <Stars value={aggregate.average || 0} size="w-5 h-5" />
             <span className="text-sm text-neutral-500">
-              ({aggregate.count} reviews)
+              ({aggregate.count} {aggregate.count === 1 ? "review" : "reviews"})
             </span>
           </div>
           <button
@@ -153,8 +195,14 @@ export function AllReviewsPageClient({
         </div>
       </div>
 
-      {/* Grid */}
-      {filtered.length === 0 ? (
+      {/* Main Reviews Container */}
+      {isLoading ? (
+        <div className="space-y-5">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <ReviewCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="text-center py-12 bg-white border border-neutral-200/80 rounded-2xl">
           <p className="text-neutral-500">No reviews match your filters.</p>
         </div>
@@ -193,8 +241,7 @@ export function AllReviewsPageClient({
                         </span>
                       )}
                       <span className="flex items-center gap-1 text-[10px] text-neutral-400">
-                        <SourceIcon className="w-3.5 h-3.5" /> via{" "}
-                        {Source.label}
+                        <SourceIcon className="w-3.5 h-3.5" /> via {Source.label}
                       </span>
                     </div>
                     <Stars value={review.rating} size="w-4 h-4" />
@@ -224,14 +271,61 @@ export function AllReviewsPageClient({
             );
           })}
 
-          {hasMore && (
-            <div className="text-center mt-6">
-              <button
-                onClick={handleLoadMore}
-                className="px-6 py-2.5 border border-neutral-200/80 text-sm font-bold uppercase tracking-widest text-neutral-600 hover:bg-neutral-50 rounded-xl transition-colors"
-              >
-                Load more reviews ({filtered.length - visibleCount} remaining)
-              </button>
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between border-t border-neutral-200/80 pt-6 mt-8">
+              <div className="text-xs text-neutral-500">
+                Showing{" "}
+                <span className="font-semibold text-neutral-900">
+                  {(currentPage - 1) * ITEMS_PER_PAGE + 1}
+                </span>{" "}
+                to{" "}
+                <span className="font-semibold text-neutral-900">
+                  {Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}
+                </span>{" "}
+                of{" "}
+                <span className="font-semibold text-neutral-900">
+                  {filtered.length}
+                </span>{" "}
+                reviews
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="p-2 border border-neutral-200/80 rounded-xl text-neutral-600 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  aria-label="Previous Page"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+
+                {Array.from({ length: totalPages }).map((_, i) => {
+                  const pageNum = i + 1;
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => handlePageChange(pageNum)}
+                      className={`px-3.5 py-1.5 text-xs font-semibold rounded-xl border transition-colors ${
+                        currentPage === pageNum
+                          ? "bg-amber-600 text-white border-amber-600"
+                          : "border-neutral-200/80 text-neutral-600 hover:bg-neutral-50"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="p-2 border border-neutral-200/80 rounded-xl text-neutral-600 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  aria-label="Next Page"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           )}
         </div>

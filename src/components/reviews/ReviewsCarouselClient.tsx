@@ -122,10 +122,10 @@ export function ReviewsCarouselClient({
             const Source = SOURCE_META[review.source] ?? SOURCE_META.website;
             const SourceIcon = Source.icon;
 
-            // Get product slug from map or fallback to productId
-            const productSlug = review.productId
-              ? productSlugMap.get(review.productId) || review.productId
-              : null;
+            // Priority: review.productSlug > productSlugMap lookup by productId
+            const productSlug =
+              (review as any).productSlug ||
+              (review.productId ? productSlugMap.get(review.productId) : null);
 
             return (
               <div
@@ -173,18 +173,18 @@ export function ReviewsCarouselClient({
                   {review.comment}
                 </p>
 
-                {/* Product link */}
+                {/* Product link using Slug */}
                 {review.productTitle && productSlug && (
                   <Link
                     href={`/product/${productSlug}`}
-                    className="mt-3 inline-flex items-center gap-1 w-fit text-xs font-semibold text-amber-700 bg-amber-50 px-3 py-1.5  hover:bg-amber-100 hover:text-amber-800 transition-colors group-hover:shadow-sm"
+                    className="mt-3 inline-flex items-center gap-1 w-fit text-xs font-semibold text-amber-700 bg-amber-50 px-3 py-1.5 rounded-lg hover:bg-amber-100 hover:text-amber-800 transition-colors group-hover:shadow-sm"
                   >
                     {review.productTitle}
                     <ArrowRight className="w-3 h-3" />
                   </Link>
                 )}
                 {review.productTitle && !productSlug && (
-                  <span className="mt-3 inline-block w-fit text-xs font-semibold text-amber-800 bg-amber-50 px-3 py-1.5 ">
+                  <span className="mt-3 inline-block w-fit text-xs font-semibold text-amber-800 bg-amber-50 px-3 py-1.5 rounded-lg">
                     {review.productTitle}
                   </span>
                 )}

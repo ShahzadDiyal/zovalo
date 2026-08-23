@@ -1,19 +1,19 @@
 // src/components/SEO/Schema.tsx
 interface SchemaProps {
   type:
-    | "Organization"
-    | "WebSite"
-    | "FAQ"
-    | "SiteNavigationElement"
-    | "BlogCategory"
-    | "BlogPost"
-    | "Product"
-    | "BreadcrumbList"
-    | "LocalBusiness"
-    | "Article"
-    | "CollectionPage"
-    | "SearchAction"
-    | "SiteReviews";
+  | "Organization"
+  | "WebSite"
+  | "FAQ"
+  | "SiteNavigationElement"
+  | "BlogCategory"
+  | "BlogPost"
+  | "Product"
+  | "BreadcrumbList"
+  | "LocalBusiness"
+  | "Article"
+  | "CollectionPage"
+  | "SearchAction"
+  | "SiteReviews";
   data?: any;
 }
 
@@ -173,25 +173,28 @@ export function Schema({ type, data }: SchemaProps) {
           ],
         };
 
-      case "Product":
+      case "Product": {
         if (!data?.product) return null;
         const product = data.product;
         const productImages = (product.images || []).filter(Boolean);
         const productReviews = (data.reviews || []).filter(Boolean);
+
+        const hasReviews = product.reviewCount && product.reviewCount > 0 && product.rating;
+
         return {
           "@context": "https://schema.org",
           "@type": "Product",
           name: product.title,
           description: product.description?.substring(0, 200) || "",
           image: productImages.length ? productImages : undefined,
-          sku: product.id,
+          sku: product.id || product.slug,
           brand: {
             "@type": "Brand",
             name: "Royal Furniture",
           },
           offers: {
             "@type": "Offer",
-            price: String(product.price ?? 0),
+            price: String(product.price ?? "0.00"),
             priceCurrency: "GBP",
             availability:
               product.stock > 0
@@ -251,39 +254,38 @@ export function Schema({ type, data }: SchemaProps) {
               },
             ],
           },
-          aggregateRating:
-            product.reviewCount && product.reviewCount > 0 && product.rating
-              ? {
-                  "@type": "AggregateRating",
-                  ratingValue: product.rating,
-                  reviewCount: product.reviewCount,
-                  bestRating: 5,
-                  worstRating: 1,
-                }
-              : undefined,
-          // Individual reviews - helps Google's rich-result eligibility and
-          // gives AI shopping/answer agents (ChatGPT, Perplexity, Gemini, etc.)
-          // real review text to cite instead of just an aggregate number.
+          // Only includes aggregateRating if real rating data exists
+          aggregateRating: hasReviews
+            ? {
+              "@type": "AggregateRating",
+              ratingValue: product.rating,
+              reviewCount: product.reviewCount,
+              bestRating: 5,
+              worstRating: 1,
+            }
+            : undefined,
+          // Only includes reviews if real review array is non-empty
           review:
             productReviews.length > 0
               ? productReviews.slice(0, 10).map((r: any) => ({
-                  "@type": "Review",
-                  reviewRating: {
-                    "@type": "Rating",
-                    ratingValue: r.rating,
-                    bestRating: 5,
-                    worstRating: 1,
-                  },
-                  author: {
-                    "@type": "Person",
-                    name: r.customerName,
-                  },
-                  reviewBody: r.comment,
-                  name: r.title || undefined,
-                  datePublished: r.reviewDate,
-                }))
+                "@type": "Review",
+                reviewRating: {
+                  "@type": "Rating",
+                  ratingValue: r.rating || 5,
+                  bestRating: 5,
+                  worstRating: 1,
+                },
+                author: {
+                  "@type": "Person",
+                  name: r.customerName || "Verified Buyer",
+                },
+                reviewBody: r.comment || "",
+                name: r.title || undefined,
+                datePublished: r.reviewDate || new Date().toISOString(),
+              }))
               : undefined,
         };
+      }
 
       case "SiteReviews": {
         // Site-wide reviews (across all products) - used by ReviewsBadge,
@@ -312,38 +314,38 @@ export function Schema({ type, data }: SchemaProps) {
           url: "https://royalfurnitures.store",
           ...(siteAggregate && siteAggregate.count > 0
             ? {
-                aggregateRating: {
-                  "@type": "AggregateRating",
-                  ratingValue: siteAggregate.average,
-                  reviewCount: siteAggregate.count,
-                  bestRating: 5,
-                  worstRating: 1,
-                },
-              }
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: siteAggregate.average,
+                reviewCount: siteAggregate.count,
+                bestRating: 5,
+                worstRating: 1,
+              },
+            }
             : {}),
           ...(siteReviews.length > 0
             ? {
-                review: siteReviews.slice(0, 50).map((r: any) => ({
-                  "@type": "Review",
-                  reviewRating: {
-                    "@type": "Rating",
-                    ratingValue: r.rating,
-                    bestRating: 5,
-                    worstRating: 1,
-                  },
-                  author: {
-                    "@type": "Person",
-                    name: r.customerName,
-                  },
-                  reviewBody: r.comment,
-                  name: r.title || undefined,
-                  datePublished: r.reviewDate,
-                  itemReviewed: {
-                    "@type": "Product",
-                    name: r.productTitle || "Royal Furniture",
-                  },
-                })),
-              }
+              review: siteReviews.slice(0, 50).map((r: any) => ({
+                "@type": "Review",
+                reviewRating: {
+                  "@type": "Rating",
+                  ratingValue: r.rating,
+                  bestRating: 5,
+                  worstRating: 1,
+                },
+                author: {
+                  "@type": "Person",
+                  name: r.customerName,
+                },
+                reviewBody: r.comment,
+                name: r.title || undefined,
+                datePublished: r.reviewDate,
+                itemReviewed: {
+                  "@type": "Product",
+                  name: r.productTitle || "Royal Furniture",
+                },
+              })),
+            }
             : {}),
         };
       }

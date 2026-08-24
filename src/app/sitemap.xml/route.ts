@@ -250,7 +250,8 @@ export async function GET() {
   return new NextResponse(sitemap, {
     headers: {
       "Content-Type": "application/xml",
-      "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
+      "Cache-Control":
+        "public, max-age=60, s-maxage=60, stale-while-revalidate=120",
     },
   });
 }

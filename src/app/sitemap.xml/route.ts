@@ -6,12 +6,12 @@ import { categoryApi } from "@/src/services/categoryApi";
 import { blogPostApi } from "../../services/blogPostApi";
 import { cityPageService } from "../../services/cityPageService";
 
+export const dynamic = "force-dynamic";
+
 interface Product {
   id: string;
   slug: string;
   updatedAt?: any;
-  images?: string[];
-  title?: string;
 }
 
 interface Category {
@@ -38,43 +38,30 @@ function formatDate(dateValue: any): string {
 
 const getSitemapData = unstable_cache(
   async () => {
-    let blogPosts: any[] = [];
-    let cities: any[] = [];
-    let products: Product[] = [];
-    let categories: Category[] = [];
+    const [blogPostsRes, citiesRes, productsRes, categoriesRes] =
+      await Promise.allSettled([
+        blogPostApi.getPublished(),
+        cityPageService.getPublishedCities(),
+        productApi.getAll(),
+        categoryApi.getAllCategories(),
+      ]);
 
-    try {
-      blogPosts = await blogPostApi.getPublished();
-    } catch (error) {
-      console.error("❌ Error fetching blog posts for sitemap:", error);
-    }
-
-    try {
-      cities = await cityPageService.getPublishedCities();
-    } catch (error) {
-      console.error("❌ Error fetching cities for sitemap:", error);
-    }
-
-    try {
-      products = await productApi.getAll();
-    } catch (error) {
-      console.error("❌ Error fetching products for sitemap:", error);
-    }
-
-    try {
-      categories = await categoryApi.getAllCategories();
-    } catch (error) {
-      console.error("❌ Error fetching categories for sitemap:", error);
-    }
-
-    return { blogPosts, cities, products, categories };
+    return {
+      blogPosts: blogPostsRes.status === "fulfilled" ? blogPostsRes.value : [],
+      cities: citiesRes.status === "fulfilled" ? citiesRes.value : [],
+      products: productsRes.status === "fulfilled" ? productsRes.value : [],
+      categories:
+        categoriesRes.status === "fulfilled" ? categoriesRes.value : [],
+    };
   },
-  ["sitemap-data"],
-  { revalidate: 120 },
+  ["sitemap-data-clean-v2"],
+  { revalidate: 3600 },
 );
 
 function escapeXml(value: string): string {
+  if (!value) return "";
   return value
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/g, "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -109,7 +96,7 @@ export async function GET() {
   const categories = dedupeBySlug(rawCategories);
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>${baseUrl}/</loc>
     <changefreq>daily</changefreq>
@@ -177,7 +164,7 @@ export async function GET() {
           .map(
             (post) => `
   <url>
-    <loc>${baseUrl}/blog/${post.slug}</loc>
+    <loc>${baseUrl}/blog/${escapeXml(post.slug)}</loc>
     <lastmod>${formatDate(post.updatedAt || post.publishedAt)}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -193,7 +180,7 @@ export async function GET() {
           .map(
             (city) => `
   <url>
-    <loc>${baseUrl}/locations/${city.slug}</loc>
+    <loc>${baseUrl}/locations/${escapeXml(city.slug)}</loc>
     <lastmod>${formatDate(city.updatedAt)}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -206,27 +193,15 @@ export async function GET() {
   ${
     products.length > 0
       ? products
-          .map((product) => {
-            // Image sitemap entries help Google pick the right thumbnail to
-            // show next to the listing in search results (up to 5 images).
-            const images = (product.images || []).filter(Boolean).slice(0, 5);
-            const imageTags = images
-              .map(
-                (img) => `
-    <image:image>
-      <image:loc>${escapeXml(img)}</image:loc>
-      ${product.title ? `<image:title>${escapeXml(product.title)}</image:title>` : ""}
-    </image:image>`,
-              )
-              .join("");
-            return `
+          .map(
+            (product) => `
   <url>
-    <loc>${baseUrl}/product/${product.slug}</loc>
+    <loc>${baseUrl}/product/${escapeXml(product.slug)}</loc>
     <lastmod>${formatDate(product.updatedAt)}</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>${imageTags}
-  </url>`;
-          })
+    <priority>0.8</priority>
+  </url>`,
+          )
           .join("")
       : ""
   }
@@ -237,7 +212,7 @@ export async function GET() {
           .map(
             (category) => `
   <url>
-    <loc>${baseUrl}/category/${category.slug}</loc>
+    <loc>${baseUrl}/category/${escapeXml(category.slug)}</loc>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>`,
@@ -249,9 +224,9 @@ export async function GET() {
 
   return new NextResponse(sitemap, {
     headers: {
-      "Content-Type": "application/xml",
+      "Content-Type": "application/xml; charset=utf-8",
       "Cache-Control":
-        "public, max-age=60, s-maxage=60, stale-while-revalidate=120",
+        "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
     },
   });
 }

@@ -306,11 +306,10 @@ export function AllReviewsPageClient({
                     <button
                       key={pageNum}
                       onClick={() => handlePageChange(pageNum)}
-                      className={`px-3.5 py-1.5 text-xs font-semibold rounded-xl border transition-colors ${
-                        currentPage === pageNum
+                      className={`px-3.5 py-1.5 text-xs font-semibold rounded-xl border transition-colors ${currentPage === pageNum
                           ? "bg-amber-600 text-white border-amber-600"
                           : "border-neutral-200/80 text-neutral-600 hover:bg-neutral-50"
-                      }`}
+                        }`}
                     >
                       {pageNum}
                     </button>

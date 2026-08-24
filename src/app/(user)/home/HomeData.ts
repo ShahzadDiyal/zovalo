@@ -10,7 +10,6 @@ export interface HomePageData {
   recentProducts: Product[];
 }
 
-// Fisher-Yates shuffle function
 function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -20,42 +19,50 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
+// Convert Timestamps/Dates to plain strings to satisfy RSC & cache serialization
+function sanitize<T>(data: T): T {
+  return JSON.parse(
+    JSON.stringify(data, (key, value) => {
+      if (value && typeof value === "object" && "seconds" in value) {
+        return new Date(value.seconds * 1000).toISOString();
+      }
+      return value;
+    }),
+  );
+}
+
 export const fetchHomeData = unstable_cache(
   async (): Promise<HomePageData> => {
     try {
-      // Fetch more products than needed for better randomization
       const [featuredProductsRaw, recentProductsRaw, categoriesData] =
         await Promise.all([
-          productApi.getFeaturedProducts(10), // Fetch 10 featured products
-          productApi.getRecentProducts(10), // Fetch 10 recent products
+          productApi.getFeaturedProducts(10),
+          productApi.getRecentProducts(10),
           categoryApi.getAllCategories(),
         ]);
 
-      // Shuffle and pick 4 random featured products
       const shuffledFeatured = shuffleArray(featuredProductsRaw);
       const featuredProducts = shuffledFeatured.slice(0, 4);
 
-      // Shuffle and pick 4 random recent products
       const shuffledRecent = shuffleArray(recentProductsRaw);
       const recentProducts = shuffledRecent.slice(0, 4);
 
-      // Fallback: If no featured products, use recent products
       const finalFeatured =
         featuredProducts.length > 0
           ? featuredProducts
           : shuffleArray(recentProductsRaw).slice(0, 4);
 
-      // Fallback: If no recent products, use featured products
       const finalRecent =
         recentProducts.length > 0
           ? recentProducts
           : shuffleArray(featuredProductsRaw).slice(0, 4);
 
-      return {
+      // Sanitize timestamps to plain string primitives before caching/returning
+      return sanitize({
         categories: categoriesData,
         featuredProducts: finalFeatured,
         recentProducts: finalRecent,
-      };
+      });
     } catch (error) {
       console.error("Error fetching home data:", error);
       return {
@@ -65,6 +72,6 @@ export const fetchHomeData = unstable_cache(
       };
     }
   },
-  ["home-data"],
+  ["home-data-v1"], // Ensure cache key tag is updated
   { revalidate: 120 },
 );

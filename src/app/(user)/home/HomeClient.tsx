@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import Image from "next/image";
 import { ProductCard } from "../../../components/ui/ProductCard";
 import Link from "next/link";
@@ -24,19 +24,18 @@ import {
 } from "lucide-react";
 import { Product, Category } from "../../../types";
 
-
 export interface HomeClientProps {
-  initialCategories: Category[];
-  initialFeaturedProducts: Product[];
-  initialRecentProducts: Product[];
+  initialCategories?: Category[];
+  initialFeaturedProducts?: Product[];
+  initialRecentProducts?: Product[];
   aggregate?: { count: number; average: number };
 }
 
-
-// ---------- Intersection observer hook ----------
+// ---------- Intersection Observer Hook with Trigger State ----------
 function useInView(options?: IntersectionObserverInit) {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -45,34 +44,87 @@ function useInView(options?: IntersectionObserverInit) {
           observer.disconnect();
         }
       },
-      { threshold: 0.1, ...options }
+      { rootMargin: "200px", threshold: 0.05, ...options }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, [options]);
+
   return { ref, inView };
 }
 
-// ---------- Lazy wrapper ----------
-function LazySection({ children }: { children: React.ReactNode }) {
+// ---------- Lazy Wrapper with Skeleton Support ----------
+function LazySection({
+  children,
+  skeleton,
+  onFetch,
+}: {
+  children: React.ReactNode;
+  skeleton: React.ReactNode;
+  onFetch?: () => Promise<void> | void;
+}) {
   const { ref, inView } = useInView();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (inView && !isLoaded) {
+      if (onFetch) {
+        Promise.resolve(onFetch()).then(() => setIsLoaded(true));
+      } else {
+        setIsLoaded(true);
+      }
+    }
+  }, [inView, isLoaded, onFetch]);
+
   return (
-    <div ref={ref}>
-      {inView ? (
-        children
-      ) : (
-        <div className="min-h-[200px] flex items-center justify-center">
-          <div className="w-8 h-8 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin" />
-        </div>
-      )}
+    <div ref={ref} className="min-h-[150px]">
+      {isLoaded ? children : skeleton}
     </div>
   );
 }
 
-// ---------- Hero (static) ----------
+// ---------- Skeletons ----------
+function GridSkeleton({ count = 4, cols = "grid-cols-2 md:grid-cols-4" }: { count?: number; cols?: string }) {
+  return (
+    <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-pulse">
+      <div className="h-8 bg-neutral-200/80 rounded w-48 mb-6"></div>
+      <div className={`grid ${cols} gap-4 sm:gap-6`}>
+        {[...Array(count)].map((_, i) => (
+          <div key={i} className="bg-white border border-neutral-200/60 rounded-xl p-4 space-y-3">
+            <div className="bg-neutral-200/70 h-44 sm:h-52 rounded-lg w-full"></div>
+            <div className="h-4 bg-neutral-200/70 rounded w-3/4"></div>
+            <div className="h-4 bg-neutral-200/70 rounded w-1/2"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TextBlockSkeleton() {
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-12 animate-pulse space-y-4 text-center">
+      <div className="h-6 bg-neutral-200/80 rounded w-32 mx-auto"></div>
+      <div className="h-8 bg-neutral-200/80 rounded w-2/3 mx-auto"></div>
+      <div className="h-4 bg-neutral-200/70 rounded w-5/6 mx-auto"></div>
+      <div className="h-4 bg-neutral-200/70 rounded w-4/6 mx-auto"></div>
+    </div>
+  );
+}
+
+function FaqSkeleton() {
+  return (
+    <div className="max-w-3xl mx-auto px-4 py-12 animate-pulse space-y-4">
+      <div className="h-8 bg-neutral-200/80 rounded w-48 mx-auto mb-6"></div>
+      {[...Array(4)].map((_, i) => (
+        <div key={i} className="h-14 bg-neutral-200/60 rounded-xl w-full"></div>
+      ))}
+    </div>
+  );
+}
+
+// ---------- Hero (Static - Renders Immediately) ----------
 function HeroSection() {
-  // ... (unchanged, exactly as in your file)
-  // I'll include the full code for completeness, but keep it identical.
   const heroSlides = [
     {
       image: "/images/sofa-bad-design-hero_.jpg",
@@ -107,12 +159,8 @@ function HeroSection() {
   }, [heroSlides.length]);
 
   const goToSlide = (index: number) => setCurrentSlide(index);
-  const nextSlide = () =>
-    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-  const prevSlide = () =>
-    setCurrentSlide(
-      (prev) => (prev - 1 + heroSlides.length) % heroSlides.length
-    );
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
 
   return (
     <section className="relative overflow-hidden bg-neutral-900 h-[300px] sm:h-[350px] md:h-[75vh] lg:h-[80vh] xl:h-[85vh]">
@@ -178,9 +226,7 @@ function HeroSection() {
             key={index}
             onClick={() => goToSlide(index)}
             aria-label={`Go to slide ${index + 1}`}
-            className={`h-1 transition-all duration-500 ease-out ${currentSlide === index
-                ? "w-8 sm:w-10 md:w-12 bg-amber-500"
-                : "w-4 sm:w-5 bg-white/30 hover:bg-white/60"
+            className={`h-1 transition-all duration-500 ease-out ${currentSlide === index ? "w-8 sm:w-10 md:w-12 bg-amber-500" : "w-4 sm:w-5 bg-white/30 hover:bg-white/60"
               }`}
           />
         ))}
@@ -189,9 +235,7 @@ function HeroSection() {
   );
 }
 
-// ---------- Existing sections (unchanged) ----------
 function FeaturedProductsSection({ products }: { products: Product[] }) {
-  // ... unchanged
   return (
     <section className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 md:space-y-16">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
@@ -265,14 +309,11 @@ function RecentProductsSection({ products }: { products: Product[] }) {
 
 function CategoriesSection({ categories }: { categories: Category[] }) {
   const getCategoryImage = (category: Category): string | null => {
-    if (category.image && category.image.startsWith("data:image"))
-      return category.image;
-    if (category.image && category.image.startsWith("http"))
-      return category.image;
+    if (category.image && category.image.startsWith("data:image")) return category.image;
+    if (category.image && category.image.startsWith("http")) return category.image;
     return null;
   };
 
-  // Shuffle categories once on mount and keep stable across renders
   const shuffledCategories = useMemo(() => {
     const shuffled = [...categories];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -282,7 +323,6 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
     return shuffled;
   }, [categories]);
 
-  // Take only first 8 after shuffling
   const displayCategories = shuffledCategories.slice(0, 8);
 
   if (categories.length === 0) return null;
@@ -351,33 +391,13 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
     </section>
   );
 }
-// ---------- Existing WhyChooseUsSection ----------
-function WhyChooseUsSection({
-  aggregate,
-}: {
-  aggregate: { count: number; average: number };
-}) {
+
+function WhyChooseUsSection({ aggregate }: { aggregate: { count: number; average: number } }) {
   const features = [
-    {
-      icon: Gem,
-      title: "Premium Quality",
-      description: "Hand-selected materials for lasting elegance.",
-    },
-    {
-      icon: CreditCard,
-      title: "Cash On Delivery",
-      description: "Secure payment upon your satisfaction.",
-    },
-    {
-      icon: Truck,
-      title: "Fast Delivery",
-      description: "UK-wide logistics to your doorstep.",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Secure Checkout",
-      description: "Your data protected by industry standards.",
-    },
+    { icon: Gem, title: "Premium Quality", description: "Hand-selected materials for lasting elegance." },
+    { icon: CreditCard, title: "Cash On Delivery", description: "Secure payment upon your satisfaction." },
+    { icon: Truck, title: "Fast Delivery", description: "UK-wide logistics to your doorstep." },
+    { icon: ShieldCheck, title: "Secure Checkout", description: "Your data protected by industry standards." },
   ];
 
   const customers = [
@@ -414,8 +434,7 @@ function WhyChooseUsSection({
             </span>
           </h2>
           <p className="text-neutral-400 text-sm sm:text-base max-w-2xl mx-auto font-light">
-            We're committed to providing you with the best shopping experience
-            possible
+            We're committed to providing you with the best shopping experience possible
           </p>
         </div>
 
@@ -468,18 +487,14 @@ function WhyChooseUsSection({
                 )}
               </div>
               <span className="text-xs text-neutral-400 font-medium">
-                <span className="text-white font-bold">{countDisplay}+</span> happy
-                customers
+                <span className="text-white font-bold">{countDisplay}+</span> happy customers
               </span>
             </div>
 
             <div className="flex items-center gap-2">
               <div className="flex gap-0.5">
                 {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-3 h-3 sm:w-4 sm:h-4 text-amber-400 fill-amber-400"
-                  />
+                  <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 text-amber-400 fill-amber-400" />
                 ))}
               </div>
               <span className="text-xs text-neutral-400 font-medium">
@@ -507,7 +522,6 @@ function WhyChooseUsSection({
   );
 }
 
-// ---------- NEW: Trust Badges ----------
 function TrustBadgesSection() {
   const badges = [
     { icon: Lock, label: "Secure SSL" },
@@ -535,7 +549,6 @@ function TrustBadgesSection() {
   );
 }
 
-// ---------- NEW: About Us Snippet ----------
 function AboutSection() {
   return (
     <section className="py-12 sm:py-16 bg-cream/30">
@@ -564,29 +577,12 @@ function AboutSection() {
   );
 }
 
-// ---------- NEW: FAQ Accordion ----------
 function FaqSection() {
   const faqs = [
-    {
-      question: "Do you offer free delivery across the UK?",
-      answer:
-        "Yes! We offer 100% free standard UK delivery on all orders – no hidden fees.",
-    },
-    {
-      question: "Can I inspect the furniture before paying?",
-      answer:
-        "Absolutely. With our Cash on Delivery service, you can thoroughly inspect your furniture upon arrival before paying a single penny.",
-    },
-    {
-      question: "What is your return policy?",
-      answer:
-        "We offer a hassle‑free 14‑day return policy. If you aren't completely satisfied, simply reach out to our support team.",
-    },
-    {
-      question: "How do I track my order?",
-      answer:
-        "Once dispatched, you’ll receive a tracking link via email and SMS. You can also check your order status in your account.",
-    },
+    { question: "Do you offer free delivery across the UK?", answer: "Yes! We offer 100% free standard UK delivery on all orders – no hidden fees." },
+    { question: "Can I inspect the furniture before paying?", answer: "Absolutely. With our Cash on Delivery service, you can thoroughly inspect your furniture upon arrival before paying a single penny." },
+    { question: "What is your return policy?", answer: "We offer a hassle‑free 14‑day return policy. If you aren't completely satisfied, simply reach out to our support team." },
+    { question: "How do I track my order?", answer: "Once dispatched, you’ll receive a tracking link via email and SMS. You can also check your order status in your account." },
   ];
 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -614,10 +610,7 @@ function FaqSection() {
           {faqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
-              <div
-                key={idx}
-                className="border border-neutral-200/80 rounded-xl overflow-hidden bg-white shadow-sm"
-              >
+              <div key={idx} className="border border-neutral-200/80 rounded-xl overflow-hidden bg-white shadow-sm">
                 <button
                   onClick={() => toggleFaq(idx)}
                   className="w-full flex items-center justify-between p-4 sm:p-5 text-left hover:bg-amber-50/50 transition-colors"
@@ -626,17 +619,10 @@ function FaqSection() {
                     {faq.question}
                   </span>
                   <span className="flex-shrink-0 ml-2">
-                    {isOpen ? (
-                      <ChevronUp className="w-5 h-5 text-amber-600" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-neutral-400" />
-                    )}
+                    {isOpen ? <ChevronUp className="w-5 h-5 text-amber-600" /> : <ChevronDown className="w-5 h-5 text-neutral-400" />}
                   </span>
                 </button>
-                <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-                    }`}
-                >
+                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}>
                   <div className="p-4 sm:p-5 pt-0 sm:pt-0 border-t border-neutral-100">
                     <p className="text-sm sm:text-base text-neutral-600 leading-relaxed">
                       {faq.answer}
@@ -649,10 +635,7 @@ function FaqSection() {
         </div>
 
         <div className="text-center mt-6">
-          <Link
-            href="/faq"
-            className="text-sm font-bold text-amber-600 hover:text-amber-800 transition-colors"
-          >
+          <Link href="/faq" className="text-sm font-bold text-amber-600 hover:text-amber-800 transition-colors">
             View all FAQs →
           </Link>
         </div>
@@ -661,53 +644,81 @@ function FaqSection() {
   );
 }
 
-
 // ---------- Main Client Component ----------
 export function HomeClient({
-  initialCategories,
-  initialFeaturedProducts,
-  initialRecentProducts,
+  initialCategories = [],
+  initialFeaturedProducts = [],
+  initialRecentProducts = [],
   aggregate = { count: 0, average: 0 },
 }: HomeClientProps) {
-  const [featuredProducts] = useState<Product[]>(initialFeaturedProducts);
-  const [recentProducts] = useState<Product[]>(initialRecentProducts);
-  const [categories] = useState<Category[]>(initialCategories);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>(initialFeaturedProducts);
+  const [recentProducts, setRecentProducts] = useState<Product[]>(initialRecentProducts);
+  const [categories, setCategories] = useState<Category[]>(initialCategories);
+
+  // Lazy API fetchers (called only when scrolled into view if data wasn't initially passed)
+  const fetchCategories = useCallback(async () => {
+    if (categories.length === 0) {
+      const res = await fetch("/api/categories");
+      if (res.ok) {
+        const data = await res.json();
+        setCategories(data);
+      }
+    }
+  }, [categories.length]);
+
+  const fetchFeatured = useCallback(async () => {
+    if (featuredProducts.length === 0) {
+      const res = await fetch("/api/products?featured=true");
+      if (res.ok) {
+        const data = await res.json();
+        setFeaturedProducts(data);
+      }
+    }
+  }, [featuredProducts.length]);
+
+  const fetchRecent = useCallback(async () => {
+    if (recentProducts.length === 0) {
+      const res = await fetch("/api/products?recent=true");
+      if (res.ok) {
+        const data = await res.json();
+        setRecentProducts(data);
+      }
+    }
+  }, [recentProducts.length]);
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24">
-      {/* Hero – always visible */}
+      {/* Hero – Always rendered instantly */}
       <HeroSection />
 
-      {/* Lazy-loaded sections */}
-      <LazySection>
+      {/* Lazy-loaded sections with customized skeleton loaders */}
+      <LazySection onFetch={fetchCategories} skeleton={<GridSkeleton count={8} cols="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4" />}>
         <CategoriesSection categories={categories} />
       </LazySection>
 
-      <LazySection>
+      <LazySection onFetch={fetchFeatured} skeleton={<GridSkeleton count={4} />}>
         <FeaturedProductsSection products={featuredProducts} />
       </LazySection>
 
-      <LazySection>
+      <LazySection onFetch={fetchRecent} skeleton={<GridSkeleton count={4} />}>
         <RecentProductsSection products={recentProducts} />
       </LazySection>
 
-      <LazySection>
+      <LazySection skeleton={<div className="h-20 bg-neutral-100 animate-pulse my-6"></div>}>
         <TrustBadgesSection />
       </LazySection>
 
-      <LazySection>
+      <LazySection skeleton={<TextBlockSkeleton />}>
         <AboutSection />
       </LazySection>
 
-      <LazySection>
+      <LazySection skeleton={<FaqSkeleton />}>
         <FaqSection />
       </LazySection>
 
-      <LazySection>
+      <LazySection skeleton={<GridSkeleton count={4} />}>
         <WhyChooseUsSection aggregate={aggregate} />
       </LazySection>
-
-
     </div>
   );
 }

@@ -431,36 +431,6 @@ export function ShopClient({
             </div>
 
             <div className="space-y-6">
-              {/* Categories - Desktop */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-700">
-                  Categories
-                </label>
-                <div className="space-y-1 max-h-[220px] overflow-y-auto pr-1 custom-scrollbar">
-                  <button
-                    onClick={() => handleCategoryClick("All")}
-                    className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${selectedCategory === "All" && !slug
-                        ? "bg-neutral-900 text-white font-medium shadow-sm"
-                        : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
-                      }`}
-                  >
-                    All Products
-                  </button>
-                  {categories.map((cat) => (
-                    <button
-                      key={cat.id}
-                      onClick={() => handleCategoryClick(cat.name, cat.slug)}
-                      className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${selectedCategoryId === cat.id
-                          ? "bg-neutral-900 text-white font-medium shadow-sm"
-                          : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
-                        }`}
-                    >
-                      {cat.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* Color Filter */}
               {availableColors.length > 0 && (
                 <div className="space-y-2.5">
@@ -475,8 +445,8 @@ export function ShopClient({
                           key={color}
                           onClick={() => toggleColor(color)}
                           className={`px-2.5 py-1 text-[11px] rounded-full transition-all flex items-center gap-1.5 border ${isSelected
-                              ? "bg-neutral-900 text-white border-neutral-900 font-medium shadow-sm"
-                              : "bg-neutral-50 text-neutral-600 border-neutral-200/80 hover:border-amber-400"
+                            ? "bg-neutral-900 text-white border-neutral-900 font-medium shadow-sm"
+                            : "bg-neutral-50 text-neutral-600 border-neutral-200/80 hover:border-amber-400"
                             }`}
                         >
                           <span
@@ -728,8 +698,8 @@ export function ShopClient({
                         onClick={goToPrevPage}
                         disabled={currentPage === 1}
                         className={`p-2 rounded-xl border transition-all ${currentPage === 1
-                            ? "border-neutral-200 text-neutral-300 cursor-not-allowed"
-                            : "border-neutral-200 text-neutral-700 hover:bg-neutral-100 hover:border-amber-400"
+                          ? "border-neutral-200 text-neutral-300 cursor-not-allowed"
+                          : "border-neutral-200 text-neutral-700 hover:bg-neutral-100 hover:border-amber-400"
                           }`}
                         aria-label="Previous page"
                       >
@@ -745,10 +715,10 @@ export function ShopClient({
                               typeof page === "number" && goToPage(page)
                             }
                             className={`min-w-[32px] h-8 px-2 rounded-xl text-xs font-medium transition-all ${page === currentPage
-                                ? "bg-neutral-900 text-white"
-                                : page === "..."
-                                  ? "text-neutral-400 cursor-default"
-                                  : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
+                              ? "bg-neutral-900 text-white"
+                              : page === "..."
+                                ? "text-neutral-400 cursor-default"
+                                : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
                               }`}
                             disabled={page === "..."}
                           >
@@ -762,8 +732,8 @@ export function ShopClient({
                         onClick={goToNextPage}
                         disabled={currentPage === totalPages}
                         className={`p-2 rounded-xl border transition-all ${currentPage === totalPages
-                            ? "border-neutral-200 text-neutral-300 cursor-not-allowed"
-                            : "border-neutral-200 text-neutral-700 hover:bg-neutral-100 hover:border-amber-400"
+                          ? "border-neutral-200 text-neutral-300 cursor-not-allowed"
+                          : "border-neutral-200 text-neutral-700 hover:bg-neutral-100 hover:border-amber-400"
                           }`}
                         aria-label="Next page"
                       >
@@ -829,8 +799,8 @@ export function ShopClient({
                       setShowMobileFilters(false);
                     }}
                     className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${selectedCategory === "All" && !slug
-                        ? "bg-neutral-900 text-white font-medium shadow-sm"
-                        : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
+                      ? "bg-neutral-900 text-white font-medium shadow-sm"
+                      : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
                       }`}
                   >
                     All Products
@@ -843,8 +813,8 @@ export function ShopClient({
                         setShowMobileFilters(false);
                       }}
                       className={`block w-full text-left text-xs py-2 px-3 transition-all rounded-xl ${selectedCategoryId === cat.id
-                          ? "bg-neutral-900 text-white font-medium shadow-sm"
-                          : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
+                        ? "bg-neutral-900 text-white font-medium shadow-sm"
+                        : "hover:bg-amber-50/60 text-neutral-600 hover:text-neutral-900"
                         }`}
                     >
                       {cat.name}
@@ -865,8 +835,8 @@ export function ShopClient({
                         key={color}
                         onClick={() => toggleColor(color)}
                         className={`px-2.5 py-1 text-[10px] rounded-full transition-all border ${selectedColors.includes(color)
-                            ? "bg-neutral-900 text-white border-neutral-900 font-medium"
-                            : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
+                          ? "bg-neutral-900 text-white border-neutral-900 font-medium"
+                          : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
                           }`}
                       >
                         {color}
@@ -888,8 +858,8 @@ export function ShopClient({
                         key={seater}
                         onClick={() => toggleSeater(seater)}
                         className={`px-2.5 py-1 text-[10px] rounded-full transition-all border ${selectedSeaters.includes(seater)
-                            ? "bg-neutral-900 text-white border-neutral-900 font-medium"
-                            : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
+                          ? "bg-neutral-900 text-white border-neutral-900 font-medium"
+                          : "bg-neutral-50 text-neutral-600 border-neutral-200/80"
                           }`}
                       >
                         {seater}

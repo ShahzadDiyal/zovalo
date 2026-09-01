@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import {
   Star,
@@ -10,10 +10,6 @@ import {
   Camera,
   Globe,
   Search,
-  Filter,
-  ArrowUpDown,
-  Sparkles,
-  Quote,
 } from "lucide-react";
 import { Review } from "../../types";
 
@@ -63,7 +59,16 @@ export function AllReviewsPageClient({
   const [searchQuery, setSearchQuery] = useState("");
   const [ratingFilter, setRatingFilter] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState<SortOption>("newest");
-  const [visibleCount, setVisibleCount] = useState(9);
+  // Set initial count high enough to show all 17 reviews at once
+  const [visibleCount, setVisibleCount] = useState(20);
+
+  // Load Trustpilot script dynamically when client component mounts
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js";
+    script.async = true;
+    document.head.appendChild(script);
+  }, []);
 
   // Rating breakdown
   const breakdown = useMemo(() => {
@@ -77,7 +82,7 @@ export function AllReviewsPageClient({
 
   // Filter and sort
   const filtered = useMemo(() => {
-    let result = reviews;
+    let result = [...reviews];
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -115,7 +120,7 @@ export function AllReviewsPageClient({
   const displayed = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
 
-  const handleLoadMore = () => setVisibleCount((prev) => prev + 9);
+  const handleLoadMore = () => setVisibleCount((prev) => prev + 12);
 
   const handleWriteReview = () => {
     const message =
@@ -126,36 +131,33 @@ export function AllReviewsPageClient({
     );
   };
 
-  // Empty state
-  if (reviews.length === 0) {
-    return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <div className="bg-white border border-neutral-200/80 p-12 shadow-sm">
-          <div className="text-7xl mb-6">⭐</div>
-          <h2 className="text-2xl sm:text-3xl  text-neutral-900 mb-3">
-            No reviews yet
-          </h2>
-          <p className="text-neutral-500 max-w-md mx-auto mb-6">
-            We haven't received any reviews yet. Be the first to share your
-            experience!
-          </p>
-          <button
-            onClick={handleWriteReview}
-            className="inline-flex items-center gap-2 bg-[#25d366] text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-[#128C7E] transition-colors shadow-lg"
-          >
-            <MessageCircle className="w-4 h-4" />
-            Write a review on WhatsApp
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="bg-[#FAF8F5] min-h-screen py-8 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Trustpilot Top Widget */}
+        <div className="bg-white border border-neutral-200/80 p-4 mb-6 flex justify-center items-center rounded-xl">
+          <div
+  className="trustpilot-widget"
+  data-locale="en-GB"
+  data-template-id="5419b6a8b0d04a076446a9ad"
+  data-businessunit-id="6a91433aaab12caba2582fd6"
+  data-style-height="24px"
+  data-style-width="100%"
+  data-theme="light"
+>
+  <a
+    href="https://www.trustpilot.com/review/royalfurnitures.store"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Trustpilot
+  </a>
+</div>
+        </div>
+
         {/* Hero / Summary Section */}
-        <div className="bg-white border border-neutral-200/80 p-6 sm:p-8 mb-10">
+        <div className="bg-white border border-neutral-200/80 p-6 sm:p-8 mb-10 rounded-xl">
           <div className="flex flex-col lg:flex-row lg:items-center gap-8">
             {/* Left: Average Rating */}
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
@@ -167,8 +169,7 @@ export function AllReviewsPageClient({
               </div>
               <Stars value={aggregate.average || 0} size="w-6 h-6" />
               <p className="text-sm text-neutral-500 mt-2">
-                Based on <span className="font-bold">{aggregate.count}</span>{" "}
-                reviews
+                Based on <span className="font-bold">{aggregate.count}</span> reviews
               </p>
               <button
                 onClick={handleWriteReview}
@@ -249,7 +250,7 @@ export function AllReviewsPageClient({
 
         {/* Reviews Grid */}
         {filtered.length === 0 ? (
-          <div className="text-center py-16 bg-white border border-neutral-200/80">
+          <div className="text-center py-16 bg-white border border-neutral-200/80 rounded-xl">
             <p className="text-neutral-500">No reviews match your filters.</p>
           </div>
         ) : (
@@ -264,7 +265,7 @@ export function AllReviewsPageClient({
                 return (
                   <div
                     key={review.id}
-                    className="group bg-white border border-neutral-200/80 p-5 sm:p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col"
+                    className="group bg-white border border-neutral-200/80 p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1 flex flex-col rounded-xl"
                   >
                     {/* Top: Avatar & Name */}
                     <div className="flex items-start gap-3 mb-3">

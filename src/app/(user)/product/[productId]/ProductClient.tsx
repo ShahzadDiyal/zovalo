@@ -398,7 +398,7 @@ export function ProductClient({ product: initialProduct }: ProductClientProps) {
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold tracking-tight max-w-4xl mx-auto leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl  font-bold tracking-tight max-w-4xl mx-auto leading-tight">
             {product.title}
           </h1>
 

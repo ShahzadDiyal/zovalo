@@ -91,7 +91,7 @@ export function FaqClient({ faqs }: FaqClientProps) {
 
             {/* Still have questions? */}
             <div className="mt-10 text-center bg-amber-50/60 border border-amber-200/80 rounded-2xl p-6 sm:p-8">
-                <h3 className="text-base sm:text-lg font-serif font-bold text-neutral-900">
+                <h3 className="text-base sm:text-lg  font-bold text-neutral-900">
                     Still have questions?
                 </h3>
                 <p className="text-sm text-neutral-600 mt-1">

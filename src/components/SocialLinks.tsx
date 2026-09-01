@@ -69,19 +69,12 @@ export default function SocialLinks() {
     {
       name: "LinkedIn",
       icon: socialIcons.linkedin,
-      url: "https://www.linkedin.com/in/royalfurnituresstore",
+      url: "https://www.linkedin.com/in/royal-furnitures-500689431",
       color: "bg-[#0A66C2]",
       hoverColor: "hover:bg-[#0A66C2]",
       followers: "856",
     },
-    {
-      name: "Pinterest",
-      icon: socialIcons.pinterest,
-      url: "https://www.pinterest.com/royalfurnituresstore/",
-      color: "bg-[#E60023]",
-      hoverColor: "hover:bg-[#E60023]",
-      followers: "1.4K",
-    },
+
   ];
 
   // Share links (first 6)

@@ -427,7 +427,7 @@ function WhyChooseUsSection({ aggregate }: { aggregate: { count: number; average
               Why Choose Us
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-3">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl  font-bold text-white mb-3">
             Experience the{" "}
             <span className="bg-gradient-to-r from-amber-400 to-amber-200 bg-clip-text text-transparent">
               Difference
@@ -559,7 +559,7 @@ function AboutSection() {
             Our Story
           </span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 mb-4">
+        <h2 className="text-2xl sm:text-3xl  font-bold text-neutral-900 mb-4">
           Crafting Furniture for Modern Homes
         </h2>
         <p className="text-sm sm:text-base text-neutral-600 leading-relaxed max-w-2xl mx-auto">
@@ -601,7 +601,7 @@ function FaqSection() {
               Got Questions?
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900">
+          <h2 className="text-2xl sm:text-3xl  font-bold text-neutral-900">
             Frequently Asked Questions
           </h2>
         </div>
@@ -610,7 +610,7 @@ function FaqSection() {
           {faqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
-              <div key={idx} className="border border-neutral-200/80 rounded-xl overflow-hidden bg-white shadow-sm">
+              <div key={idx} className="border border-neutral-200/80 rounded-xl overflow-hidden bg-white">
                 <button
                   onClick={() => toggleFaq(idx)}
                   className="w-full flex items-center justify-between p-4 sm:p-5 text-left hover:bg-amber-50/50 transition-colors"

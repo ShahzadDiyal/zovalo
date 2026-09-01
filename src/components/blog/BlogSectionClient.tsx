@@ -173,7 +173,7 @@ function BlogCard({ post, featured }: { post: BlogPost; featured?: boolean }) {
 
 export function BlogSectionClient({
   initialPosts,
-  limit = 4,
+  limit = 3,
   title = "Latest from Our Blog",
   subtitle = "Discover expert tips, design inspiration, and furniture care guides",
 }: BlogSectionClientProps) {

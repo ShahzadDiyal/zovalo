@@ -248,7 +248,8 @@ export function Navbar() {
       {/* Header 01: Trust & Timer Bar */}
       <div className="bg-amber-800 text-cream py-1.5 px-4 flex items-center justify-between">
         {/* Left: Rating - Hidden on mobile and tablet */}
-        <div className="hidden lg:flex items-center gap-2 min-w-[180px]">
+
+        <Link href="/reviews" className="hidden lg:flex items-center gap-2 min-w-[180px] hover:underline">
           <div className="flex items-center gap-0.5">
             {[1, 2, 3, 4, 5].map((i) => {
               const fill = Math.min(Math.max((reviewAggregate.average - (i - 1)) * 100, 0), 100);
@@ -266,7 +267,7 @@ export function Navbar() {
           <span className="text-yellow-200 text-[12px] font-bold">
             ({reviewAggregate.count.toLocaleString()})
           </span>
-        </div>
+        </Link>
 
         {/* Center: Cash on Delivery + Timer */}
         <div className="flex-1 flex items-center justify-center gap-3 sm:gap-4 md:gap-6">

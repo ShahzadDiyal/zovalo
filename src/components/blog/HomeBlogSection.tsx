@@ -9,7 +9,7 @@ interface HomeBlogSectionProps {
 }
 
 export async function HomeBlogSection({
-  limit = 4,
+  limit = 3,
   title = "Latest from Our Blog",
   subtitle = "Discover expert tips, design inspiration, and furniture care guides",
 }: HomeBlogSectionProps) {

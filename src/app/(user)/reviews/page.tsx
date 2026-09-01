@@ -36,15 +36,36 @@ export const metadata: Metadata = {
 };
 
 export default async function ReviewsPage() {
-  const [reviews, products] = await Promise.all([
+  const [rawReviews, products] = await Promise.all([
     reviewApi.getAllPublished().catch(() => []),
     productApi.getAll().catch(() => []),
   ]);
 
-  const productSlugMap = new Map<string, string>();
+  // Sanitize reviews to remove non-serializable Firestore Timestamps
+  const reviews = rawReviews.map((review: any) => ({
+    ...review,
+    createdAt: review.createdAt?.toDate
+      ? review.createdAt.toDate().toISOString()
+      : typeof review.createdAt === "object"
+      ? new Date(review.createdAt.seconds * 1000).toISOString()
+      : String(review.createdAt || ""),
+    updatedAt: review.updatedAt?.toDate
+      ? review.updatedAt.toDate().toISOString()
+      : typeof review.updatedAt === "object"
+      ? new Date(review.updatedAt.seconds * 1000).toISOString()
+      : String(review.updatedAt || ""),
+    reviewDate: review.reviewDate?.toDate
+      ? review.reviewDate.toDate().toISOString()
+      : typeof review.reviewDate === "object"
+      ? new Date(review.reviewDate.seconds * 1000).toISOString()
+      : String(review.reviewDate || ""),
+  }));
+
+  // Create a plain serializable map object instead of JS Map
+  const productSlugMap: Record<string, string> = {};
   products.forEach((product) => {
     if (product.id && product.slug) {
-      productSlugMap.set(product.id, product.slug);
+      productSlugMap[product.id] = product.slug;
     }
   });
 
@@ -53,7 +74,8 @@ export default async function ReviewsPage() {
     average:
       reviews.length > 0
         ? Number(
-            (reviews.reduce((sum, r) => sum + (r.rating || 0), 0) /
+            (
+              reviews.reduce((sum: number, r: any) => sum + (r.rating || 0), 0) /
               reviews.length
             ).toFixed(1)
           )
@@ -73,7 +95,7 @@ export default async function ReviewsPage() {
       <AllReviewsPageClient
         initialReviews={reviews}
         aggregate={aggregate}
-        productSlugMap={productSlugMap}
+        productSlugMap={new Map(Object.entries(productSlugMap))}
       />
     </>
   );

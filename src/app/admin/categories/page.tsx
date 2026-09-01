@@ -17,6 +17,7 @@ import {
 import { Category } from "../../../types/index";
 import { categoryApi } from "../../../services/categoryApi";
 import { Skeleton } from "../../../components/ui/Loading";
+import { CloudinaryService } from "../../../services/cloudinaryService";
 
 export default function AdminCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -51,58 +52,6 @@ export default function AdminCategories() {
     (cat) => cat.id !== currentCategory?.id,
   );
 
-  const convertToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
-  };
-
-  const compressImage = (
-    file: File,
-    maxWidth: number = 800,
-  ): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (e) => {
-        const img = new Image();
-        img.src = e.target?.result as string;
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          let width = img.width;
-          let height = img.height;
-          if (width > maxWidth) {
-            height = (height * maxWidth) / width;
-            width = maxWidth;
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext("2d");
-          ctx?.drawImage(img, 0, 0, width, height);
-          canvas.toBlob(
-            (blob) => {
-              if (blob) {
-                const reader2 = new FileReader();
-                reader2.readAsDataURL(blob);
-                reader2.onload = () => resolve(reader2.result as string);
-                reader2.onerror = reject;
-              } else {
-                reject(new Error("Failed to compress image"));
-              }
-            },
-            file.type,
-            0.7,
-          );
-        };
-        img.onerror = reject;
-      };
-      reader.onerror = reject;
-    });
-  };
-
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -116,12 +65,13 @@ export default function AdminCategories() {
     }
     setUploadingImage(true);
     try {
-      const base64String = await compressImage(file, 600);
-      setImagePreview(base64String);
-      setCurrentCategory((prev) => ({ ...prev, image: base64String }));
+      // Upload directly to Cloudinary
+      const imageUrl = await CloudinaryService.uploadImage(file);
+      setImagePreview(imageUrl);
+      setCurrentCategory((prev) => ({ ...prev, image: imageUrl }));
     } catch (error) {
-      console.error("Error processing image:", error);
-      alert("Failed to process image");
+      console.error("Error uploading image:", error);
+      alert("Failed to upload image. Please try again.");
     } finally {
       setUploadingImage(false);
     }

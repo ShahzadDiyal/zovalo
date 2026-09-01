@@ -18,6 +18,7 @@ import { Review, Product } from "../../../types/index";
 import { reviewApi } from "../../../services/reviewApi";
 import { productApi } from "../../../services/productApi";
 import { Skeleton } from "../../../components/ui/Loading";
+import { CloudinaryService } from "../../../services/cloudinaryService";
 
 const SOURCE_META: Record<
   Review["source"],
@@ -117,14 +118,6 @@ export default function AdminReviews() {
     [products],
   );
 
-  const convertToBase64 = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-    });
-
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -132,8 +125,13 @@ export default function AdminReviews() {
       alert("Please upload an image file");
       return;
     }
-    const base64 = await convertToBase64(file);
-    setCurrent((prev) => ({ ...prev, customerImage: base64 }));
+    try {
+      const imageUrl = await CloudinaryService.uploadImage(file);
+      setCurrent((prev) => ({ ...prev, customerImage: imageUrl }));
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Failed to upload image. Please try again.");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

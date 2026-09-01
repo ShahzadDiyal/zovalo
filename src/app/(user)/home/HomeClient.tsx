@@ -247,7 +247,7 @@ function FeaturedProductsSection({ products }: { products: Product[] }) {
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl text-neutral-900">
-            Featured Collection
+            Featured Products
           </h2>
           <div className="w-12 sm:w-16 h-0.5 bg-amber-500 mx-auto sm:mx-0" />
         </div>

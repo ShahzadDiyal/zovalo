@@ -28,6 +28,7 @@ import { productApi } from "../../../../services/productApi";
 import { categoryApi } from "../../../../services/categoryApi";
 import { LoadingSpinner } from "../../../../components/ui/Loading";
 import { useRouter } from "next/navigation";
+import { CloudinaryService } from "../../../../services/cloudinaryService";
 
 interface SeaterPrice {
   seater: string;
@@ -397,15 +398,6 @@ export default function AdminProductForm() {
     });
   };
 
-  const convertToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
-  };
-
   const handleMultipleFilesUpload = async (files: FileList) => {
     const filesArray = Array.from(files);
     const currentImages = formData.images || [];
@@ -447,9 +439,9 @@ export default function AdminProductForm() {
         // Compress the image with high quality preservation
         const compressedFile = await compressImage(file, 1600, 0.92);
 
-        // Convert to base64
-        const base64String = await convertToBase64(compressedFile);
-        newImages.push(base64String);
+        // Upload to Cloudinary
+        const imageUrl = await CloudinaryService.uploadImage(compressedFile);
+        newImages.push(imageUrl);
 
         // Use filename without extension as default alt text
         const altText = file.name
@@ -461,7 +453,7 @@ export default function AdminProductForm() {
         setUploadProgress((processed / filesArray.length) * 100);
       } catch (error) {
         console.error(`Error processing ${file.name}:`, error);
-        alert(`Failed to process ${file.name}`);
+        alert(`Failed to upload ${file.name}. Please try again.`);
       }
     }
 

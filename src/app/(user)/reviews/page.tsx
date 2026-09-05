@@ -47,18 +47,18 @@ export default async function ReviewsPage() {
     createdAt: review.createdAt?.toDate
       ? review.createdAt.toDate().toISOString()
       : typeof review.createdAt === "object"
-      ? new Date(review.createdAt.seconds * 1000).toISOString()
-      : String(review.createdAt || ""),
+        ? new Date(review.createdAt.seconds * 1000).toISOString()
+        : String(review.createdAt || ""),
     updatedAt: review.updatedAt?.toDate
       ? review.updatedAt.toDate().toISOString()
       : typeof review.updatedAt === "object"
-      ? new Date(review.updatedAt.seconds * 1000).toISOString()
-      : String(review.updatedAt || ""),
+        ? new Date(review.updatedAt.seconds * 1000).toISOString()
+        : String(review.updatedAt || ""),
     reviewDate: review.reviewDate?.toDate
       ? review.reviewDate.toDate().toISOString()
       : typeof review.reviewDate === "object"
-      ? new Date(review.reviewDate.seconds * 1000).toISOString()
-      : String(review.reviewDate || ""),
+        ? new Date(review.reviewDate.seconds * 1000).toISOString()
+        : String(review.reviewDate || ""),
   }));
 
   // Create a plain serializable map object instead of JS Map
@@ -74,11 +74,11 @@ export default async function ReviewsPage() {
     average:
       reviews.length > 0
         ? Number(
-            (
-              reviews.reduce((sum: number, r: any) => sum + (r.rating || 0), 0) /
-              reviews.length
-            ).toFixed(1)
-          )
+          (
+            reviews.reduce((sum: number, r: any) => sum + (r.rating || 0), 0) /
+            reviews.length
+          ).toFixed(1)
+        )
         : 0,
   };
 

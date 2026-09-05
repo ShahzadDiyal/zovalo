@@ -31,11 +31,10 @@ function Stars({ value, size = "w-4 h-4" }: { value: number; size?: string }) {
       {[1, 2, 3, 4, 5].map((n) => (
         <Star
           key={n}
-          className={`${size} ${
-            n <= Math.round(value)
+          className={`${size} ${n <= Math.round(value)
               ? "fill-amber-500 text-amber-500"
               : "text-neutral-200 fill-neutral-200"
-          }`}
+            }`}
         />
       ))}
     </div>
@@ -134,26 +133,26 @@ export function AllReviewsPageClient({
   return (
     <div className="bg-[#FAF8F5] min-h-screen py-8 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Trustpilot Top Widget */}
         <div className="bg-white border border-neutral-200/80 p-4 mb-6 flex justify-center items-center rounded-xl">
           <div
-  className="trustpilot-widget"
-  data-locale="en-GB"
-  data-template-id="5419b6a8b0d04a076446a9ad"
-  data-businessunit-id="6a91433aaab12caba2582fd6"
-  data-style-height="24px"
-  data-style-width="100%"
-  data-theme="light"
->
-  <a
-    href="https://www.trustpilot.com/review/royalfurnitures.store"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    Trustpilot
-  </a>
-</div>
+            className="trustpilot-widget"
+            data-locale="en-GB"
+            data-template-id="5419b6a8b0d04a076446a9ad"
+            data-businessunit-id="6a91433aaab12caba2582fd6"
+            data-style-height="24px"
+            data-style-width="100%"
+            data-theme="light"
+          >
+            <a
+              href="https://www.trustpilot.com/review/royalfurnitures.store"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Trustpilot
+            </a>
+          </div>
         </div>
 
         {/* Hero / Summary Section */}

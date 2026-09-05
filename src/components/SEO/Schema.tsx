@@ -287,92 +287,262 @@ export function Schema({ type, data }: SchemaProps) {
       //   };
       // }
 
-      case "Product": {
-        if (!data?.product) return null;
-        const product = data.product;
+    case "Product": {
+  if (!data?.product) return null;
 
-        // Ensure absolute image URLs and fallback image array
-        const productImages = (product.images || [])
-          .filter(Boolean)
-          .map((img: string) => img.startsWith("http") ? img : `https://royalfurnitures.store${img}`);
+  const product = data.product;
 
-        if (productImages.length === 0) {
-          productImages.push("https://royalfurnitures.store/logo.png");
+  // -----------------------------
+  // Product URL
+  // -----------------------------
+  const productUrl = `https://royalfurnitures.store/product/${product.slug}`;
+
+  // -----------------------------
+  // Product images
+  // -----------------------------
+  const productImages = (product.images || [])
+    .filter(Boolean)
+    .map((img: string) =>
+      img.startsWith("http")
+        ? img
+        : `https://royalfurnitures.store${img.startsWith("/") ? "" : "/"}${img}`,
+    );
+
+  // Google expects at least one valid image.
+  if (productImages.length === 0) {
+    productImages.push("https://royalfurnitures.store/logo.png");
+  }
+
+  // -----------------------------
+  // Clean description
+  // -----------------------------
+  const cleanDescription =
+    product.description
+      ?.replace(/<[^>]*>/g, "")
+      .replace(/\s+/g, " ")
+      .trim() || product.title;
+
+  // -----------------------------
+  // Price
+  // IMPORTANT:
+  // Never invent a price such as £1.00.
+  // -----------------------------
+  const numericPrice = Number(product.price);
+
+  const hasValidPrice =
+    Number.isFinite(numericPrice) && numericPrice > 0;
+
+  // -----------------------------
+  // Availability
+  // -----------------------------
+  const stock = Number(product.stock);
+
+  let availability =
+    "https://schema.org/InStock";
+
+  if (
+    product.inStock === false ||
+    (Number.isFinite(stock) && stock <= 0)
+  ) {
+    availability = "https://schema.org/OutOfStock";
+  }
+
+  // -----------------------------
+  // Reviews
+  // -----------------------------
+  const productReviews = (data.reviews || []).filter(Boolean);
+
+  const validReviews = productReviews.filter(
+    (review: any) =>
+      review.rating !== undefined &&
+      review.rating !== null &&
+      Number(review.rating) > 0,
+  );
+
+  const reviewCount = Number(product.reviewCount);
+  const ratingValue = Number(product.rating);
+
+  const hasValidAggregateRating =
+    Number.isFinite(reviewCount) &&
+    reviewCount > 0 &&
+    Number.isFinite(ratingValue) &&
+    ratingValue >= 1 &&
+    ratingValue <= 5;
+
+  // -----------------------------
+  // Base Product schema
+  // -----------------------------
+  const productSchema: any = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+
+    "@id": `${productUrl}#product`,
+
+    name: product.title,
+
+    description: cleanDescription,
+
+    image: productImages,
+
+    url: productUrl,
+
+    sku: String(product.id || product.slug),
+
+    brand: {
+      "@type": "Brand",
+      name: "Royal Furniture",
+    },
+
+    // New products should use NewCondition.
+    itemCondition: "https://schema.org/NewCondition",
+
+    // Category is useful for merchant/product understanding.
+    ...(product.category
+      ? {
+          category: product.category,
         }
+      : {}),
 
-        const productReviews = (data.reviews || []).filter(Boolean);
-        const hasReviews = product.reviewCount && product.reviewCount > 0 && product.rating;
-
-        return {
-          "@context": "https://schema.org",
-          "@type": "Product",
-          "name": product.title,
-          "description": product.description?.replace(/<[^>]*>?/gm, '').substring(0, 200) || product.title,
-          "image": productImages,
-          "sku": String(product.id || product.slug),
-          "mpn": String(product.id || product.slug),
-          "brand": {
-            "@type": "Brand",
-            "name": "Royal Furniture",
-          },
-          "offers": {
+    // --------------------------------
+    // Offer
+    // --------------------------------
+    ...(hasValidPrice
+      ? {
+          offers: {
             "@type": "Offer",
-            "price": String(product.price && product.price > 0 ? product.price : "1.00"),
-            "priceCurrency": "GBP",
-            "priceValidUntil": new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
-            "availability": product.stock > 0 || product.inStock !== false
-              ? "https://schema.org/InStock"
-              : "https://schema.org/OutOfStock",
-            "url": `https://royalfurnitures.store/product/${product.slug}`,
-            "hasMerchantReturnPolicy": {
-              "@type": "MerchantReturnPolicy",
-              "applicableCountry": "GB",
-              "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-              "merchantReturnDays": 14,
-              "returnMethod": "https://schema.org/ReturnByMail",
-              "returnFees": "https://schema.org/ReturnFeesCustomerResponsibility",
+
+            url: productUrl,
+
+            price: numericPrice.toFixed(2),
+
+            priceCurrency: "GBP",
+
+            availability,
+
+            itemCondition: "https://schema.org/NewCondition",
+
+            seller: {
+              "@type": "Organization",
+              "@id": "https://royalfurnitures.store/#organization",
+              name: "Royal Furniture",
+              url: "https://royalfurnitures.store",
             },
-            "shippingDetails": {
+
+            // Only include this if your actual website policy
+            // really provides a 14-day return period.
+            hasMerchantReturnPolicy: {
+              "@type": "MerchantReturnPolicy",
+
+              applicableCountry: "GB",
+
+              returnPolicyCategory:
+                "https://schema.org/MerchantReturnFiniteReturnWindow",
+
+              merchantReturnDays: 14,
+
+              returnMethod:
+                "https://schema.org/ReturnByMail",
+
+              returnFees:
+                "https://schema.org/ReturnFeesCustomerResponsibility",
+            },
+
+            // Shipping information
+            shippingDetails: {
               "@type": "OfferShippingDetails",
-              "shippingRate": {
+
+              shippingRate: {
                 "@type": "MonetaryAmount",
-                "value": 0,
-                "currency": "GBP",
+                value: 0,
+                currency: "GBP",
               },
-              "deliveryTime": {
+
+              shippingDestination: {
+                "@type": "DefinedRegion",
+                addressCountry: "GB",
+              },
+
+              deliveryTime: {
                 "@type": "ShippingDeliveryTime",
-                "handlingTime": {
+
+                handlingTime: {
                   "@type": "QuantitativeValue",
-                  "minValue": 0,
-                  "maxValue": 1,
-                  "unitCode": "DAY"
+                  minValue: 0,
+                  maxValue: 1,
+                  unitCode: "DAY",
                 },
-                "transitTime": {
+
+                transitTime: {
                   "@type": "QuantitativeValue",
-                  "minValue": 1,
-                  "maxValue": 3,
-                  "unitCode": "DAY"
-                }
+                  minValue: 1,
+                  maxValue: 3,
+                  unitCode: "DAY",
+                },
               },
-              "shippingDestination": [
-                {
-                  "@type": "DefinedRegion",
-                  "addressCountry": "GB",
-                },
-              ],
             },
           },
-          ...(hasReviews ? {
-            aggregateRating: {
-              "@type": "AggregateRating",
-              "ratingValue": product.rating,
-              "reviewCount": product.reviewCount,
-              "bestRating": 5,
-              "worstRating": 1,
-            }
-          } : {}),
-        };
-      }
+        }
+      : {}),
+
+    // --------------------------------
+    // Aggregate rating
+    // --------------------------------
+    ...(hasValidAggregateRating
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: ratingValue,
+            reviewCount: reviewCount,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }
+      : {}),
+
+    // --------------------------------
+    // Individual reviews
+    // --------------------------------
+    ...(validReviews.length > 0
+      ? {
+          review: validReviews.slice(0, 50).map((review: any) => ({
+            "@type": "Review",
+
+            reviewRating: {
+              "@type": "Rating",
+              ratingValue: Number(review.rating),
+              bestRating: 5,
+              worstRating: 1,
+            },
+
+            author: {
+              "@type": "Person",
+              name: review.customerName || "Customer",
+            },
+
+            ...(review.comment
+              ? {
+                  reviewBody: review.comment,
+                }
+              : {}),
+
+            ...(review.title
+              ? {
+                  name: review.title,
+                }
+              : {}),
+
+            ...(review.reviewDate
+              ? {
+                  datePublished: review.reviewDate,
+                }
+              : {}),
+          })),
+        }
+      : {}),
+  };
+
+  return productSchema;
+}
 
       case "SiteReviews": {
         // Site-wide reviews (across all products) - used by ReviewsBadge,

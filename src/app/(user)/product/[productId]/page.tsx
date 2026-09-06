@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { productApi } from "../../../../services/productApi";
 import { reviewApi } from "../../../../services/reviewApi";
+import { categoryApi } from "../../../../services/categoryApi";
 import { ProductClient } from "./ProductClient";
 import { Schema } from "../../../../components/SEO/Schema";
 
@@ -59,7 +60,7 @@ export async function generateMetadata({
     title,
     description,
     alternates: {
-      canonical: `/product/${product.slug}`,
+      canonical: `https://royalfurnitures.store/product/${product.slug}`,
     },
     openGraph: {
       title,
@@ -76,12 +77,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
   if (!productData) notFound();
   const reviewsData = await getReviewsForPage(productData.id);
 
+  // Fetch the actual category to get the correct slug
+  let categorySlug = "products";
+  if (productData.category) {
+    const category = await categoryApi.getCategoryByName(productData.category);
+    categorySlug = category?.slug || productData.category.toLowerCase().replace(/ /g, "-");
+  }
+
   const breadcrumbItems = [
     { name: "Home", url: "https://royalfurnitures.store/" },
     { name: "Shop", url: "https://royalfurnitures.store/shop" },
     {
       name: productData.category || "Products",
-      url: `https://royalfurnitures.store/category/${productData.category?.toLowerCase().replace(/ /g, "-") || "products"}`,
+      url: `https://royalfurnitures.store/category/${categorySlug}`,
     },
     {
       name: productData.title,
@@ -100,3 +108,109 @@ export default async function ProductPage({ params }: ProductPageProps) {
     </>
   );
 }
+
+
+
+
+// // src/app/(user)/product/[productId]/page.tsx
+// import { notFound } from "next/navigation";
+// import { Metadata } from "next";
+// import { unstable_cache } from "next/cache";
+// import { productApi } from "../../../../services/productApi";
+// import { reviewApi } from "../../../../services/reviewApi";
+// import { ProductClient } from "./ProductClient";
+// import { Schema } from "../../../../components/SEO/Schema";
+
+// interface ProductPageProps {
+//   params: Promise<{ productId: string }>;
+// }
+
+// const getProductForPage = (productId: string) =>
+//   unstable_cache(
+//     async () =>
+//       (await productApi.getById(productId)) ||
+//       (await productApi.getProductBySlug(productId)),
+//     ["product-page", productId],
+//     { revalidate: 120 },
+//   )();
+
+// const getReviewsForPage = (productId: string) =>
+//   unstable_cache(
+//     async () => {
+//       try {
+//         return await reviewApi.getApprovedByProductId(productId);
+//       } catch (error) {
+//         console.error("Error fetching reviews for schema:", error);
+//         return [];
+//       }
+//     },
+//     ["product-reviews", productId],
+//     { revalidate: 120 },
+//   )();
+
+// export async function generateMetadata({
+//   params,
+// }: ProductPageProps): Promise<Metadata> {
+//   const { productId } = await params;
+//   const product = await getProductForPage(productId);
+
+//   if (!product) return {};
+
+//   const rawTitle = product.title || "";
+//   const title =
+//     rawTitle.length > 60 ? `${rawTitle.slice(0, 57).trimEnd()}...` : rawTitle;
+//   const rawDescription =
+//     product.description?.replace(/<[^>]*>/g, "") ||
+//     `Buy ${product.title} at Royal Furniture. Cash on Delivery available across the UK.`;
+//   const description =
+//     rawDescription.length > 155
+//       ? `${rawDescription.slice(0, 152).trimEnd()}...`
+//       : rawDescription;
+//   const image =
+//     product.images?.[0] || "https://royalfurnitures.store/og-image.jpg";
+
+//   return {
+//     title,
+//     description,
+//     alternates: {
+//       canonical: `/product/${product.slug}`,
+//     },
+//     openGraph: {
+//       title,
+//       description,
+//       type: "website", // Next's OG type union doesn't include "product"
+//       images: [{ url: image, width: 1200, height: 630 }],
+//     },
+//   };
+// }
+
+// export default async function ProductPage({ params }: ProductPageProps) {
+//   const { productId } = await params;
+//   const productData = await getProductForPage(productId);
+//   if (!productData) notFound();
+//   const reviewsData = await getReviewsForPage(productData.id);
+
+//   const breadcrumbItems = [
+//     { name: "Home", url: "https://royalfurnitures.store/" },
+//     { name: "Shop", url: "https://royalfurnitures.store/shop" },
+//     {
+//       name: productData.category || "Products",
+//       url: `https://royalfurnitures.store/category/${productData.category?.toLowerCase().replace(/ /g, "-") || "products"}`,
+//     },
+//     {
+//       name: productData.title,
+//       url: `https://royalfurnitures.store/product/${productData.slug}`,
+//     },
+//   ];
+
+//   return (
+//     <>
+//       <Schema type="BreadcrumbList" data={{ items: breadcrumbItems }} />
+//       <Schema
+//         type="Product"
+//         data={{ product: productData, reviews: reviewsData }}
+//       />
+//       <ProductClient product={productData} />
+//     </>
+//   );
+// }
